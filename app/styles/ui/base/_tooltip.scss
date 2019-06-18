@@ -1,0 +1,43 @@
+.tooltip {
+  display: inline-block;
+  position: relative;
+  width: max-content;
+
+  & > .tooltip-text {
+    width: max-content;
+    z-index: 10000;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 10px;
+      border-width: 7px 7px 0;
+      border-style: solid;
+      border-color: #333333 transparent;
+      display: block;
+      width: 0;
+    }
+
+    &.hide {
+      display: none;
+    }
+
+    &.transition {
+      transition: 1s ease all;
+    }
+
+    position: absolute;
+    top: -45px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(51, 51, 51, 0.8);
+    color: white;
+  }
+
+  & > .text {
+    &.help {
+      cursor: help;
+    }
+  }
+}
