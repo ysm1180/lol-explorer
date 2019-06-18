@@ -1,5 +1,9 @@
 # LOL EXPLORER
 
+## Requirment
+
+- [Lol explorer api server](https://bitbucket.org/ysm1180/lol-explorer-server/src/master/)
+
 ## Development Requirement Tools
 
 - Yarn
