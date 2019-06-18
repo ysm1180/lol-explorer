@@ -98,6 +98,7 @@ class LcuMain extends React.Component<Props, ILcuMainState> {
     });
 
     ipcRenderer.on('lcu-api-message', (event: IpcMessageEvent, data: any) => {
+      console.log(data);
       if (data.uri === '/lol-summoner/v1/current-summoner') {
         this.props.loadCurrnetSummoner(data.data);
       }

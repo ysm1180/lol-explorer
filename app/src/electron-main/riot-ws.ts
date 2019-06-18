@@ -19,11 +19,15 @@ export class RiotWSProtocol {
   private listeners: { [key: string]: (...args: any[]) => void } = {};
 
   constructor(private url: string) {
-    this.connect();
   }
 
   private registerListeners() {
+    log.info('register listener');
     if (this.ws) {
+      for (var event in this.listeners) {
+        this.ws.on(event, this.listeners[event]);
+      }
+
       this.on('open', () => {
         log.info('[RiotWSProtocol] Connected.');
         this.retryCount = 0;
@@ -58,22 +62,25 @@ export class RiotWSProtocol {
   public connect() {
     this.ws = new WebSocket(this.url, 'wamp', { rejectUnauthorized: false });
     this.registerListeners();
-    for (var event in this.listeners) {
-      this.ws.on(event, this.listeners[event]);
-    }
   }
 
   public close() {
-    this.ws!.close();
+    if (this.ws) {
+      this.ws.close();
+    }
   }
 
   public terminate() {
-    this.ws!.terminate();
+    if (this.ws) {
+      this.ws.terminate();
+    }
   }
 
   public on(event: string, listener: (this: WebSocket, ...args: any[]) => void) {
     this.listeners[event] = listener;
-    this.ws!.addListener(event, listener);
+    if (this.ws) {
+      this.ws.addListener(event, listener);
+    }
   }
 
   public subscribe(topic: string, callback: (...args: any[]) => void) {
@@ -82,14 +89,18 @@ export class RiotWSProtocol {
   }
 
   public unsubscribe(topic: string) {
-    this.ws!.removeListener(topic, this.listeners[topic]);
-    this.send(MESSAGE_TYPES.UNSUBSCRIBE, topic);
+    if (this.ws) {
+      this.ws.removeListener(topic, this.listeners[topic]);
+      this.send(MESSAGE_TYPES.UNSUBSCRIBE, topic);
+    }
 
     delete this.listeners[topic];
   }
 
   public send(type: number, message: any) {
-    this.ws!.send(JSON.stringify([type, message]));
+    if (this.ws) {
+      this.ws.send(JSON.stringify([type, message]));
+    }
   }
 
   private _onMessage(message: any) {
@@ -102,20 +113,14 @@ export class RiotWSProtocol {
         // this.details = data[2];
         break;
       case MESSAGE_TYPES.CALLRESULT:
-        log.log(
-          'Unknown call, if you see this file an issue at https://discord.gg/hPtrMcx with the following data:',
-          data
-        );
+        log.log('Unknown call: ', data);
         break;
       case MESSAGE_TYPES.EVENT:
         const [topic, payload] = data;
         this.ws!.emit(topic, payload);
         break;
       default:
-        log.log(
-          'Unknown type, if you see this file an issue with at https://discord.gg/hPtrMcx with the following data:',
-          [type, data]
-        );
+        log.log('Unknown type: ', [type, data]);
         break;
     }
   }
@@ -124,10 +129,6 @@ export class RiotWSProtocol {
     if (this.ws) {
       for (var event in this.listeners) {
         this.ws.removeListener(event, this.listeners[event]);
-      }
-
-      if (this.ws.readyState === WebSocket.OPEN) {
-        this.ws.close();
       }
     }
 
