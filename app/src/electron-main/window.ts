@@ -100,10 +100,8 @@ export class AppWindow {
   }
 
   private connectRiotWebSocket(url: string) {
-    console.log('connect riot ws');
     this.riotWs = new RiotWSProtocol(url);
     this.riotWs.on('open', () => {
-      console.info('[RiotWSProtocol] Subscribe event.');
       this.riotWs!.subscribe('OnJsonApiEvent', (data) => {
         this.window.webContents.send('lcu-api-message', data);
       });
