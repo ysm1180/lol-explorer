@@ -4,6 +4,9 @@
 
 - [Lol explorer api server](https://bitbucket.org/ysm1180/lol-explorer-server/src/master/)
 
+# OS
+- Windows
+
 ## Development Requirement Tools
 
 - Yarn
