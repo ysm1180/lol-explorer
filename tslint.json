@@ -1,34 +1,19 @@
 {
-  "extends": ["tslint-config-prettier"],
-  "rulesDirectory": [
-    "node_modules/tslint-react/rules",
-    "node_modules/tslint-microsoft-contrib/",
-    "tslint-rules/"
+  "defaultSeverity": "warning",
+  "extends": [
+    "tslint:recommended"
   ],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**"
+    ]
+  },
   "rules": {
-    "class-name": true,
-    "jsdoc-format": true,
-    "member-ordering": [true, "static-before-instance"],
-    "no-unnecessary-class": true,
-    "promise-must-complete": true,
-    "react-unused-props-and-state": [
-      true,
-      {
-        "props-interface-regex": "Props$",
-        "state-interface-regex": "State$"
-      }
-    ],
-    "react-this-binding-issue": true,
-    "typedef-whitespace": [
-      true,
-      {
-        "call-signature": "nospace",
-        "index-signature": "nospace",
-        "parameter": "nospace",
-        "property-declaration": "nospace",
-        "variable-declaration": "nospace"
-      }
-    ],
-    "variable-name": [true, "ban-keywords"]
+    "quotemark": [true, "single"],
+    "indent": [true, "spaces", 2],
+    "interface-name": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-consecutive-blank-lines": false
   }
 }

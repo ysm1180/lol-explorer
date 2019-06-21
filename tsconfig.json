@@ -1,24 +1,40 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2017",
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "sourceMap": true,
-    "jsx": "react",
+    "target": "esnext",
+    "module": "esnext",
     "strict": true,
-    "noEmit": true,
-    "outDir": "./out",
-    "skipLibCheck": false
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "webpack-env"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
   },
-  "plugins": [
-    {
-      "name": "typescript-tslint-plugin"
-    }
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/typings",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
   ],
-  "include": ["app/**/*.ts", "app/**/*.tsx", "app/**/*.d.tsx", "app/typings/"],
-  "exclude": ["node_modules", "app/node_modules", "dist", "out"],
-  "compileOnSave": false
+  "exclude": [
+    "node_modules"
+  ]
 }
