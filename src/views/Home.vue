@@ -1,20 +1,15 @@
 <template>
-  <v-container fill-height align-center pa-0>
-    <v-layout v-if="status === 0" justify-center align-center>
+  <v-container fluid fill-height pa-0>
+    <v-layout v-if="status === 'WAITING_CLIENT'" justify-center align-center>
       <v-flex display-1 font-weight-bold text-xs-center>롤 클라이언트를 실행해주세요</v-flex>
     </v-layout>
-    <v-layout v-if="status === 1" justify-center align-center>
+    <v-layout v-if="status === 'WAITING_LOGIN'" justify-center align-center>
       <v-flex display-1 font-weight-bold text-xs-center>로그인을 기다리는중...</v-flex>
     </v-layout>
-    <v-layout v-if="status === 2" align-center column>
-      <!-- <v-flex display-1 font-weight-bold text-xs-center>로그인 이후 페이지</v-flex> -->
-      <v-flex
-        v-for="(match, key) in matches"
-        v-bind:key="key"
-      >
-        <match-card :match="match"/>
-      </v-flex>
+    <v-layout v-if="status === 'LOGIN_COMPLETE'" justify-center align-center>
+      <v-flex display-1 font-weight-bold text-xs-center @click="toMatchingInfo">전적확인</v-flex>
     </v-layout>
+    <matching-info v-if="status === 'MATCHING_INFO'" />
   </v-container>
 </template>
 
@@ -23,32 +18,44 @@ import { mapGetters } from 'vuex';
 import { IpcMessageEvent, ipcRenderer } from 'electron';
 import { lcuData } from 'models';
 import { Component, Vue } from 'vue-property-decorator';
-import MatchCard from '../components/MatchCard.vue';
+import MatchingInfo from '../components/MatchingInfo/Index.vue';
 
 @Component({
   components: {
-    'match-card': MatchCard,
+    'matching-info': MatchingInfo,
   },
 })
 export default class Home extends Vue {
+  toMatchingInfo() {
+    this.$store.commit('connection/setStatus', 'MATCHING_INFO')
+  }
   mounted(): void {
-    ipcRenderer.on('lcu-connect', (event: IpcMessageEvent, lcuData: lcuData) => {
+    this.$store.dispatch('lolstatic/fetchChampions')
+    this.$store.dispatch('lolstatic/fetchSpells')
+    this.$store.dispatch('lolstatic/fetchItems')
+    ipcRenderer.on('lcu-connect', async (event: IpcMessageEvent, lcuData: lcuData) => {
       this.$store.commit('connection/setLcuData', lcuData)
-      this.$store.commit('connection/setStatus', 1)
+      this.$store.commit('connection/setStatus', 'LOGIN_COMPLETE')
+      await this.$store.dispatch('connection/loadLcuSummoner', lcuData)
+      if (this.status === 'LOGIN_COMPLETE') {
+        await this.$store.dispatch('connection/updateSummoner', this.lcuSummoner.displayName)
+        // await this.$store.dispatch('match/updateMatches', this.summoner.accountId)
+      }
     })
     ipcRenderer.on('lcu-disconnect', () => {
       this.$store.dispatch('connection/initializeState')
       this.$store.dispatch('match/initializeState')
     })
     ipcRenderer.on('lcu-api-message', async (event: IpcMessageEvent, data: any) => {
-      if (this.status !== 2 &&
+      window.console.log(data)
+      if (this.status !== 'LOGIN_COMPLETE' &&
         data.uri === '/lol-summoner/v1/current-summoner' &&
         data.data.displayName
       ) {
-        await this.$store.commit('connection/setStatus', 2)
+        await this.$store.commit('connection/setStatus', 'LOGIN_COMPLETE')
         await this.$store.commit('connection/setLcuSummoner', data.data)
         await this.$store.dispatch('connection/updateSummoner', this.lcuSummoner.displayName)
-        await this.$store.dispatch('match/updateMatches', this.summoner.accountId)
+        // await this.$store.dispatch('match/updateMatches', this.summoner.accountId)
       }
     })
   }

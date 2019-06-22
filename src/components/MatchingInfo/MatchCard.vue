@@ -1,7 +1,7 @@
 <template>
-  <v-layout>
-    {{match.gameId}}
-  </v-layout>
+  <v-card height="100%">
+    GameId: {{match.gameId}}
+  </v-card>
 </template>
 
 <script lang="ts">

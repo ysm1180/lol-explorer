@@ -28,6 +28,7 @@ export class AppWindow {
       webPreferences: {
         disableBlinkFeatures: 'Auxclick',
         nodeIntegration: true,
+        webSecurity: false,
       },
     };
 
