@@ -45,17 +45,17 @@ app.on('activate', () => {
 
 let lcuData;
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installVueDevtools()
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
-  if (isDuplicateInstance) {
-    return;
-  }
+  // if (isDevelopment && !process.env.IS_TEST) {
+  //   // Install Vue Devtools
+  //   try {
+  //     await installVueDevtools()
+  //   } catch (e) {
+  //     console.error('Vue Devtools failed to install:', e.toString())
+  //   }
+  // }
+  // if (isDuplicateInstance) {
+  //   return;
+  // }
 
   mainWindow = createWindow();
 
