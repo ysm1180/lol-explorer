@@ -7,18 +7,21 @@
           </div>
         </v-layout>
       </v-flex>
-      <v-flex xs9 pa-4>
+      <v-flex xs9 pa-3>
         <v-layout fill-height column align-baseline>
-          <v-flex xs5>
+          <v-flex xs3 style="width:100%" text-xs-left>
             <span class="headline font-weight-bold mr-2">{{summoner.name}}</span>
             <span class="cyan--text">(level. {{summoner.summonerLevel}})</span>
           </v-flex>
-          <v-flex xs2>
-            <span class="purple--text font-weight-bold mr-1">{{summoner.seasons[0].tier}}</span>
-            <span class="purple--text font-weight-bold">{{summoner.seasons[0].rank}}</span>
-          </v-flex>
-          <v-flex xs2>
-            <span class="font-weight-bold">{{summoner.seasons[0].leaguePoints}}LP</span>
+          <v-flex xs9 style="width:100%">
+            <v-layout fill-height row style="max-height:130px;">
+              <v-flex xs5 mr-3>
+                <tier-card :season="solo" queueType="solo" />
+              </v-flex>
+              <v-flex xs5 ml-3>
+                <tier-card :season="free" queueType="free" />
+              </v-flex>
+            </v-layout>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -29,15 +32,26 @@
 <script lang="ts">
 import { mapGetters, mapActions } from 'vuex';
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import TierCard from './TierCard.vue';
 
 @Component({
   components: {
+    'tier-card': TierCard,
   },
 })
 export default class SummonerInfoCard extends Vue {
   @Prop() summoner: any
+  solo = null
+  free = null
 
   mounted() {
+    this.summoner.seasons.forEach((season: any) => {
+      if (season.queueType === 'RANKED_SOLO_5x5') {
+        this.solo = season
+      } else if (season.queueType === 'RANKED_FLEX_SR') {
+        this.free = season
+      }
+    })
   }
 }
 </script>

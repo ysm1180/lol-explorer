@@ -50,7 +50,7 @@ export default class Index extends Vue {
 <style scoped>
 #summoner-info {
   width: 70%;
-  min-height: 150px;
+  min-height: 200px;
 }
 #match-info {
   width: 70%;
