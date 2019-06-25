@@ -33,6 +33,7 @@ export default class Home extends Vue {
     this.$store.dispatch('lolstatic/fetchChampions')
     this.$store.dispatch('lolstatic/fetchSpells')
     this.$store.dispatch('lolstatic/fetchItems')
+    this.$store.dispatch('lolstatic/fetchPerks')
     ipcRenderer.on('lcu-connect', async (event: IpcMessageEvent, lcuData: lcuData) => {
       this.$store.commit('connection/setLcuData', lcuData)
       this.$store.commit('connection/setStatus', 'WAITING_LOGIN')

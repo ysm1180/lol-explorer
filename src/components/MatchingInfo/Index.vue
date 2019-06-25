@@ -1,11 +1,11 @@
 <template>
   <v-layout fill-height column align-center>
-    <v-flex id="summoner-info" ma-5>
+    <v-flex id="summoner-info" ma-5 style="max-width:750px;min-width:600px;">
       <summoner-info-card
         :summoner="summoner"
       />
     </v-flex>
-    <v-flex id="match-info">
+    <v-flex id="match-info" style="max-width:750px;min-width:600px;">
       <v-layout column fill-height>
         <v-flex
           v-for="(match, key) in matches"
@@ -50,13 +50,13 @@ export default class Index extends Vue {
 <style scoped>
 #summoner-info {
   width: 70%;
-  min-height: 200px;
+  min-height: 150px;
 }
 #match-info {
   width: 70%;
 }
 .match-card-wrap {
   width: 100%;
-  height: 150px;
+  height: 120px;
 }
 </style>

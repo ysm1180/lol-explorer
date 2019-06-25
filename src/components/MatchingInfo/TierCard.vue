@@ -35,7 +35,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 })
 export default class TierCard extends Vue {
   @Prop() season: any
-  @Prop() queueType: string
+  @Prop() queueType!: string
 
   mounted() {
   }

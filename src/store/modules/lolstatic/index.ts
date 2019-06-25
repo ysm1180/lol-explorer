@@ -8,6 +8,7 @@ export default class Lolstatic extends VuexModule {
   champions: Array<any> = []
   spells: Array<any> = []
   items: Array<any> = []
+  perks: Array<any> = []
 
   @MutationAction({ mutate: ['champions', 'spells', 'items'] })
   async initializeState() {
@@ -27,5 +28,10 @@ export default class Lolstatic extends VuexModule {
   async fetchItems() {
     const response = await axios.get(`${ENDPOINT}/static/item/all`)
     return { items: response.data }
+  }
+  @MutationAction({ mutate: ['perks'] })
+  async fetchPerks() {
+    const response = await axios.get(`${ENDPOINT}/static/perk/all`)
+    return { perks: response.data }
   }
 }

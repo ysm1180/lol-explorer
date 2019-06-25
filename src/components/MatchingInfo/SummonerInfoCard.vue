@@ -7,7 +7,7 @@
           </div>
         </v-layout>
       </v-flex>
-      <v-flex xs9 pa-3>
+      <v-flex xs9 pa-2>
         <v-layout fill-height column align-baseline>
           <v-flex xs3 style="width:100%" text-xs-left>
             <span class="headline font-weight-bold mr-2">{{summoner.name}}</span>
