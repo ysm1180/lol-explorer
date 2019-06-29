@@ -13,7 +13,7 @@
           </v-flex>
           <v-flex class="participant-row-area2" fill-height>
             <v-layout fill-height align-center>
-              <span class="font-size-small">{{participant.player.summonerName}}</span>
+              <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
             </v-layout>
           </v-flex>
           <v-flex class="participant-row-area3" fill-height>
@@ -75,7 +75,7 @@
           </v-flex>
           <v-flex class="participant-row-area2" fill-height>
             <v-layout fill-height align-center>
-              <span class="font-size-small">{{participant.player.summonerName}}</span>
+              <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
             </v-layout>
           </v-flex>
           <v-flex class="participant-row-area3" fill-height>
@@ -171,6 +171,10 @@ export default class MatchDetail extends Vue {
     }
   }
 
+  toMatch(name: string) {
+    location.href = `/match/${name}`
+  }
+
   mounted() {
   }
 }
@@ -181,6 +185,9 @@ export default class MatchDetail extends Vue {
 }
 .font-size-small {
   font-size: 10px;
+}
+.pointer {
+  cursor: pointer;
 }
 .participant-row-area1 {
   max-width: 30px;

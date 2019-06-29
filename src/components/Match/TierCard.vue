@@ -2,7 +2,7 @@
   <v-card height="100%" flat class="tier-card">
     <v-layout fill-height justify-start v-if="season !== null">
       <v-flex mr-3>
-        <v-img :src="`assets/emblems/${season.tier}.png`" style="width:100px; height:100px;"/>
+        <v-img :src="`/assets/emblems/${season.tier}.png`" style="width:100px; height:100px;"/>
       </v-flex>
       <v-flex align-self-center>
         <v-layout fill-height column justify-center>

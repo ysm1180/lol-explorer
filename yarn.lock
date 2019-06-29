@@ -1676,6 +1676,11 @@ async-limiter@^1.0.0, async-limiter@~1.0.0:
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
   integrity sha512-jp/uFnooOiO+L211eZOoSyzpOITMXx1rBITauYykG3BRYPu8h0UcxsPNB04RR5vo4Tyz3+ay17tR6JVf9qzYWg==
 
+async@0.1.x:
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/async/-/async-0.1.22.tgz#0fc1aaa088a0e3ef0ebe2d8831bab0dcf8845061"
+  integrity sha1-D8GqoIig4+8Ovi2IMbqw3PiEUGE=
+
 async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
@@ -2494,6 +2499,11 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
+coffee-script@1.4.x:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/coffee-script/-/coffee-script-1.4.0.tgz#5e3bc8aac26c01a8e27bf107722c5655f5ad7d36"
+  integrity sha1-XjvIqsJsAajie/EHcixWVfWtfTY=
+
 collection-visit@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/collection-visit/-/collection-visit-1.0.0.tgz#4bc0373c164bc3291b4d368c829cf1a80a59dca0"
@@ -2540,12 +2550,24 @@ color@^3.0.0:
     color-convert "^1.9.1"
     color-string "^1.5.2"
 
+colors@0.x.x:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/colors/-/colors-0.6.2.tgz#2423fe6678ac0c5dae8852e5d0e5be08c997abcc"
+  integrity sha1-JCP+ZnisDF2uiFLl0OW+CMmXq8w=
+
 combined-stream@^1.0.6, combined-stream@~1.0.6:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+commander@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-1.1.1.tgz#50d1651868ae60eccff0a2d9f34595376bc6b041"
+  integrity sha1-UNFlGGiuYOzP8KLZ80WVN2vGsEE=
+  dependencies:
+    keypress "0.1.x"
 
 commander@2.17.x:
   version "2.17.1"
@@ -3123,7 +3145,7 @@ decompress-response@^3.3.0:
   dependencies:
     mimic-response "^1.0.0"
 
-deep-equal@^1.0.1:
+deep-equal@*, deep-equal@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
   integrity sha1-9dJgKStmDghO/0zbyfCK0yR0SLU=
@@ -4099,6 +4121,11 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
+fresh@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.1.0.tgz#03e4b0178424e4c2d5d19a54d8814cdc97934850"
+  integrity sha1-A+SwF4Qk5MLV0ZpU2IFM3JeTSFA=
+
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
@@ -4663,6 +4690,16 @@ http-proxy-middleware@^0.19.1:
     lodash "^4.17.11"
     micromatch "^3.1.10"
 
+http-proxy@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/http-proxy/-/http-proxy-0.10.0.tgz#a20b718d05ec40427ae61644dabdcc427ba62508"
+  integrity sha1-ogtxjQXsQEJ65hZE2r3MQnumJQg=
+  dependencies:
+    colors "0.x.x"
+    optimist "0.3.x"
+    pkginfo "0.2.x"
+    utile "~0.1.7"
+
 http-proxy@^1.17.0:
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/http-proxy/-/http-proxy-1.17.0.tgz#7ad38494658f84605e2f6db4436df410f4e5be9a"
@@ -4685,6 +4722,11 @@ https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
   integrity sha1-7AbBDgo0wPL68Zn3/X/Hj//QPHM=
+
+i@0.3.x:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/i/-/i-0.3.6.tgz#d96c92732076f072711b6b10fd7d4f65ad8ee23d"
+  integrity sha1-2WyScyB28HJxG2sQ/X1PZa2O4j0=
 
 iconv-lite@0.4.24, iconv-lite@^0.4.17, iconv-lite@^0.4.24, iconv-lite@^0.4.4:
   version "0.4.24"
@@ -5360,6 +5402,11 @@ keyboardevents-areequal@^0.2.1:
   resolved "https://registry.yarnpkg.com/keyboardevents-areequal/-/keyboardevents-areequal-0.2.2.tgz#88191ec738ce9f7591c25e9056de928b40277194"
   integrity sha512-Nv+Kr33T0mEjxR500q+I6IWisOQ0lK1GGOncV0kWE6n4KFmpcu7RUX5/2B0EUtX51Cb0HjZ9VJsSY3u4cBa0kw==
 
+keypress@0.1.x:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/keypress/-/keypress-0.1.0.tgz#4a3188d4291b66b4f65edb99f806aa9ae293592a"
+  integrity sha1-SjGI1CkbZrT2XtuZ+AaqmuKTWSo=
+
 keyv@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-3.1.0.tgz#ecc228486f69991e49e9476485a5be1e8fc5c4d9"
@@ -5770,6 +5817,11 @@ mime-types@^2.1.12, mime-types@~2.1.17, mime-types@~2.1.19, mime-types@~2.1.24:
   dependencies:
     mime-db "1.40.0"
 
+mime@1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-1.2.6.tgz#b1f86c768c025fa87b48075f1709f28aeaf20365"
+  integrity sha1-sfhsdowCX6h7SAdfFwnyiuryA2U=
+
 mime@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
@@ -5892,7 +5944,7 @@ mixin-deep@^1.2.0:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
 
-mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
+mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@0.x.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
@@ -5974,6 +6026,11 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+ncp@0.2.x:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/ncp/-/ncp-0.2.7.tgz#46fac2b7dda2560a4cb7e628677bd5f64eac5be1"
+  integrity sha1-RvrCt92iVgpMt+YoZ3vV9k6sW+E=
 
 needle@^2.2.1:
   version "2.4.0"
@@ -6317,6 +6374,13 @@ opn@^5.5.0:
   dependencies:
     is-wsl "^1.1.0"
 
+optimist@0.3.x:
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/optimist/-/optimist-0.3.7.tgz#c90941ad59e4273328923074d2cf2e7cbc6ec0d9"
+  integrity sha1-yQlBrVnkJzMokjB00s8ufLxuwNk=
+  dependencies:
+    wordwrap "~0.0.2"
+
 optimist@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/optimist/-/optimist-0.6.1.tgz#da3ea74686fa21a19a111c326e90eb15a0196686"
@@ -6657,6 +6721,11 @@ pkg-up@^2.0.0:
   integrity sha1-yBmscoBZpGHKscOImivjxJoATX8=
   dependencies:
     find-up "^2.1.0"
+
+pkginfo@0.2.x:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.2.3.tgz#7239c42a5ef6c30b8f328439d9b9ff71042490f8"
+  integrity sha1-cjnEKl72wwuPMoQ52bn/cQQkkPg=
 
 plist@^3.0.1:
   version "3.0.1"
@@ -7202,6 +7271,11 @@ randomfill@^1.0.3:
     randombytes "^2.0.5"
     safe-buffer "^5.1.0"
 
+range-parser@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-0.0.4.tgz#c0427ffef51c10acba0782a46c9602e744ff620b"
+  integrity sha1-wEJ//vUcEKy6B4KkbJYC50T/Ygs=
+
 range-parser@^1.2.1, range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
@@ -7425,6 +7499,17 @@ relateurl@0.2.x:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
+remote@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/remote/-/remote-0.2.6.tgz#96842b427bb19d404793867cce402cee42dcd364"
+  integrity sha1-loQrQnuxnUBHk4Z8zkAs7kLc02Q=
+  dependencies:
+    coffee-script "1.4.x"
+    commander "1.1.1"
+    http-proxy "0.10.0"
+    send "0.1.0"
+    underscore "1.4.x"
+
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
@@ -7589,6 +7674,11 @@ rgba-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/rgba-regex/-/rgba-regex-1.0.0.tgz#43374e2e2ca0968b0ef1523460b7d730ff22eeb3"
   integrity sha1-QzdOLiyglosO8VI0YLfXMP8i7rM=
 
+rimraf@1.x.x:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-1.0.9.tgz#be4801ff76c2ba6f1c50c78e9700eb1d21f239f1"
+  integrity sha1-vkgB/3bCum8cUMeOlwDrHSHyOfE=
+
 rimraf@^2.5.2, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@^2.6.3:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.3.tgz#b2d104fe0d8fb27cf9e0a1cda8262dd3833c6cab"
@@ -7709,6 +7799,16 @@ semver@^6.0.0, semver@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.1.1.tgz#53f53da9b30b2103cd4f15eab3a18ecbcb210c9b"
   integrity sha512-rWYq2e5iYW+fFe/oPPtYJxYgjBm8sC4rmoGdUOgBB7VnwKt6HrL793l2voH1UlsyYZpJ4g0wfjnTEO1s1NP2eQ==
+
+send@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/send/-/send-0.1.0.tgz#cfb08ebd3cec9b7fc1a37d9ff9e875a971cf4640"
+  integrity sha1-z7COvTzsm3/Bo32f+eh1qXHPRkA=
+  dependencies:
+    debug "*"
+    fresh "0.1.0"
+    mime "1.2.6"
+    range-parser "0.0.4"
 
 send@0.17.1:
   version "0.17.1"
@@ -8709,6 +8809,11 @@ uglify-js@3.4.x:
     commander "~2.19.0"
     source-map "~0.6.1"
 
+underscore@1.4.x:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.4.4.tgz#61a6a32010622afa07963bf325203cf12239d604"
+  integrity sha1-YaajIBBiKvoHljvzJSA88SI51gQ=
+
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-1.0.4.tgz#2619800c4c825800efdd8343af7dd9933cbe2818"
@@ -8918,6 +9023,18 @@ utila@^0.4.0, utila@~0.4:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/utila/-/utila-0.4.0.tgz#8a16a05d445657a3aea5eecc5b12a4fa5379772c"
   integrity sha1-ihagXURWV6Oupe7MWxKk+lN5dyw=
+
+utile@~0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/utile/-/utile-0.1.7.tgz#55db180d54475339fd6dd9e2d14a4c0b52624b69"
+  integrity sha1-VdsYDVRHUzn9bdni0UpMC1JiS2k=
+  dependencies:
+    async "0.1.x"
+    deep-equal "*"
+    i "0.3.x"
+    mkdirp "0.x.x"
+    ncp "0.2.x"
+    rimraf "1.x.x"
 
 utils-merge@1.0.1:
   version "1.0.1"

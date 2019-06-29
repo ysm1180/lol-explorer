@@ -25,6 +25,7 @@
     "event-kit": "^2.5.3",
     "file-url": "^3.0.0",
     "lcu-connector": "^2.1.2",
+    "remote": "^0.2.6",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
