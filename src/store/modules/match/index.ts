@@ -17,8 +17,14 @@ export default class Match extends VuexModule {
     return { matches: [] }
   }
   @MutationAction({ mutate: ['matches'] })
-  async updateMatches(accountId: any) {
-    const response = await axios.get(`${ENDPOINT}/summoner/matches/${accountId}/1/10`)
-    return { matches: response.data }
+  async updateMatches({ accountId, page }: any) {
+    const start = page * 10 + 1
+    const response = await axios.get(`${ENDPOINT}/summoner/matches/${accountId}/${start}/10`)
+    if (page === 0) {
+      return { matches: response.data }
+    } else {
+      const state: any = this.state
+      return { matches: state.matches.concat(response.data) }
+    }
   }
 }

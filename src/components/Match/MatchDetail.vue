@@ -1,129 +1,133 @@
 <template>
   <v-card flat>
     <v-layout column>
-      <v-flex text-xs-left pa-2>블루팀</v-flex>
-      <v-flex v-for="(participant, key) in gameInfo.teams['100'].participants" v-bind:key="key" class="participant-row">
-        <v-layout fill-height justify-space-between>
-          <v-flex class="participant-row-area1" fill-height>
-            <v-layout fill-height align-center>
-              <v-img class="champion-icon" :src="champions[participant.championId].iconUrl" style="position:relative">
-                <span class="white--text font-size-very-small" style="position:absolute;right:0;bottom:0;">{{participant.stats.champLevel}}</span>
-              </v-img>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area2" fill-height>
-            <v-layout fill-height align-center>
-              <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area3" fill-height>
-            <v-layout fill-height align-center>
-              <span class="font-size-small">티어</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area4" fill-height>
-            <v-layout column fill-height justify-center>
-              <span class="font-size-small font-weight-bold">평점 {{((participant.stats.kills + participant.stats.assists) / participant.stats.deaths).toFixed(2)}}</span>
-              <span class="font-size-small">{{participant.stats.kills}} / {{participant.stats.deaths}} / {{participant.stats.assists}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area5" fill-height>
-            <v-layout column fill-height justify-center>
-              <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned}}</span>
-              <span class="font-size-small">CS {{participant.stats.totalMinionsKilled}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area6" fill-height>
-            <v-layout column fill-height justify-center>
-              <span class="font-size-small">피해량 </span>
-              <span class="font-size-small">{{participant.stats.totalDamageDealtToChampions}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area7" fill-height>
-            <v-layout fill-height column justify-center>
-              <div>
-                <v-layout>
-                  <v-img :src="spells[participant.spells[0]].iconUrl" class="spell-icon" />
-                  <v-img :src="spells[participant.spells[1]].iconUrl" class="spell-icon" />
-                </v-layout>
-              </div>
-              <div>
-                <v-layout>
-                  <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 1)}`" class="perk-icon" />
-                  <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 2)}`" class="perk-icon" />
-                </v-layout>
-              </div>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area8" fill-height>
-            <v-layout fill-height align-center>
-              <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon" />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-flex>
+      <v-layout column lighten-5 :class="gameInfo.teams['100'].isWin?'blue':'red'">
+        <v-flex text-xs-left pa-2 :class="gameInfo.teams['100'].isWin?'blue--text':'red--text'">블루팀({{gameInfo.teams['100'].isWin?'승리':'패배'}})</v-flex>
+        <v-flex v-for="(participant, key) in gameInfo.teams['100'].participants" v-bind:key="key" class="participant-row">
+          <v-layout fill-height justify-space-between>
+            <v-flex class="participant-row-area1" fill-height>
+              <v-layout fill-height align-center>
+                <v-img class="champion-icon" :src="champions[participant.championId].iconUrl" style="position:relative">
+                  <span class="white--text font-size-very-small" style="position:absolute;right:0;bottom:0;">{{participant.stats.champLevel}}</span>
+                </v-img>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area2" fill-height>
+              <v-layout fill-height align-center>
+                <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area3" fill-height>
+              <v-layout fill-height align-center>
+                <span class="font-size-small">티어</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area4" fill-height>
+              <v-layout column fill-height justify-center>
+                <span class="font-size-small font-weight-bold">평점 {{((participant.stats.kills + participant.stats.assists) / participant.stats.deaths).toFixed(2)}}</span>
+                <span class="font-size-small">{{participant.stats.kills}} / {{participant.stats.deaths}} / {{participant.stats.assists}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area5" fill-height>
+              <v-layout column fill-height justify-center>
+                <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned}}</span>
+                <span class="font-size-small">CS {{participant.stats.totalMinionsKilled}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area6" fill-height>
+              <v-layout column fill-height justify-center>
+                <span class="font-size-small">피해량 </span>
+                <span class="font-size-small">{{participant.stats.totalDamageDealtToChampions}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area7" fill-height>
+              <v-layout fill-height column justify-center>
+                <div>
+                  <v-layout>
+                    <v-img :src="spells[participant.spells[0]].iconUrl" class="spell-icon" />
+                    <v-img :src="spells[participant.spells[1]].iconUrl" class="spell-icon" />
+                  </v-layout>
+                </div>
+                <div>
+                  <v-layout>
+                    <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 1)}`" class="perk-icon" />
+                    <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 2)}`" class="perk-icon" />
+                  </v-layout>
+                </div>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area8" fill-height>
+              <v-layout fill-height align-center>
+                <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon" />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
 
-      <v-flex text-xs-left pa-2>레드팀</v-flex>
-      <v-flex v-for="(participant, key) in gameInfo.teams['200'].participants" v-bind:key="key" class="participant-row">
-        <v-layout fill-height justify-space-between>
-          <v-flex class="participant-row-area1" fill-height>
-            <v-layout fill-height align-center>
-              <v-img class="champion-icon" :src="champions[participant.championId].iconUrl" style="position:relative">
-                <span class="white--text font-size-very-small" style="position:absolute;right:0;bottom:0;">{{participant.stats.champLevel}}</span>
-              </v-img>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area2" fill-height>
-            <v-layout fill-height align-center>
-              <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area3" fill-height>
-            <v-layout fill-height align-center>
-              <span class="font-size-small">티어</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area4" fill-height>
-            <v-layout column fill-height justify-center>
-              <span class="font-size-small font-weight-bold">평점 {{((participant.stats.kills + participant.stats.assists) / participant.stats.deaths).toFixed(2)}}</span>
-              <span class="font-size-small">{{participant.stats.kills}} / {{participant.stats.deaths}} / {{participant.stats.assists}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area5" fill-height>
-            <v-layout column fill-height justify-center>
-              <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned}}</span>
-              <span class="font-size-small">CS {{participant.stats.totalMinionsKilled}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area6" fill-height>
-            <v-layout column fill-height justify-center>
-              <span class="font-size-small">피해량 </span>
-              <span class="font-size-small">{{participant.stats.totalDamageDealtToChampions}}</span>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area7" fill-height>
-            <v-layout fill-height column justify-center>
-              <div>
-                <v-layout>
-                  <v-img :src="spells[participant.spells[0]].iconUrl" class="spell-icon" />
-                  <v-img :src="spells[participant.spells[1]].iconUrl" class="spell-icon" />
-                </v-layout>
-              </div>
-              <div>
-                <v-layout>
-                  <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 1)}`" class="perk-icon" />
-                  <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 2)}`" class="perk-icon" />
-                </v-layout>
-              </div>
-            </v-layout>
-          </v-flex>
-          <v-flex class="participant-row-area8" fill-height>
-            <v-layout fill-height align-center>
-              <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon" />
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-flex>
+      <v-layout column red lighten-5 :class="gameInfo.teams['200'].isWin?'blue':'red'">
+        <v-flex text-xs-left pa-2 :class="gameInfo.teams['200'].isWin?'blue--text':'red--text'">레드팀({{gameInfo.teams['200'].isWin?'승리':'패배'}})</v-flex>
+        <v-flex v-for="(participant, key) in gameInfo.teams['200'].participants" v-bind:key="key" class="participant-row">
+          <v-layout fill-height justify-space-between>
+            <v-flex class="participant-row-area1" fill-height>
+              <v-layout fill-height align-center>
+                <v-img class="champion-icon" :src="champions[participant.championId].iconUrl" style="position:relative">
+                  <span class="white--text font-size-very-small" style="position:absolute;right:0;bottom:0;">{{participant.stats.champLevel}}</span>
+                </v-img>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area2" fill-height>
+              <v-layout fill-height align-center>
+                <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area3" fill-height>
+              <v-layout fill-height align-center>
+                <span class="font-size-small">티어</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area4" fill-height>
+              <v-layout column fill-height justify-center>
+                <span class="font-size-small font-weight-bold">평점 {{((participant.stats.kills + participant.stats.assists) / participant.stats.deaths).toFixed(2)}}</span>
+                <span class="font-size-small">{{participant.stats.kills}} / {{participant.stats.deaths}} / {{participant.stats.assists}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area5" fill-height>
+              <v-layout column fill-height justify-center>
+                <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned}}</span>
+                <span class="font-size-small">CS {{participant.stats.totalMinionsKilled}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area6" fill-height>
+              <v-layout column fill-height justify-center>
+                <span class="font-size-small">피해량 </span>
+                <span class="font-size-small">{{participant.stats.totalDamageDealtToChampions}}</span>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area7" fill-height>
+              <v-layout fill-height column justify-center>
+                <div>
+                  <v-layout>
+                    <v-img :src="spells[participant.spells[0]].iconUrl" class="spell-icon" />
+                    <v-img :src="spells[participant.spells[1]].iconUrl" class="spell-icon" />
+                  </v-layout>
+                </div>
+                <div>
+                  <v-layout>
+                    <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 1)}`" class="perk-icon" />
+                    <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 2)}`" class="perk-icon" />
+                  </v-layout>
+                </div>
+              </v-layout>
+            </v-flex>
+            <v-flex class="participant-row-area8" fill-height>
+              <v-layout fill-height align-center>
+                <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon" />
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
     </v-layout>
   </v-card>
 </template>

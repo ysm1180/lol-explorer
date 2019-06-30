@@ -52,12 +52,13 @@ const ENDPOINT = 'http://localhost:3000'
 export default class Index extends Vue {
   @Prop() name!: string
   summoner: any = null
-
+  page: number = 0
   toggleArray: Array<number> = []
+
   async mounted() {
     const response = await axios.get(`${ENDPOINT}/summoner/${this.name}`)
     this.summoner = response.data
-    await this.$store.dispatch('match/updateMatches', this.summoner.accountId)
+    await this.$store.dispatch('match/updateMatches', { accountId: this.summoner.accountId, page: this.page })
     window.addEventListener('scroll', this.onScroll)
   }
   async destroyed() {
@@ -76,9 +77,10 @@ export default class Index extends Vue {
       this.toggleArray.push(index)
     }
   }
-  onScroll() {
+  async onScroll() {
     if (document.documentElement.scrollHeight == document.documentElement.scrollTop + window.innerHeight) {
-      console.log('bottom')
+      this.page += 1
+      await this.$store.dispatch('match/updateMatches', { accountId: this.summoner.accountId, page: this.page })
     }
   }
 }
