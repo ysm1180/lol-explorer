@@ -99,7 +99,7 @@ export default class Index extends Vue {
       this.summoner = response.data
       await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
     } catch (err) {
-      alert('잠시 후에 시도해주세요')
+      alert(`${err.response.data.seconds}초 후에 시도해주세요`)
     }
     this.renewing = false
   }
