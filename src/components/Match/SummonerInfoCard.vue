@@ -57,6 +57,8 @@ export default class SummonerInfoCard extends Vue {
 </script>
 <style scoped>
 .summoner-icon {
+  position: relative;
+  display: inline-block;
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -64,18 +66,18 @@ export default class SummonerInfoCard extends Vue {
 }
 .summoner-level {
   position: absolute;
-      top: 100%;
-      text-align: center;
-      width: 50px;
-      left: 50%;
-      margin-left: -25px;
-      margin-top: -15px;
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
-      border: 1px solid #3a3a3a;
-      border-radius: 5px;
-      background-color: #1b2838;
-      padding: 1px;
+  top: 100%;
+  text-align: center;
+  width: 50px;
+  left: 50%;
+  margin-left: -25px;
+  margin-top: -15px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  background-color: #1b2838;
+  padding: 1px;
 }
 </style>
