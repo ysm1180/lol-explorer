@@ -6,11 +6,7 @@ const ENDPOINT = 'http://localhost:3000'
 @Module({ namespaced: true, name: 'match' })
 export default class Match extends VuexModule {
   matches: Array<any> = []
-
-  @Mutation
-  setMatches (matches: Array<any>) {
-    this.matches = matches
-  }
+  champions: any = null
 
   @MutationAction({ mutate: ['matches'] })
   async initializeState() {
@@ -18,7 +14,7 @@ export default class Match extends VuexModule {
   }
   @MutationAction({ mutate: ['matches'] })
   async updateMatches({ accountId, page }: any) {
-    const start = page * 10
+    const start = page * 20
     const response = await axios.get(`${ENDPOINT}/summoner/matches/${accountId}/${start}/20`)
     if (page === 0) {
       return { matches: response.data }
@@ -26,5 +22,10 @@ export default class Match extends VuexModule {
       const state: any = this.state
       return { matches: state.matches.concat(response.data) }
     }
+  }
+  @MutationAction({ mutate: ['champions'] })
+  async fetchChampions({ seasonId, accountId }: any) {
+    const response = await axios.get(`${ENDPOINT}/summoner/champions/${seasonId}/${accountId}`)
+    return { champions: response.data }
   }
 }

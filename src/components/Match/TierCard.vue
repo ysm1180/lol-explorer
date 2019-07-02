@@ -13,7 +13,8 @@
             <span class="font-weight-bold">{{season.rank}}</span>
           </div>
           <span class="font-weight-bold my-1">{{season.leaguePoints}}LP</span>
-          <span class="font-weight-bold">{{(season.wins * 100 / (season.wins + season.losses)).toFixed(2)}}%</span>
+          <span class="font-weight-bold caption">{{season.wins}}승 {{season.losses}}패</span>
+          <span class="font-weight-bold catpion">({{(season.wins * 100 / (season.wins + season.losses)).toFixed(2)}}%)</span>
         </v-layout>
       </v-flex>
     </v-layout>

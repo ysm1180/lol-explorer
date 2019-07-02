@@ -22,7 +22,7 @@
       <v-flex class="matchinfo-area4">
         <v-layout fill-height column justify-center>
           <span class="font-size-small">레벨 {{requester.stats.champLevel}}</span>
-          <span class="font-size-small font-weight-bold">골드 {{requester.stats.goldEarned}}</span>
+          <span class="font-size-small font-weight-bold">골드 {{requester.stats.goldEarned | gold}}</span>
           <span class="font-size-small">CS {{requester.stats.totalMinionsKilled}}</span>
         </v-layout>
       </v-flex>
@@ -92,6 +92,11 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 @Component({
   components: {
   },
+  filters: {
+    gold(val: number) {
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+  }
 })
 export default class MatchCard extends Vue {
   @Prop() match: any
