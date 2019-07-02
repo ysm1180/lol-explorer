@@ -19,7 +19,7 @@ export default class Match extends VuexModule {
   @MutationAction({ mutate: ['matches'] })
   async updateMatches({ accountId, page }: any) {
     const start = page * 10 + 1
-    const response = await axios.get(`${ENDPOINT}/summoner/matches/${accountId}/${start}/10`)
+    const response = await axios.get(`${ENDPOINT}/summoner/matches/${accountId}/${start}/20`)
     if (page === 0) {
       return { matches: response.data }
     } else {

@@ -5,6 +5,13 @@
         v-if="summoner!==null"
         :summoner="summoner"
       />
+      <v-layout fill-height justify-center align-center>
+        <v-progress-circular
+          v-if="loadingSummoner"
+          indeterminate
+          color="grey"
+        />
+      </v-layout>
     </v-flex>
     <v-flex id="match-info" style="max-width:750px;min-width:600px;">
       <v-layout column fill-height>
@@ -26,6 +33,13 @@
               :match="match"
             />
           </div>
+        </v-flex>
+        <v-flex text-xs-center>
+          <v-progress-circular
+            v-if="loadingMatches"
+            indeterminate
+            color="grey"
+          />
         </v-flex>
       </v-layout>
     </v-flex>
@@ -50,15 +64,19 @@ const ENDPOINT = 'http://localhost:3000'
   },
 })
 export default class Index extends Vue {
-  @Prop() name!: string
+  @Prop() accountId!: string
   summoner: any = null
   page: number = 0
   toggleArray: Array<number> = []
+  loadingSummoner: boolean = true
+  loadingMatches: boolean = true
 
   async mounted() {
-    const response = await axios.get(`${ENDPOINT}/summoner/${this.name}`)
+    const response = await axios.get(`${ENDPOINT}/summoner/byAccount/${this.accountId}`)
     this.summoner = response.data
-    await this.$store.dispatch('match/updateMatches', { accountId: this.summoner.accountId, page: this.page })
+    this.loadingSummoner = false
+    await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
+    this.loadingMatches = false
     window.addEventListener('scroll', this.onScroll)
   }
   async destroyed() {
@@ -78,9 +96,11 @@ export default class Index extends Vue {
     }
   }
   async onScroll() {
-    if (document.documentElement.scrollHeight == document.documentElement.scrollTop + window.innerHeight) {
+    if (document.documentElement.scrollHeight == document.documentElement.scrollTop + window.innerHeight && !this.loadingMatches) {
+      this.loadingMatches = true
       this.page += 1
-      await this.$store.dispatch('match/updateMatches', { accountId: this.summoner.accountId, page: this.page })
+      await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
+      this.loadingMatches = false
     }
   }
 }

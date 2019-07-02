@@ -46,12 +46,12 @@
         <v-layout fill-height column justify-center>
           <div>
             <v-layout>
-              <v-img v-for="(item, index) in requester.items.slice(0,3)" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="requester-item-icon" />
+              <v-img v-for="(item, index) in requester.items.slice(0,3)" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="requester-item-icon grey lighten-2" />
             </v-layout>
           </div>
           <div>
             <v-layout>
-              <v-img v-for="(item, index) in requester.items.slice(3,7)" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="requester-item-icon" />
+              <v-img v-for="(item, index) in requester.items.slice(3,7)" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="requester-item-icon grey lighten-2" />
             </v-layout>
           </div>
         </v-layout>
