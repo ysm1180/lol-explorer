@@ -4,6 +4,7 @@
       <v-flex xs3>
         <v-layout fill-height align-center justify-center>
           <div class="summoner-icon" :style="`background-image:url(${summoner.iconUrl})`">
+            <span class="summoner-level">{{summoner.summonerLevel}}</span>
           </div>
         </v-layout>
       </v-flex>
@@ -11,7 +12,6 @@
         <v-layout fill-height column align-baseline>
           <v-flex xs3 style="width:100%" text-xs-left>
             <span class="headline font-weight-bold mr-2">{{summoner.name}}</span>
-            <span class="cyan--text">(level. {{summoner.summonerLevel}})</span>
           </v-flex>
           <v-flex xs9 style="width:100%">
             <v-layout fill-height row style="max-height:130px;">
@@ -61,5 +61,21 @@ export default class SummonerInfoCard extends Vue {
   height: 100px;
   border-radius: 50%;
   background-size: cover;
+}
+.summoner-level {
+  position: absolute;
+      top: 100%;
+      text-align: center;
+      width: 50px;
+      left: 50%;
+      margin-left: -25px;
+      margin-top: -15px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border: 1px solid #3a3a3a;
+      border-radius: 5px;
+      background-color: #1b2838;
+      padding: 1px;
 }
 </style>
