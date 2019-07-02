@@ -23,23 +23,6 @@
       <v-flex xs3>
         <tier-card :season="free" queueType="free" />
       </v-flex>
-      <!-- <v-flex xs9 pa-2>
-        <v-layout fill-height column align-baseline>
-          <v-flex xs3 style="width:100%" text-xs-left>
-            <span class="headline font-weight-bold mr-2">{{summoner.name}}</span>
-          </v-flex>
-          <v-flex xs9 style="width:100%">
-            <v-layout fill-height row style="max-height:130px;">
-              <v-flex xs5 mr-3>
-                <tier-card :season="solo" queueType="solo" />
-              </v-flex>
-              <v-flex xs5 ml-3>
-                <tier-card :season="free" queueType="free" />
-              </v-flex>
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-flex> -->
     </v-layout>
   </v-card>
 </template>
