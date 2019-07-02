@@ -3,7 +3,7 @@
     <span v-if="status === 'WAITING_CLIENT'" class="display-1 font-weight-bold">롤 클라이언트를 실행해주세요</span>
     <span v-if="status === 'WAITING_LOGIN'" class="display-1 font-weight-bold">로그인을 기다리는중...</span>
     <v-layout fill-height v-if="status === 'LOGIN_COMPLETE'" py-2 align-baseline>
-      <span class="display-1 font-weight-bold" style="cursor:pointer" @click="$router.push(`/match/${summoner.name}`)">전적확인</span>
+      <span class="display-1 font-weight-bold" style="cursor:pointer" @click="$router.push(`/match/${summoner.accountId}`)">전적확인</span>
     </v-layout>
   </v-layout>
 </template>

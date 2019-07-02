@@ -16,7 +16,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/Home.vue'),
     },
     {
-      path: '/match/:name',
+      path: '/match/:accountId',
       name: 'match',
       component: () => import('./views/Match.vue'),
       props: true,

@@ -2,7 +2,12 @@
   <v-card flat>
     <v-layout column>
       <v-layout column lighten-5 :class="gameInfo.teams['100'].isWin?'blue':'red'">
-        <v-flex text-xs-left pa-2 :class="gameInfo.teams['100'].isWin?'blue--text':'red--text'">블루팀({{gameInfo.teams['100'].isWin?'승리':'패배'}})</v-flex>
+        <v-flex text-xs-left pa-2>
+          <span class="mr-3" :class="gameInfo.teams['100'].isWin?'blue--text':'red--text'">블루팀({{gameInfo.teams['100'].isWin?'승리':'패배'}})</span>
+          <span class="font-weight-bold mr-4">{{gameInfo.teams['100'].totalKills}} / {{gameInfo.teams['100'].totalDeaths}} / {{gameInfo.teams['100'].totalAssists}}</span>
+          <span class="font-size-small mr-2">바론: {{gameInfo.teams['100'].baronKills}}</span>
+          <span class="font-size-small mr-4">용: {{gameInfo.teams['100'].dragonKills}}</span>
+        </v-flex>
         <v-flex v-for="(participant, key) in gameInfo.teams['100'].participants" v-bind:key="key" class="participant-row">
           <v-layout fill-height justify-space-between>
             <v-flex class="participant-row-area1" fill-height>
@@ -14,7 +19,7 @@
             </v-flex>
             <v-flex class="participant-row-area2" fill-height>
               <v-layout fill-height align-center>
-                <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
+                <span class="font-size-small pointer" @click="toMatch(participant.player.accountId)">{{participant.player.summonerName}}</span>
               </v-layout>
             </v-flex>
             <v-flex class="participant-row-area3" fill-height>
@@ -25,13 +30,13 @@
             <v-flex class="participant-row-area4" fill-height>
               <v-layout column fill-height justify-center>
                 <span class="font-size-small font-weight-bold">평점 {{((participant.stats.kills + participant.stats.assists) / participant.stats.deaths).toFixed(2)}}</span>
-                <span class="font-size-small">{{participant.stats.kills}} / {{participant.stats.deaths}} / {{participant.stats.assists}}</span>
+                <span class="font-size-small">{{participant.stats.kills}}/{{participant.stats.deaths}}/{{participant.stats.assists}} ({{((participant.stats.kills + participant.stats.assists) * 100 / gameInfo.teams['100'].totalKills).toFixed(2)}}%)</span>
               </v-layout>
             </v-flex>
             <v-flex class="participant-row-area5" fill-height>
               <v-layout column fill-height justify-center>
-                <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned}}</span>
-                <span class="font-size-small">CS {{participant.stats.totalMinionsKilled}}</span>
+                <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned | gold}}</span>
+                <span class="font-size-small">CS {{participant.stats.totalMinionsKilled + participant.stats.neutralMinionsKilled}}</span>
               </v-layout>
             </v-flex>
             <v-flex class="participant-row-area6" fill-height>
@@ -58,7 +63,7 @@
             </v-flex>
             <v-flex class="participant-row-area8" fill-height>
               <v-layout fill-height align-center>
-                <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon" />
+                <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon grey lighten-1" />
               </v-layout>
             </v-flex>
           </v-layout>
@@ -66,7 +71,12 @@
       </v-layout>
 
       <v-layout column red lighten-5 :class="gameInfo.teams['200'].isWin?'blue':'red'">
-        <v-flex text-xs-left pa-2 :class="gameInfo.teams['200'].isWin?'blue--text':'red--text'">레드팀({{gameInfo.teams['200'].isWin?'승리':'패배'}})</v-flex>
+        <v-flex text-xs-left pa-2>
+          <span class="mr-3" :class="gameInfo.teams['200'].isWin?'blue--text':'red--text'">레드팀({{gameInfo.teams['200'].isWin?'승리':'패배'}})</span>
+          <span class="font-weight-bold mr-4">{{gameInfo.teams['200'].totalKills}} / {{gameInfo.teams['200'].totalDeaths}} / {{gameInfo.teams['200'].totalAssists}}</span>
+          <span class="font-size-small mr-2">바론: {{gameInfo.teams['200'].baronKills}}</span>
+          <span class="font-size-small mr-4">용: {{gameInfo.teams['200'].dragonKills}}</span>
+        </v-flex>
         <v-flex v-for="(participant, key) in gameInfo.teams['200'].participants" v-bind:key="key" class="participant-row">
           <v-layout fill-height justify-space-between>
             <v-flex class="participant-row-area1" fill-height>
@@ -78,7 +88,7 @@
             </v-flex>
             <v-flex class="participant-row-area2" fill-height>
               <v-layout fill-height align-center>
-                <span class="font-size-small pointer" @click="toMatch(participant.player.summonerName)">{{participant.player.summonerName}}</span>
+                <span class="font-size-small pointer" @click="toMatch(participant.player.accountId)">{{participant.player.summonerName}}</span>
               </v-layout>
             </v-flex>
             <v-flex class="participant-row-area3" fill-height>
@@ -89,13 +99,13 @@
             <v-flex class="participant-row-area4" fill-height>
               <v-layout column fill-height justify-center>
                 <span class="font-size-small font-weight-bold">평점 {{((participant.stats.kills + participant.stats.assists) / participant.stats.deaths).toFixed(2)}}</span>
-                <span class="font-size-small">{{participant.stats.kills}} / {{participant.stats.deaths}} / {{participant.stats.assists}}</span>
+                <span class="font-size-small">{{participant.stats.kills}}/{{participant.stats.deaths}}/{{participant.stats.assists}} ({{((participant.stats.kills + participant.stats.assists) * 100 / gameInfo.teams['200'].totalKills).toFixed(2)}}%)</span>
               </v-layout>
             </v-flex>
             <v-flex class="participant-row-area5" fill-height>
               <v-layout column fill-height justify-center>
-                <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned}}</span>
-                <span class="font-size-small">CS {{participant.stats.totalMinionsKilled}}</span>
+                <span class="font-size-small font-weight-bold">골드 {{participant.stats.goldEarned | gold}}</span>
+                <span class="font-size-small">CS {{participant.stats.totalMinionsKilled + participant.stats.neutralMinionsKilled}}</span>
               </v-layout>
             </v-flex>
             <v-flex class="participant-row-area6" fill-height>
@@ -122,7 +132,7 @@
             </v-flex>
             <v-flex class="participant-row-area8" fill-height>
               <v-layout fill-height align-center>
-                <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon" />
+                <v-img v-for="(item, index) in participant.items" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="item-icon grey lighten-1" />
               </v-layout>
             </v-flex>
           </v-layout>
@@ -139,6 +149,11 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 @Component({
   components: {
   },
+  filters: {
+    gold(val: number) {
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+  }
 })
 export default class MatchDetail extends Vue {
   @Prop() match: any
@@ -175,8 +190,8 @@ export default class MatchDetail extends Vue {
     }
   }
 
-  toMatch(name: string) {
-    location.href = `/match/${name}`
+  toMatch(accountId: string) {
+    location.href = `/match/${accountId}`
   }
 
   mounted() {
@@ -203,7 +218,7 @@ export default class MatchDetail extends Vue {
   max-width: 40px;
 }
 .participant-row-area4 {
-  max-width: 60px;
+  max-width: 80px;
 }
 .participant-row-area5 {
   max-width: 60px;
@@ -225,6 +240,8 @@ export default class MatchDetail extends Vue {
   max-height: 25px;
 }
 .item-icon{
+  min-width: 20px;
+  min-height: 20px;
   max-width: 20px;
   max-height: 20px;
   margin-right: 1px;
