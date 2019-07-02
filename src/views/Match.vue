@@ -4,6 +4,8 @@
       <summoner-info-card
         v-if="summoner!==null"
         :summoner="summoner"
+        :renewing="renewing"
+        @renew="renew"
       />
       <v-layout fill-height justify-center align-center>
         <v-progress-circular
@@ -68,6 +70,7 @@ export default class Index extends Vue {
   summoner: any = null
   page: number = 0
   toggleArray: Array<number> = []
+  renewing: boolean = false
   loadingSummoner: boolean = true
   loadingMatches: boolean = true
 
@@ -87,6 +90,19 @@ export default class Index extends Vue {
     return this.$store.state.match.matches
   }
 
+  async renew() {
+    this.renewing = true
+    try {
+      await axios.post(`${ENDPOINT}/summoner/${this.summoner.name}`)
+      this.page = 0
+      const response = await axios.get(`${ENDPOINT}/summoner/byAccount/${this.accountId}`)
+      this.summoner = response.data
+      await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
+    } catch (err) {
+      alert('잠시 후에 시도해주세요')
+    }
+    this.renewing = false
+  }
   toggle(index: number) {
     if (this.toggleArray.includes(index)) {
       const idx = this.toggleArray.indexOf(index)
@@ -108,8 +124,8 @@ export default class Index extends Vue {
 <style scoped>
 #summoner-info {
   width: 70%;
-  min-height: 150px;
-  max-height: 150px;
+  min-height: 100px;
+  max-height: 100px;
 }
 #match-info {
   width: 70%;
