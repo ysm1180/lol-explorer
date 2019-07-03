@@ -1,20 +1,47 @@
 <template>
   <div id="app">
-    <top-bar />
+    <!-- topbar -->
+    <v-toolbar absolute id="top-bar" dark dense height=40 app>
+      <v-layout fill-height align-center>
+        <v-toolbar-side-icon @click="viewNav=!viewNav" />
+        <v-flex class="white--text fill-height arrow cursor-pointer" @click="$router.go(-1)">
+          <v-btn small icon><v-icon small>arrow_back_ios</v-icon></v-btn>
+        </v-flex>
+        <v-flex class="white--text fill-height arrow cursor-pointer" @click="$router.go(1)">
+          <v-btn small icon><v-icon small>arrow_forward_ios</v-icon></v-btn>
+        </v-flex>
+      </v-layout>
+    </v-toolbar>
+    <!-- nav-bar -->
+    <v-navigation-drawer
+      dark fixed
+      v-model="viewNav"
+      height="100%" width="200px"
+    >
+    <v-layout column fill-height pt-5>
+      <v-divider />
+      <v-flex class="menu" subheading cursor-pointer py-2
+        @click="$router.push(`/match/${summoner.accountId}`)"
+        :class="routerStartWith('/match')?'grey darken-2':''"
+      >
+        전적 확인
+      </v-flex>
+      <v-divider />
+    </v-layout>
+    </v-navigation-drawer>
     <router-view style="padding-top:50px;" />
   </div>
 </template>
 <script>
 import { IpcMessageEvent, ipcRenderer } from 'electron';
-import TopBar from '@/components/common/TopBar';
 
 export default {
   name: 'App',
   components: {
-    'top-bar': TopBar,
   },
   data () {
     return {
+      viewNav: true,
     }
   },
   computed: {
@@ -48,6 +75,7 @@ export default {
       await this.$store.dispatch('connection/loadLcuSummoner', lcuData)
       if (this.status === 'LOGIN_COMPLETE') {
         await this.$store.dispatch('connection/updateSummoner', this.lcuSummoner.displayName)
+        this.$router.push(`/match/${this.summoner.accountId}`)
       }
     })
     ipcRenderer.on('lcu-disconnect', () => {
@@ -64,11 +92,18 @@ export default {
         await this.$store.commit('connection/setStatus', 'LOGIN_COMPLETE')
         await this.$store.commit('connection/setLcuSummoner', data.data)
         await this.$store.dispatch('connection/updateSummoner', this.lcuSummoner.displayName)
+        this.$router.push(`/match/${this.summoner.accountId}`)
       }
     })
   },
   methods: {
-  }
+    routerStartWith(url) {
+      if (this.$router.currentRoute.path.indexOf(url) === 0) {
+        return true
+      }
+      return false
+    }
+  },
 }
 </script>
 
@@ -81,5 +116,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: white;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.menu {
+  max-height: 40px;
+}
+.cursor-pointer {
+  cursor: pointer;
+  width: 100%;
+}
+.arrow {
+  max-width: 50px;
 }
 </style>
