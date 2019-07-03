@@ -1,14 +1,17 @@
 <template>
   <div id="app">
-    <router-view/>
+    <top-bar />
+    <router-view style="padding-top:50px;" />
   </div>
 </template>
 <script>
 import { IpcMessageEvent, ipcRenderer } from 'electron';
+import TopBar from '@/components/common/TopBar';
 
 export default {
   name: 'App',
   components: {
+    'top-bar': TopBar,
   },
   data () {
     return {
