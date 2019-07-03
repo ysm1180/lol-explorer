@@ -1,5 +1,5 @@
 <template>
-  <v-layout fill-height column align-center>
+  <v-layout fill-height column align-center id="match-page" @scroll="onScroll">
     <v-flex id="summoner-info" ma-5>
       <summoner-info-card
         v-if="summoner!==null"
@@ -98,10 +98,6 @@ export default class Index extends Vue {
     this.loadingMatches = false
     await this.$store.dispatch('match/fetchChampions', { seasonId: 13, accountId: this.accountId })
     this.loadingChampion = false
-    window.addEventListener('scroll', this.onScroll)
-  }
-  async destroyed() {
-    window.removeEventListener('scroll', this.onScroll);
   }
 
   get matches () {
@@ -133,8 +129,9 @@ export default class Index extends Vue {
       this.toggleArray.push(index)
     }
   }
-  async onScroll() {
-    if (document.documentElement.scrollHeight == document.documentElement.scrollTop + window.innerHeight && !this.loadingMatches) {
+  async onScroll({ target } : any) {
+    const { scrollTop, clientHeight, scrollHeight } = target
+    if (scrollTop + clientHeight >= scrollHeight) {
       this.loadingMatches = true
       this.page += 1
       await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
@@ -144,6 +141,9 @@ export default class Index extends Vue {
 }
 </script>
 <style scoped>
+#match-page {
+  overflow-y: auto;
+}
 #summoner-info {
   width: 70%;
   min-height: 100px;
