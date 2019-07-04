@@ -18,18 +18,18 @@ export class RiotWSProtocol {
   private ws: WebSocket | null = null;
   private listeners: { [key: string]: (...args: any[]) => void } = {};
 
-  constructor(private url: string) {
-  }
+  constructor(private url: string) {}
 
   private registerListeners() {
-    log.info('register listener');
     if (this.ws) {
-      for (var event in this.listeners) {
-        this.ws.on(event, this.listeners[event]);
+      for (const event in this.listeners) {
+        if (this.listeners.hasOwnProperty(event)) {
+          this.ws.on(event, this.listeners[event]);
+        }
       }
 
       this.on('open', () => {
-        log.info('[RiotWSProtocol] Connected.');
+        log.info(`[RiotWSProtocol] ${this.url} Connected.`);
         this.retryCount = 0;
       });
 
@@ -127,8 +127,10 @@ export class RiotWSProtocol {
 
   public dispose() {
     if (this.ws) {
-      for (var event in this.listeners) {
-        this.ws.removeListener(event, this.listeners[event]);
+      for (const event in this.listeners) {
+        if (this.listeners.hasOwnProperty(event)) {
+          this.ws.removeListener(event, this.listeners[event]);
+        }
       }
     }
 

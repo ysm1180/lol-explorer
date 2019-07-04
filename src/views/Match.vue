@@ -8,53 +8,27 @@
         @renew="renew"
       />
       <v-layout fill-height justify-center align-center>
-        <v-progress-circular
-          v-if="loadingSummoner"
-          indeterminate
-          color="grey"
-        />
+        <v-progress-circular v-if="loadingSummoner" indeterminate color="grey" />
       </v-layout>
     </v-flex>
     <v-flex id="champion-info" ma-5>
-      <champion-info-card
-        v-if="champions!==null"
-        :champions="champions"
-      />
+      <champion-info-card v-if="champions!==null" :champions="champions" />
       <v-layout fill-height justify-center align-center>
-        <v-progress-circular
-          v-if="loadingChampion"
-          indeterminate
-          color="grey"
-        />
+        <v-progress-circular v-if="loadingChampion" indeterminate color="grey" />
       </v-layout>
     </v-flex>
     <v-flex id="match-info">
       <v-layout column fill-height>
-        <v-flex
-          v-for="(match, index) in matches"
-          v-bind:key="index"
-          mb-2
-        >
-          <div class="match-card-wrap"
-            @click="toggle(index)"
-            style="cursor:pointer"
-          >
-            <match-card
-              :match="match"
-            />
+        <v-flex v-for="(match, index) in matches" v-bind:key="index" mb-2>
+          <div class="match-card-wrap" @click="toggle(index)" style="cursor:pointer">
+            <match-card :match="match" />
           </div>
           <div class="match-detail-wrap" v-if="toggleArray.includes(index)">
-            <match-detail
-              :match="match"
-            />
+            <match-detail :match="match" />
           </div>
         </v-flex>
         <v-flex text-xs-center>
-          <v-progress-circular
-            v-if="loadingMatches"
-            indeterminate
-            color="grey"
-          />
+          <v-progress-circular v-if="loadingMatches" indeterminate color="grey" />
         </v-flex>
       </v-layout>
     </v-flex>
@@ -70,7 +44,7 @@ import ChampionInfoCard from '../components/Match/ChampionInfoCard.vue';
 import MatchCard from '../components/Match/MatchCard.vue';
 import MatchDetail from '../components/Match/MatchDetail.vue';
 
-const ENDPOINT = 'http://localhost:3000'
+const ENDPOINT = 'http://localhost:3000';
 
 @Component({
   components: {
@@ -81,61 +55,80 @@ const ENDPOINT = 'http://localhost:3000'
   },
 })
 export default class Index extends Vue {
-  @Prop() accountId!: string
-  summoner: any = null
-  page: number = 0
-  toggleArray: Array<number> = []
-  renewing: boolean = false
-  loadingSummoner: boolean = true
-  loadingChampion: boolean = true
-  loadingMatches: boolean = true
+  @Prop() public accountId!: string;
+  public summoner: any = null;
+  public page: number = 0;
+  public toggleArray: number[] = [];
+  public renewing: boolean = false;
+  public loadingSummoner: boolean = true;
+  public loadingChampion: boolean = true;
+  public loadingMatches: boolean = true;
 
-  async mounted() {
-    const response = await axios.get(`${ENDPOINT}/summoner/byAccount/${this.accountId}`)
-    this.summoner = response.data
-    this.loadingSummoner = false
-    await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
-    this.loadingMatches = false
-    await this.$store.dispatch('match/fetchChampions', { seasonId: 13, accountId: this.accountId })
-    this.loadingChampion = false
+  public async mounted() {
+    const response = await axios.get(
+      `${ENDPOINT}/summoner/byAccount/${this.accountId}`
+    );
+    this.summoner = response.data;
+    this.loadingSummoner = false;
+    await this.$store.dispatch('match/updateMatches', {
+      accountId: this.accountId,
+      page: this.page,
+    });
+    this.loadingMatches = false;
+    await this.$store.dispatch('match/fetchChampions', {
+      seasonId: 13,
+      accountId: this.accountId,
+    });
+    this.loadingChampion = false;
   }
 
-  get matches () {
-    return this.$store.state.match.matches
+  get matches() {
+    return this.$store.state.match.matches;
   }
-  get champions () {
-    return this.$store.state.match.champions
+  get champions() {
+    return this.$store.state.match.champions;
   }
 
-  async renew() {
-    this.renewing = true
+  public async renew() {
+    this.renewing = true;
     try {
-      await axios.post(`${ENDPOINT}/summoner/${this.summoner.name}`)
-      this.page = 0
-      const response = await axios.get(`${ENDPOINT}/summoner/byAccount/${this.accountId}`)
-      this.summoner = response.data
-      await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
-      await this.$store.dispatch('match/fetchChampions', { accountId: this.accountId, seasonId: 13 })
+      await axios.post(`${ENDPOINT}/summoner/${this.summoner.name}`);
+      this.page = 0;
+      const response = await axios.get(
+        `${ENDPOINT}/summoner/byAccount/${this.accountId}`
+      );
+      this.summoner = response.data;
+      await this.$store.dispatch('match/updateMatches', {
+        accountId: this.accountId,
+        page: this.page,
+      });
+      await this.$store.dispatch('match/fetchChampions', {
+        accountId: this.accountId,
+        seasonId: 13,
+      });
     } catch (err) {
-      alert(`${err.response.data.seconds}초 후에 시도해주세요`)
+      alert(`${err.response.data.seconds}초 후에 시도해주세요`);
     }
-    this.renewing = false
+    this.renewing = false;
   }
-  toggle(index: number) {
+  public toggle(index: number) {
     if (this.toggleArray.includes(index)) {
-      const idx = this.toggleArray.indexOf(index)
-      this.toggleArray.splice(idx, 1)
+      const idx = this.toggleArray.indexOf(index);
+      this.toggleArray.splice(idx, 1);
     } else {
-      this.toggleArray.push(index)
+      this.toggleArray.push(index);
     }
   }
-  async onScroll({ target } : any) {
-    const { scrollTop, clientHeight, scrollHeight } = target
+  public async onScroll({ target }: any) {
+    const { scrollTop, clientHeight, scrollHeight } = target;
     if (scrollTop + clientHeight >= scrollHeight) {
-      this.loadingMatches = true
-      this.page += 1
-      await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page })
-      this.loadingMatches = false
+      this.loadingMatches = true;
+      this.page += 1;
+      await this.$store.dispatch('match/updateMatches', {
+        accountId: this.accountId,
+        page: this.page,
+      });
+      this.loadingMatches = false;
     }
   }
 }
@@ -148,8 +141,8 @@ export default class Index extends Vue {
   width: 70%;
   min-height: 100px;
   max-height: 100px;
-  max-width:750px;
-  min-width:600px;
+  max-width: 750px;
+  min-width: 600px;
 }
 #champion-info {
   width: 70%;
@@ -158,8 +151,8 @@ export default class Index extends Vue {
 }
 #match-info {
   width: 70%;
-  max-width:750px;
-  min-width:600px;
+  max-width: 750px;
+  min-width: 600px;
 }
 .match-card-wrap {
   width: 100%;

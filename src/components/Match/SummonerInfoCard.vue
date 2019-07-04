@@ -4,7 +4,9 @@
       <v-flex xs3>
         <v-layout fill-height align-center justify-center>
           <v-img class="summoner-icon" :src="summoner.iconUrl">
-            <span class="summoner-level font-weight-bold text-xs-center white--text deep-purple darken-2 px-3">{{summoner.summonerLevel}}</span>
+            <span
+              class="summoner-level font-weight-bold text-xs-center white--text deep-purple darken-2 px-3"
+            >{{summoner.summonerLevel}}</span>
           </v-img>
         </v-layout>
       </v-flex>
@@ -13,7 +15,13 @@
           <span class="headline font-weight-bold mb-1 white--text">{{summoner.name}}</span>
           <v-btn class="blue lighten-2" @click="$emit('renew')" :disabled="renewing">
             <span class="white--text font-weight-bold">전적 갱신</span>
-            <v-progress-circular v-if="renewing" class="ml-3" color="white" size="20" indeterminate />
+            <v-progress-circular
+              v-if="renewing"
+              class="ml-3"
+              color="white"
+              size="20"
+              indeterminate
+            />
           </v-btn>
         </v-layout>
       </v-flex>
@@ -38,19 +46,19 @@ import TierCard from './TierCard.vue';
   },
 })
 export default class SummonerInfoCard extends Vue {
-  @Prop() summoner: any
-  @Prop() renewing!: boolean
-  solo = null
-  free = null
+  @Prop() public summoner: any;
+  @Prop() public renewing!: boolean;
+  public solo = null;
+  public free = null;
 
-  mounted() {
+  public mounted() {
     this.summoner.seasons.forEach((season: any) => {
       if (season.queueType === 'RANKED_SOLO_5x5') {
-        this.solo = season
+        this.solo = season;
       } else if (season.queueType === 'RANKED_FLEX_SR') {
-        this.free = season
+        this.free = season;
       }
-    })
+    });
   }
 }
 </script>
