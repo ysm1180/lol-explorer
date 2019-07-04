@@ -4,12 +4,12 @@
     <v-toolbar absolute id="top-bar" dark dense height="40" app>
       <v-layout fill-height align-center>
         <v-toolbar-side-icon @click="viewNav=!viewNav" />
-        <v-flex class="white--text fill-height arrow cursor-pointer" @click="$router.go(-1)">
+        <v-flex class="white--text fill-height cursor-pointer" style="max-width:50px;" @click="$router.go(-1)">
           <v-btn small icon>
             <v-icon small>arrow_back_ios</v-icon>
           </v-btn>
         </v-flex>
-        <v-flex class="white--text fill-height arrow cursor-pointer" @click="$router.go(1)">
+        <v-flex class="white--text fill-height cursor-pointer" style="max-width:50px;" @click="$router.go(1)">
           <v-btn small icon>
             <v-icon small>arrow_forward_ios</v-icon>
           </v-btn>
@@ -17,17 +17,19 @@
       </v-layout>
     </v-toolbar>
     <!-- nav-bar -->
-    <v-navigation-drawer dark fixed v-model="viewNav" height="100%" width="200px">
+    <v-navigation-drawer class="grey darken-4" fixed temporary v-model="viewNav" height="100%" width="200px">
       <v-layout column fill-height pt-5>
         <v-divider />
         <v-flex
-          class="menu"
-          subheading
-          cursor-pointer
-          py-2
+          class="menu" subheading cursor-pointer py-2
           @click="$router.push(`/match/${summoner.accountId}`)"
-          :class="routerStartWith('/match')?'grey darken-2':''"
+          :class="routerStartWith('/match')?'grey darken-3':''"
         >전적 확인</v-flex>
+        <v-flex
+          class="menu" subheading cursor-pointer py-2
+          @click="$router.push('/rune')"
+          :class="routerStartWith('/rune')?'grey darken-3':''"
+        >룬 관리</v-flex>
         <v-divider />
       </v-layout>
     </v-navigation-drawer>
@@ -136,8 +138,5 @@ export default {
 .cursor-pointer {
   cursor: pointer;
   width: 100%;
-}
-.arrow {
-  max-width: 50px;
 }
 </style>

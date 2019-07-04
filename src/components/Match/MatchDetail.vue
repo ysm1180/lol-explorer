@@ -17,6 +17,7 @@
           v-for="(participant, key) in gameInfo.teams['100'].participants"
           v-bind:key="key"
           class="participant-row"
+          :class="gameInfo.requester.participantId==key?'orange lighten-2':''"
         >
           <v-layout fill-height justify-space-between>
             <v-flex class="participant-row-area1" fill-height>
@@ -124,6 +125,7 @@
           v-for="(participant, key) in gameInfo.teams['200'].participants"
           v-bind:key="key"
           class="participant-row"
+          :class="gameInfo.requester.participantId==key?'orange lighten-2':''"
         >
           <v-layout fill-height justify-space-between>
             <v-flex class="participant-row-area1" fill-height>
@@ -292,7 +294,7 @@ export default class MatchDetail extends Vue {
   max-width: 40px;
 }
 .participant-row-area4 {
-  max-width: 80px;
+  max-width: 90px;
 }
 .participant-row-area5 {
   max-width: 60px;
