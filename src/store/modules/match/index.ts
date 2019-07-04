@@ -8,6 +8,12 @@ export default class Match extends VuexModule {
   matches: Array<any> = []
   champions: any = null
 
+  @Mutation
+  initialize () {
+    this.matches = []
+    this.champions = null
+  }
+
   @MutationAction({ mutate: ['matches'] })
   async initializeState() {
     return { matches: [] }

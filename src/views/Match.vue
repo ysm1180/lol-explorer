@@ -90,7 +90,21 @@ export default class Index extends Vue {
   loadingChampion: boolean = true
   loadingMatches: boolean = true
 
+  @Watch('$route')
+  onRouteChanged(to: any, from: any) {
+    this.summoner = null
+    this.$store.commit('match/initialize')
+    this.loadingSummoner = true
+    this.loadingMatches = true
+    this.loadingChampion = true
+    this.init()
+  }
+
   async mounted() {
+    this.init()
+  }
+
+  async init() {
     const response = await axios.get(`${ENDPOINT}/summoner/byAccount/${this.accountId}`)
     this.summoner = response.data
     this.loadingSummoner = false
