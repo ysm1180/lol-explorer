@@ -21,13 +21,15 @@
       <v-layout column fill-height pt-5>
         <v-divider />
         <v-flex
-          class="menu"
-          subheading
-          cursor-pointer
-          py-2
+          class="menu" subheading cursor-pointer py-2
           @click="$router.push(`/match/${summoner.accountId}`)"
-          :class="routerStartWith('/match')?'grey darken-2':''"
+          :class="routerStartWith('/match')?'grey darken-3':''"
         >전적 확인</v-flex>
+        <v-flex
+          class="menu" subheading cursor-pointer py-2
+          @click="$router.push('/rune')"
+          :class="routerStartWith('/rune')?'grey darken-3':''"
+        >룬 관리</v-flex>
         <v-divider />
       </v-layout>
     </v-navigation-drawer>

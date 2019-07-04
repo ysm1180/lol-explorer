@@ -21,5 +21,16 @@ export default new Router({
       component: () => import('./views/Match.vue'),
       props: true,
     },
+    {
+      path: '/rune',
+      name: 'rune',
+      component: () => import('./views/Rune.vue'),
+    },
+    {
+      path: '/rune/:championId',
+      name: 'rune-detail',
+      component: () => import('./views/RuneDetail.vue'),
+      props: true,
+    },
   ],
 });
