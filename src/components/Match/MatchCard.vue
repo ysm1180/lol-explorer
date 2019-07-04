@@ -39,8 +39,8 @@
         <v-layout fill-height column justify-center>
           <div>
             <v-layout>
-              <v-img :src="spells[requester.spells[0]].iconUrl" class="requester-spell-icon" />
-              <v-img :src="spells[requester.spells[1]].iconUrl" class="requester-spell-icon" />
+              <v-img v-on="on" :src="spells[requester.spells[0]].iconUrl" class="requester-spell-icon" />
+              <v-img v-on="on" :src="spells[requester.spells[1]].iconUrl" class="requester-spell-icon" />
             </v-layout>
           </div>
           <div>

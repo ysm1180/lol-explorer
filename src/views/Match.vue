@@ -11,27 +11,37 @@
         <v-progress-circular v-if="loadingSummoner" indeterminate color="grey" />
       </v-layout>
     </v-flex>
-    <v-flex id="champion-info" ma-5>
-      <champion-info-card v-if="champions!==null" :champions="champions" />
-      <v-layout fill-height justify-center align-center>
-        <v-progress-circular v-if="loadingChampion" indeterminate color="grey" />
-      </v-layout>
-    </v-flex>
-    <v-flex id="match-info">
-      <v-layout column fill-height>
-        <v-flex v-for="(match, index) in matches" v-bind:key="index" mb-2>
-          <div class="match-card-wrap" @click="toggle(index)" style="cursor:pointer">
-            <match-card :match="match" />
-          </div>
-          <div class="match-detail-wrap" v-if="toggleArray.includes(index)">
-            <match-detail :match="match" />
-          </div>
-        </v-flex>
-        <v-flex text-xs-center>
-          <v-progress-circular v-if="loadingMatches" indeterminate color="grey" />
-        </v-flex>
-      </v-layout>
-    </v-flex>
+    <v-tabs fixed-tabs dark height=40 slider-color="blue" v-model="tab" class="mb-1 grey darken-4">
+      <v-tab class="cursor-pointer">전적</v-tab>
+      <v-tab class="cursor-pointer">챔피언 분석</v-tab>
+    </v-tabs>
+    <v-layout style="min-width:600px;width:100%;" justify-center>
+      <v-flex xs12 sm10 md8 lg6 xl6>
+        <v-tabs-items v-model="tab">
+          <v-tab-item>
+            <v-layout column fill-height>
+              <v-flex v-for="(match, index) in matches" v-bind:key="index" mb-2>
+                <div class="match-card-wrap" @click="toggle(index)" style="cursor:pointer">
+                  <match-card :match="match" />
+                </div>
+                <div class="match-detail-wrap" v-if="toggleArray.includes(index)">
+                  <match-detail :match="match" />
+                </div>
+              </v-flex>
+              <v-flex text-xs-center>
+                <v-progress-circular v-if="loadingMatches" indeterminate color="grey" />
+              </v-flex>
+            </v-layout>
+          </v-tab-item>
+          <v-tab-item>
+            <champion-info-card v-if="champions!==null" :champions="champions" />
+            <v-layout fill-height justify-center align-center>
+              <v-progress-circular v-if="loadingChampion" indeterminate color="grey" />
+            </v-layout>
+          </v-tab-item>
+        </v-tabs-items>
+      </v-flex>
+    </v-layout>
   </v-layout>
 </template>
 
@@ -63,6 +73,7 @@ export default class Index extends Vue {
   public loadingSummoner: boolean = true;
   public loadingChampion: boolean = true;
   public loadingMatches: boolean = true;
+  public tab: number = 0;
 
   @Watch('$route')
   public onRouteChanged(to: any, from: any) {

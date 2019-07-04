@@ -1,6 +1,6 @@
 <template>
-  <v-card height="100%" flat class="summoner-info-card blue-grey darken-3">
-    <v-layout fill-height column>
+  <v-card dark height="100%" flat class="summoner-info-card blue-grey darken-3">
+    <v-layout fill-height column class="grey darken-3">
       <v-flex mb-3>
         <v-layout>
           <v-flex xs4>최근 {{champions.totalGames}} 게임</v-flex>
