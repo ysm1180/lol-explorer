@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Module, MutationAction, VuexModule } from 'vuex-module-decorators';
+import { Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -7,6 +7,12 @@ const ENDPOINT = 'http://localhost:3000';
 export default class Match extends VuexModule {
   public matches: any[] = [];
   public champions: any = null;
+
+  @Mutation
+  public initialize() {
+    this.matches = [];
+    this.champions = null;
+  }
 
   @MutationAction({ mutate: ['matches'] })
   public async initializeState() {

@@ -266,7 +266,7 @@ export default class MatchDetail extends Vue {
   }
 
   public toMatch(accountId: string) {
-    location.href = `/match/${accountId}`;
+    this.$router.push(`/match/${accountId}`);
   }
 
   public mounted() {}

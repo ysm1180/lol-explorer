@@ -64,21 +64,27 @@ export default class Index extends Vue {
   public loadingChampion: boolean = true;
   public loadingMatches: boolean = true;
 
+  @Watch('$route')
+  public onRouteChanged(to: any, from: any) {
+    this.summoner = null;
+    this.$store.commit('match/initialize');
+    this.loadingSummoner = true;
+    this.loadingMatches = true;
+    this.loadingChampion = true;
+    this.init();
+  }
+
   public async mounted() {
-    const response = await axios.get(
-      `${ENDPOINT}/summoner/byAccount/${this.accountId}`
-    );
+    this.init();
+  }
+
+  public async init() {
+    const response = await axios.get(`${ENDPOINT}/summoner/byAccount/${this.accountId}`);
     this.summoner = response.data;
     this.loadingSummoner = false;
-    await this.$store.dispatch('match/updateMatches', {
-      accountId: this.accountId,
-      page: this.page,
-    });
+    await this.$store.dispatch('match/updateMatches', { accountId: this.accountId, page: this.page });
     this.loadingMatches = false;
-    await this.$store.dispatch('match/fetchChampions', {
-      seasonId: 13,
-      accountId: this.accountId,
-    });
+    await this.$store.dispatch('match/fetchChampions', { seasonId: 13, accountId: this.accountId });
     this.loadingChampion = false;
   }
 
