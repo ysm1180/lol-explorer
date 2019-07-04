@@ -21,7 +21,9 @@
           </v-flex>
           <v-flex xs1>{{champion.wins + champion.losses}}</v-flex>
           <v-flex xs1>{{(champion.wins * 100 / (champion.wins + champion.losses)).toFixed(2)}}%</v-flex>
-          <v-flex xs3>{{champion.averageKills.toFixed(1)}}/{{champion.averageDeaths.toFixed(1)}}/{{champion.averageAssists.toFixed(1)}}</v-flex>
+          <v-flex
+            xs3
+          >{{champion.averageKills.toFixed(1)}}/{{champion.averageDeaths.toFixed(1)}}/{{champion.averageAssists.toFixed(1)}}</v-flex>
           <v-flex xs1>{{champion.averageCS.toFixed(2)}}</v-flex>
           <v-flex xs2>{{champion.averageEarnedGold.toFixed(2)}}</v-flex>
         </v-layout>
@@ -35,25 +37,23 @@ import { mapGetters, mapActions } from 'vuex';
 import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component({
-  components: {
-  },
+  components: {},
 })
 export default class ChampionInfoCard extends Vue {
-  @Prop() champions: any
+  @Prop() public champions: any;
 
-  mounted() {
-  }
+  public mounted() {}
 
-  get championsArray () {
-    const champions = this.champions.champions
-    const championsArray = Object.values(champions)
+  get championsArray() {
+    const champions = this.champions.champions;
+    const championsArray = Object.values(champions);
     championsArray.sort((a: any, b: any) => {
-      return (b.wins + b.losses) - (a.wins + a.losses)
-    })
-    return championsArray
+      return b.wins + b.losses - (a.wins + a.losses);
+    });
+    return championsArray;
   }
-  get staticChampions () {
-    return this.$store.state.lolstatic.champions
+  get staticChampions() {
+    return this.$store.state.lolstatic.champions;
   }
 }
 </script>

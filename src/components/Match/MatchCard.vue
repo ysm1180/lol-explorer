@@ -3,19 +3,28 @@
     <v-layout justify-space-between>
       <v-flex class="matchinfo-area1">
         <v-img :src="champions[requester.championId].iconUrl" class="requester-champ-icon">
-          <span class="white--text font-size-small font-weight-bold">{{champions[requester.championId].name}}</span>
+          <span
+            class="white--text font-size-small font-weight-bold"
+          >{{champions[requester.championId].name}}</span>
         </v-img>
       </v-flex>
       <v-flex class="matchinfo-area2">
         <v-layout fill-height column justify-center>
           <span class="font-size-small font-weight-bold">{{queueString}}</span>
-          <span class="font-size-small" :class="gameInfo.requester.isWin?'blue--text':'red--text'">{{gameInfo.requester.isWin?'승리':'패배'}}</span>
+          <span
+            class="font-size-small"
+            :class="gameInfo.requester.isWin?'blue--text':'red--text'"
+          >{{gameInfo.requester.isWin?'승리':'패배'}}</span>
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area3">
         <v-layout fill-height column justify-center>
-          <span class="font-size-small font-weight-bold">평점 {{((requester.stats.kills + requester.stats.assists) / requester.stats.deaths).toFixed(2)}}</span>
-          <span class="caption">{{requester.stats.kills}} / {{requester.stats.deaths}} / {{requester.stats.assists}}</span>
+          <span
+            class="font-size-small font-weight-bold"
+          >평점 {{((requester.stats.kills + requester.stats.assists) / requester.stats.deaths).toFixed(2)}}</span>
+          <span
+            class="caption"
+          >{{requester.stats.kills}} / {{requester.stats.deaths}} / {{requester.stats.assists}}</span>
           <span class="font-size-small green--text">{{getSucceededKillString(requester)}}</span>
         </v-layout>
       </v-flex>
@@ -36,8 +45,14 @@
           </div>
           <div>
             <v-layout>
-              <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(requester, 1)}`" class="requester-perk-icon" />
-              <v-img :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(requester, 2)}`" class="requester-perk-icon" />
+              <v-img
+                :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(requester, 1)}`"
+                class="requester-perk-icon"
+              />
+              <v-img
+                :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(requester, 2)}`"
+                class="requester-perk-icon"
+              />
             </v-layout>
           </div>
         </v-layout>
@@ -46,12 +61,22 @@
         <v-layout fill-height column justify-center>
           <div>
             <v-layout>
-              <v-img v-for="(item, index) in requester.items.slice(0,3)" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="requester-item-icon grey lighten-2" />
+              <v-img
+                v-for="(item, index) in requester.items.slice(0,3)"
+                v-bind:key="index"
+                :src="item!==0?items[item].iconUrl:''"
+                class="requester-item-icon grey lighten-2"
+              />
             </v-layout>
           </div>
           <div>
             <v-layout>
-              <v-img v-for="(item, index) in requester.items.slice(3,7)" v-bind:key="index" :src="item!==0?items[item].iconUrl:''" class="requester-item-icon grey lighten-2" />
+              <v-img
+                v-for="(item, index) in requester.items.slice(3,7)"
+                v-bind:key="index"
+                :src="item!==0?items[item].iconUrl:''"
+                class="requester-item-icon grey lighten-2"
+              />
             </v-layout>
           </div>
         </v-layout>
@@ -66,12 +91,22 @@
         <v-layout fill-height column justify-center>
           <div>
             <v-layout mb-1>
-              <v-img v-for="(participant, key) in gameInfo.teams['100'].participants" v-bind:key="key" :src="champions[participant.championId].iconUrl" class="participant-icon" />
+              <v-img
+                v-for="(participant, key) in gameInfo.teams['100'].participants"
+                v-bind:key="key"
+                :src="champions[participant.championId].iconUrl"
+                class="participant-icon"
+              />
             </v-layout>
           </div>
           <div>
             <v-layout>
-              <v-img v-for="(participant, key) in gameInfo.teams['200'].participants" v-bind:key="key" :src="champions[participant.championId].iconUrl" class="participant-icon" />
+              <v-img
+                v-for="(participant, key) in gameInfo.teams['200'].participants"
+                v-bind:key="key"
+                :src="champions[participant.championId].iconUrl"
+                class="participant-icon"
+              />
             </v-layout>
           </div>
         </v-layout>
@@ -90,54 +125,55 @@ import { format } from 'util';
 import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component({
-  components: {
-  },
+  components: {},
   filters: {
     gold(val: number) {
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    }
-  }
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+  },
 })
 export default class MatchCard extends Vue {
-  @Prop() match: any
+  @Prop() public match: any;
 
   get champions() {
-    return this.$store.state.lolstatic.champions
+    return this.$store.state.lolstatic.champions;
   }
   get items() {
-    return this.$store.state.lolstatic.items
+    return this.$store.state.lolstatic.items;
   }
   get spells() {
-    return this.$store.state.lolstatic.spells
+    return this.$store.state.lolstatic.spells;
   }
   get perks() {
-    return this.$store.state.lolstatic.perks
+    return this.$store.state.lolstatic.perks;
   }
   get gameInfo() {
-    return this.match.gameInfo
+    return this.match.gameInfo;
   }
   get requester() {
-    const { participantId, teamId } = this.gameInfo.requester
-    return this.gameInfo.teams[teamId].participants[participantId]
+    const { participantId, teamId } = this.gameInfo.requester;
+    return this.gameInfo.teams[teamId].participants[participantId];
   }
 
   get queueString() {
-    let str = ''
+    let str = '';
     if (this.match.queue === 420) {
-      str = '개인/2인 랭크'
+      str = '개인/2인 랭크';
     } else if (this.match.queue === 430) {
-      str = '일반'
+      str = '일반';
     } else if (this.match.queue === 440) {
-      str = '자유 랭크'
+      str = '자유 랭크';
     } else if (this.match.queue === 450) {
-      str = '무작위 총력전'
+      str = '무작위 총력전';
     }
-    return str
+    return str;
   }
 
   get timeDeltaTextByNow() {
     const utcNow = new Date(new Date().toUTCString()).getTime();
-    const sinceAfterSeconds = Math.floor((utcNow - this.match.timestamp) / 1000);
+    const sinceAfterSeconds = Math.floor(
+      (utcNow - this.match.timestamp) / 1000
+    );
     let sinceTimeText = '';
     if (sinceAfterSeconds < 60) {
       sinceTimeText = `${sinceAfterSeconds}초 전`;
@@ -152,44 +188,46 @@ export default class MatchCard extends Vue {
   }
 
   get durationString() {
-    const { gameDuration } = this.match.gameInfo
+    const { gameDuration } = this.match.gameInfo;
     const secondStr = format('%d', gameDuration % 60).padStart(2, '0');
-    const minuteStr = format('%d', Math.floor(gameDuration / 60)).padStart(2, '0');
+    const minuteStr = format('%d', Math.floor(gameDuration / 60)).padStart(
+      2,
+      '0'
+    );
     const durationTimeStr = `${minuteStr}분 ${secondStr}초`;
-    return durationTimeStr
+    return durationTimeStr;
   }
 
-  getSucceededKillString(participant: any) {
+  public getSucceededKillString(participant: any) {
     if (participant.stats.pentaKills !== 0) {
-      return '펜타킬'
+      return '펜타킬';
     } else if (participant.stats.quadraKills !== 0) {
-      return '쿼드라킬'
+      return '쿼드라킬';
     } else if (participant.stats.tripleKills !== 0) {
-      return '트리플킬'
+      return '트리플킬';
     } else if (participant.stats.doubleKills !== 0) {
-      return '더블킬'
+      return '더블킬';
     } else {
-      return ''
+      return '';
     }
   }
-  getPerkUrl(participant: any, n: number) {
+  public getPerkUrl(participant: any, n: number) {
     if (n === 1) {
-      const perkId = participant.stats.perkPrimaryStyle
+      const perkId = participant.stats.perkPrimaryStyle;
       const perk = this.perks.find((element: any) => {
-        return element.id === perkId
-      })
-      return perk.icon
+        return element.id === perkId;
+      });
+      return perk.icon;
     } else if (n === 2) {
-      const perkId = participant.stats.perkSubStyle
+      const perkId = participant.stats.perkSubStyle;
       const perk = this.perks.find((element: any) => {
-        return element.id === perkId
-      })
-      return perk.icon
+        return element.id === perkId;
+      });
+      return perk.icon;
     }
   }
 
-  mounted() {
-  }
+  public mounted() {}
 }
 </script>
 <style scoped>

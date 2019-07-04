@@ -1,16 +1,13 @@
 import { app } from 'electron';
-import { AppWindow } from './electron/window';
-import {
-  installVueDevtools
-} from 'vue-cli-plugin-electron-builder/lib'
 import LCUConnector from 'lcu-connector';
+import { AppWindow } from './electron/window';
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production';
 const connector = new LCUConnector('');
 let mainWindow: AppWindow | null = null;
 
 type OnDidLoadFn = (window: AppWindow) => void;
-let onDidLoadFns: Array<OnDidLoadFn> | null = [];
+let onDidLoadFns: OnDidLoadFn[] | null = [];
 
 let isDuplicateInstance = false;
 const gotSingleInstanceLock = app.requestSingleInstanceLock();

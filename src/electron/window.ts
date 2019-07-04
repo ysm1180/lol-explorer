@@ -1,7 +1,7 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { Disposable, Emitter } from 'event-kit';
 import { lcuData } from 'models';
-import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import { RiotWSProtocol } from './riot-ws';
 
 function now(): number {
@@ -68,15 +68,15 @@ export class AppWindow {
 
     this.window.on('focus', () => this.window.webContents.send('focus'));
     this.window.on('blur', () => this.window.webContents.send('blur'));
-    
+
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
-      this.window.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
-      if (!process.env.IS_TEST) this.window.webContents.openDevTools()
+      this.window.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
+      if (!process.env.IS_TEST) { this.window.webContents.openDevTools(); }
     } else {
-      createProtocol('app')
+      createProtocol('app');
       // Load the index.html when not in development
-      this.window.loadURL('app://./index.html')
+      this.window.loadURL('app://./index.html');
     }
   }
 
@@ -103,8 +103,9 @@ export class AppWindow {
   public sendConnect(data: lcuData) {
     this.show();
 
+    console.log(`Basic ${Buffer.from(`${data.username}:${data.password}`).toString('base64')}`);
     this.connectRiotWebSocket(
-      `wss://${data.username}:${data.password}@${data.address}:${data.port}/`,
+      `wss://${data.username}:${data.password}@${data.address}:${data.port}/`
     );
 
     this.lcuData = data;
@@ -150,7 +151,6 @@ export class AppWindow {
   }
 
   private connectRiotWebSocket(url: string) {
-    console.log('connect riot ws');
     this.riotWs = new RiotWSProtocol(url);
     this.riotWs.on('open', () => {
       console.info('[RiotWSProtocol] Subscribe event.');
