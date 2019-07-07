@@ -31,7 +31,7 @@ export default class Match extends VuexModule {
   }
   @MutationAction({ mutate: ['champions'] })
   public async fetchChampions({ seasonId, accountId }: any) {
-    const response = await axios.get(`${ENDPOINT}/summoner/champions/${seasonId}/${accountId}`);
+    const response = await axios.get(`${ENDPOINT}/summoner/rift/champions/${seasonId}/${accountId}`);
     return { champions: response.data };
   }
 }

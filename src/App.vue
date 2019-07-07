@@ -92,7 +92,7 @@ export default {
       this.$router.push('/');
     });
     ipcRenderer.on('lcu-api-message', async (event, data) => {
-      window.console.log(data);
+      // window.console.log(data);
       if (
         this.status !== 'LOGIN_COMPLETE' &&
         data.uri === '/lol-summoner/v1/current-summoner' &&
@@ -105,6 +105,12 @@ export default {
           this.lcuSummoner.displayName
         );
         this.$router.push(`/match/${this.summoner.accountId}`);
+      } else if (data.uri === '/lol-champ-select/v1/session' &&
+        data.data.actions[0][0].championId !== 0
+      ) {
+        console.log(data);
+        console.log(data.data.actions[0][0]);
+        this.$router.push(`/rune/${data.data.actions[0][0].championId}`);
       }
     });
   },

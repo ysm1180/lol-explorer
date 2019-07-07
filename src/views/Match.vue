@@ -78,6 +78,7 @@ export default class Index extends Vue {
   @Watch('$route')
   public onRouteChanged(to: any, from: any) {
     this.summoner = null;
+    this.toggleArray = [];
     this.$store.commit('match/initialize');
     this.loadingSummoner = true;
     this.loadingMatches = true;
