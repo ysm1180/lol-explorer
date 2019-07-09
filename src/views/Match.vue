@@ -139,7 +139,7 @@ export default class Index extends Vue {
   }
   public async onScroll({ target }: any) {
     const { scrollTop, clientHeight, scrollHeight } = target;
-    if (scrollTop + clientHeight >= scrollHeight) {
+    if (scrollTop + clientHeight >= scrollHeight && this.tab === 0) {
       this.loadingMatches = true;
       this.page += 1;
       await this.$store.dispatch('match/updateMatches', {

@@ -46,11 +46,11 @@
           <div>
             <v-layout>
               <v-img
-                :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(requester, 1)}`"
+                :src="`${perks.baseIconUrl}${perks[requester.stats.perkPrimaryStyle].icon}`"
                 class="requester-perk-icon"
               />
               <v-img
-                :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(requester, 2)}`"
+                :src="`${perks.baseIconUrl}${perks[requester.stats.perkSubStyle].icon}`"
                 class="requester-perk-icon"
               />
             </v-layout>
@@ -211,22 +211,6 @@ export default class MatchCard extends Vue {
       return '';
     }
   }
-  public getPerkUrl(participant: any, n: number) {
-    if (n === 1) {
-      const perkId = participant.stats.perkPrimaryStyle;
-      const perk = this.perks.find((element: any) => {
-        return element.id === perkId;
-      });
-      return perk.icon;
-    } else if (n === 2) {
-      const perkId = participant.stats.perkSubStyle;
-      const perk = this.perks.find((element: any) => {
-        return element.id === perkId;
-      });
-      return perk.icon;
-    }
-  }
-
   public mounted() {}
 }
 </script>

@@ -84,11 +84,11 @@
                 <div>
                   <v-layout>
                     <v-img
-                      :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 1)}`"
+                      :src="`${perks.baseIconUrl}${perks[participant.stats.perkPrimaryStyle].icon}`"
                       class="perk-icon"
                     />
                     <v-img
-                      :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 2)}`"
+                      :src="`${perks.baseIconUrl}${perks[participant.stats.perkSubStyle].icon}`"
                       class="perk-icon"
                     />
                   </v-layout>
@@ -192,11 +192,11 @@
                 <div>
                   <v-layout>
                     <v-img
-                      :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 1)}`"
+                      :src="`${perks.baseIconUrl}${perks[participant.stats.perkPrimaryStyle].icon}`"
                       class="perk-icon"
                     />
                     <v-img
-                      :src="`https://ddragon.leagueoflegends.com/cdn/img/${getPerkUrl(participant, 2)}`"
+                      :src="`${perks.baseIconUrl}${perks[participant.stats.perkSubStyle].icon}`"
                       class="perk-icon"
                     />
                   </v-layout>
@@ -250,23 +250,6 @@ export default class MatchDetail extends Vue {
   get gameInfo() {
     return this.match.gameInfo;
   }
-
-  public getPerkUrl(participant: any, n: number) {
-    if (n === 1) {
-      const perkId = participant.stats.perkPrimaryStyle;
-      const perk = this.perks.find((element: any) => {
-        return element.id === perkId;
-      });
-      return perk.icon;
-    } else if (n === 2) {
-      const perkId = participant.stats.perkSubStyle;
-      const perk = this.perks.find((element: any) => {
-        return element.id === perkId;
-      });
-      return perk.icon;
-    }
-  }
-
   public toMatch(accountId: string) {
     this.$router.push(`/match/${accountId}`);
   }
