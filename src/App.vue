@@ -145,4 +145,7 @@ export default {
   cursor: pointer;
   width: 100%;
 }
+.container-after-titlebar {
+  overflow: hidden !important;
+}
 </style>
