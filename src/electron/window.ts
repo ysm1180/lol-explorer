@@ -23,7 +23,6 @@ export class AppWindow {
       y: 100,
       width: 960,
       height: 660,
-      frame: false,
       backgroundColor: '#2F3437',
       show: false,
       webPreferences: {
