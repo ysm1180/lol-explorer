@@ -34,7 +34,6 @@ export class AppWindow {
     };
 
     this.window = new BrowserWindow(windowOptions);
-    this.window.removeMenu();
   }
 
   public load() {
