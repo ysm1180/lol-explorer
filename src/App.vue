@@ -31,6 +31,11 @@
           :class="routerStartWith('/rune')?'grey darken-3':''"
         >룬 관리</v-flex>
         <v-divider />
+        <v-flex
+          class="menu" subheading cursor-pointer py-2
+          @click="$router.push('/champselect')"
+          :class="routerStartWith('/champselect')?'grey darken-3':''"
+        >챔피언 선택중</v-flex>
       </v-layout>
     </v-navigation-drawer>
     <router-view style="padding-top:50px;" />
@@ -92,7 +97,7 @@ export default {
       this.$router.push('/');
     });
     ipcRenderer.on('lcu-api-message', async (event, data) => {
-      // window.console.log(data);
+      // console.log(data);
       if (
         this.status !== 'LOGIN_COMPLETE' &&
         data.uri === '/lol-summoner/v1/current-summoner' &&
@@ -105,12 +110,10 @@ export default {
           this.lcuSummoner.displayName
         );
         this.$router.push(`/match/${this.summoner.accountId}`);
-      } else if (data.uri === '/lol-champ-select/v1/session' &&
-        data.data.actions[0][0].championId !== 0
+      } else if (data.uri === '/lol-gameflow/v1/gameflow-phase' &&
+        data.data === 'ChampSelect'
       ) {
-        console.log(data);
-        console.log(data.data.actions[0][0]);
-        this.$router.push(`/rune/${data.data.actions[0][0].championId}`);
+        this.$router.push('/champselect');
       }
     });
   },
