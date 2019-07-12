@@ -3,9 +3,6 @@
     <v-layout justify-space-between>
       <v-flex class="matchinfo-area1">
         <v-img :src="champions[requester.championId].iconUrl" class="requester-champ-icon">
-          <span
-            class="white--text font-size-small font-weight-bold"
-          >{{champions[requester.championId].name}}</span>
         </v-img>
       </v-flex>
       <v-flex class="matchinfo-area2">
@@ -65,7 +62,7 @@
                 v-for="(item, index) in requester.items.slice(0,3)"
                 v-bind:key="index"
                 :src="item!==0?items[item].iconUrl:''"
-                class="requester-item-icon grey lighten-2"
+                class="requester-item-icon grey darken-2"
               />
             </v-layout>
           </div>
@@ -75,7 +72,7 @@
                 v-for="(item, index) in requester.items.slice(3,7)"
                 v-bind:key="index"
                 :src="item!==0?items[item].iconUrl:''"
-                class="requester-item-icon grey lighten-2"
+                class="requester-item-icon grey darken-2"
               />
             </v-layout>
           </div>
@@ -113,7 +110,7 @@
       </v-flex>
       <v-flex class="matchinfo-area9">
         <v-layout fill-height align-center>
-          <v-icon>arrow_drop_down</v-icon>
+          <v-icon>expand_more</v-icon>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -216,7 +213,7 @@ export default class MatchCard extends Vue {
 </script>
 <style scoped>
 .font-size-small {
-  font-size: 10px;
+  font-size: 12px;
 }
 .matchinfo-area1 {
   max-width: 50px;
@@ -228,7 +225,7 @@ export default class MatchCard extends Vue {
   max-width: 60px;
 }
 .matchinfo-area4 {
-  max-width: 60px;
+  max-width: 80px;
 }
 .matchinfo-area5 {
   max-width: 50px;
@@ -246,29 +243,27 @@ export default class MatchCard extends Vue {
   max-width: 25px;
 }
 .requester-champ-icon {
-  max-width: 50px;
-  max-height: 50px;
+  width: 64px;
+  height: 64px;
 }
 .requester-spell-icon {
-  max-width: 20px;
-  max-height: 20px;
-  border-radius: 5px;
+  max-width: 23px;
+  max-height: 23px;
 }
 .requester-perk-icon {
-  max-width: 20px;
-  max-height: 20px;
-  border-radius: 5px;
+  max-width: 23px;
+  max-height: 23px;
 }
 .requester-item-icon {
-  min-width: 20px;
-  min-height: 20px;
-  max-width: 20px;
-  max-height: 20px;
-  border-radius: 5px;
+  min-width: 23px;
+  min-height: 23px;
+  max-width: 23px;
+  max-height: 23px;
+  border-radius: 3px;
 }
 .participant-icon {
-  max-width: 20px;
-  max-height: 20px;
+  max-width: 24px;
+  max-height: 24px;
   border-radius: 3px;
 }
 </style>

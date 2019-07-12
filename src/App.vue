@@ -128,6 +128,7 @@ export default {
 <style>
 #app {
   width: 100vw;
+  min-width: 800px;
   height: 100vh;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
