@@ -11,12 +11,13 @@
         <v-progress-circular v-if="loadingSummoner" indeterminate color="grey" />
       </v-layout>
     </v-flex>
-    <v-tabs fixed-tabs dark height=40 slider-color="blue" v-model="tab" class="mb-1 grey darken-4">
+    <v-tabs fixed-tabs dark color="transparent" height=40 slider-color="orange" v-model="tab" class="mb-1">
       <v-tab class="cursor-pointer">전적</v-tab>
       <v-tab class="cursor-pointer">챔피언 분석</v-tab>
     </v-tabs>
-    <v-layout style="min-width:600px;width:100%;" justify-center>
-      <v-flex xs12 sm10 md8 lg6 xl6>
+
+    <v-layout style="min-width:600px;width:700px;">
+      <v-flex>
         <v-tabs-items v-model="tab">
           <v-tab-item>
             <v-layout column fill-height>
@@ -28,6 +29,9 @@
                   <match-detail :match="match" />
                 </div>
               </v-flex>
+              <v-layout fill-height justify-center align-center>
+                <v-icon class="cursor-none" v-if="!loadingMatches">arrow_drop_down_circle</v-icon>
+              </v-layout>
               <v-flex text-xs-center>
                 <v-progress-circular v-if="loadingMatches" indeterminate color="grey" />
               </v-flex>
@@ -42,6 +46,8 @@
         </v-tabs-items>
       </v-flex>
     </v-layout>
+
+    
   </v-layout>
 </template>
 
@@ -65,15 +71,16 @@ const ENDPOINT = 'http://localhost:3000';
   },
 })
 export default class Index extends Vue {
-  @Prop() public accountId!: string;
-  public summoner: any = null;
-  public page: number = 0;
-  public toggleArray: number[] = [];
-  public renewing: boolean = false;
-  public loadingSummoner: boolean = true;
-  public loadingChampion: boolean = true;
-  public loadingMatches: boolean = true;
-  public tab: number = 0;
+  @Prop() private accountId!: string;
+  private summoner: any = null;
+  private page: number = 0;
+  private toggleArray: number[] = [];
+  private renewing: boolean = false;
+  private loadingSummoner: boolean = true;
+  private loadingChampion: boolean = true;
+  private loadingMatches: boolean = true;
+  private tab: number = 0;
+  private prevScrollEnd: boolean = false;
 
   @Watch('$route')
   public onRouteChanged(to: any, from: any) {
@@ -129,6 +136,7 @@ export default class Index extends Vue {
     }
     this.renewing = false;
   }
+
   public toggle(index: number) {
     if (this.toggleArray.includes(index)) {
       const idx = this.toggleArray.indexOf(index);
@@ -137,16 +145,31 @@ export default class Index extends Vue {
       this.toggleArray.push(index);
     }
   }
+
   public async onScroll({ target }: any) {
     const { scrollTop, clientHeight, scrollHeight } = target;
-    if (scrollTop + clientHeight >= scrollHeight && this.tab === 0) {
+
+    if (
+        this.tab === 0 &&
+        !this.loadingMatches &&
+        this.prevScrollEnd &&
+        scrollTop + clientHeight >= scrollHeight
+    ) {
       this.loadingMatches = true;
+      this.prevScrollEnd = false;
       this.page += 1;
       await this.$store.dispatch('match/updateMatches', {
         accountId: this.accountId,
         page: this.page,
       });
       this.loadingMatches = false;
+    } else if (
+        !this.prevScrollEnd &&
+        !this.loadingMatches &&
+        scrollTop + clientHeight >= scrollHeight
+    ) {
+      target.scrollTop = target.scrollTop - 1;
+      this.prevScrollEnd = true;
     }
   }
 }
@@ -174,6 +197,10 @@ export default class Index extends Vue {
 }
 .match-card-wrap {
   width: 100%;
-  height: 50px;
+  height: 60px;
+}
+
+.cursor-none {
+  user-select: none;
 }
 </style>
