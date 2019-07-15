@@ -28,12 +28,12 @@ export class RiotWSProtocol {
         }
       }
 
-      this.on('open', () => {
+      this.ws.on('open', () => {
         log.info(`[RiotWSProtocol] ${this.url} Connected.`);
         this.retryCount = 0;
       });
 
-      this.on('error', (e: { code: string; message: string }) => {
+      this.ws.on('error', (e: { code: string; message: string }) => {
         if (e.code === 'ECONNREFUSED') {
           setTimeout(() => {
             if (this.retryCount < 3) {
@@ -50,10 +50,10 @@ export class RiotWSProtocol {
         }
       });
 
-      this.on('message', this._onMessage.bind(this));
+      this.ws.on('message', this._onMessage.bind(this));
 
-      this.on('close', () => {
-        log.info('[RiotWSProtocol] Closed connection...');
+      this.ws.on('close', (code, reason) => {
+        log.info(`[RiotWSProtocol] ${code} ${reason} Closed connection...`);
         this.dispose();
       });
     }
@@ -134,7 +134,6 @@ export class RiotWSProtocol {
       }
     }
 
-    this.listeners = {};
     this.ws = null;
   }
 }
