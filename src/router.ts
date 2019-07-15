@@ -9,15 +9,16 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Home.vue'),
+      redirect: '/match/',
+    },
+    {
+      path: '/match',
+      name: 'match',
+      component: () => import('./views/Match.vue'),
     },
     {
       path: '/match/:accountId',
-      name: 'match',
+      name: 'matchWithAccountId',
       component: () => import('./views/Match.vue'),
       props: true,
     },

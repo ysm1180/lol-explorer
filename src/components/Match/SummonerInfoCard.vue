@@ -5,7 +5,7 @@
         <v-layout fill-height align-center justify-center>
           <v-img class="summoner-icon" :src="summoner.iconUrl">
             <span
-              class="summoner-level font-weight-bold text-xs-center white--text deep-purple darken-2 px-3"
+              class="summoner-level font-weight-bold text-xs-center white--text"
             >{{summoner.summonerLevel}}</span>
           </v-img>
         </v-layout>
@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts">
-import { mapGetters, mapActions } from 'vuex';
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import TierCard from './TierCard.vue';
 
@@ -64,14 +63,21 @@ export default class SummonerInfoCard extends Vue {
 </script>
 <style scoped>
 .summoner-icon {
+  position: relative;
   max-width: 100px;
   max-height: 100px;
   background-size: cover;
+
 }
+
 .summoner-level {
+  position: absolute;
+  bottom: 0;
   width: 50px;
-  border-radius: 5px;
   z-index: 3;
-  padding: 1px;
+  text-align: center;
+
+  background-color: #212121;
+  border: 1px solid darkorange;
 }
 </style>
