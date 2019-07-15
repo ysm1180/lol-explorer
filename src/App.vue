@@ -17,6 +17,9 @@
         <button title="룬 관리" @click="enterRunePage()" class="icon-button selectable" :class="isRunePage() && 'selected'">
           <v-icon dark>filter_none</v-icon>
         </button>
+        <button title="In Game" @click="enterChampionSelectPage()" class="icon-button selectable" :class="isChampionSelectInGame() && 'selected'">
+          <v-icon dark>wifi</v-icon>
+        </button>
       </div>
     </div>
     <router-view style="padding-top:50px;"/>
@@ -110,6 +113,10 @@
         return this.routerStartWith('/rune');
       },
 
+      isChampionSelectInGame() {
+        return this.routerStartWith('/champselect');
+      },
+
       enterHome() {
         let homeUrl;
         if (this.status === 'LOGIN_COMPLETE') {
@@ -128,6 +135,13 @@
 
       enterRunePage() {
         let url = `/rune`;
+        if (this.$router.currentRoute.path !== url) {
+          this.$router.push(url);
+        }
+      },
+
+      enterChampionSelectPage() {
+        let url = `/champselect`;
         if (this.$router.currentRoute.path !== url) {
           this.$router.push(url);
         }

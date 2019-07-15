@@ -33,5 +33,10 @@ export default new Router({
       component: () => import('./views/RuneDetail.vue'),
       props: true,
     },
+    {
+      path: '/champselect',
+      name: 'champ-select',
+      component: () => import('./views/ChampSelect.vue'),
+    },
   ],
 });
