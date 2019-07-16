@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
+import {
+  Module,
+  Mutation,
+  MutationAction,
+  VuexModule,
+} from 'vuex-module-decorators';
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -18,10 +23,13 @@ export default class Match extends VuexModule {
   public async initializeState() {
     return { matches: [] };
   }
+
   @MutationAction({ mutate: ['matches'] })
   public async updateMatches({ accountId, page }: any) {
     const start = page * 20;
-    const response = await axios.get(`${ENDPOINT}/summoner/matches/${accountId}/${start}/20`);
+    const response = await axios.get(
+      `${ENDPOINT}/summoner/matches/${accountId}/${start}/20`
+    );
     if (page === 0) {
       return { matches: response.data };
     } else {
@@ -29,9 +37,12 @@ export default class Match extends VuexModule {
       return { matches: state.matches.concat(response.data) };
     }
   }
+
   @MutationAction({ mutate: ['champions'] })
   public async fetchChampions({ seasonId, accountId }: any) {
-    const response = await axios.get(`${ENDPOINT}/summoner/rift/champions/${seasonId}/${accountId}`);
+    const response = await axios.get(
+      `${ENDPOINT}/summoner/rift/champions/${seasonId}/${accountId}`
+    );
     return { champions: response.data };
   }
 }

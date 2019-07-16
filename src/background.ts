@@ -9,7 +9,7 @@ let mainWindow: AppWindow | null = null;
 type OnDidLoadFn = (window: AppWindow) => void;
 let onDidLoadFns: OnDidLoadFn[] | null = [];
 
-let isDuplicateInstance = false;
+let isDuplicateInstance: boolean;
 const gotSingleInstanceLock = app.requestSingleInstanceLock();
 isDuplicateInstance = !gotSingleInstanceLock;
 

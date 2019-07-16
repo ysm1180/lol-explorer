@@ -1,53 +1,93 @@
 <template>
-  <v-card flat height="100%" class="lighten-4" :class="gameInfo.requester.isWin?'blue':'red'">
+  <v-card
+    :class="gameInfo.requester.isWin ? 'blue' : 'red'"
+    class="lighten-4"
+    flat
+    height="100%"
+  >
     <v-layout justify-space-between>
       <v-flex class="matchinfo-area1">
-        <v-img :src="champions[requester.championId].iconUrl" class="requester-champ-icon">
-        </v-img>
+        <v-img
+          :src="champions[requester.championId].iconUrl"
+          class="requester-champ-icon"
+        ></v-img>
       </v-flex>
       <v-flex class="matchinfo-area2">
-        <v-layout fill-height column justify-center>
-          <span class="font-size-small font-weight-bold">{{queueString}}</span>
+        <v-layout column fill-height justify-center>
+          <span class="font-size-small font-weight-bold">
+            {{ queueString }}
+          </span>
           <span
+            :class="gameInfo.requester.isWin ? 'blue--text' : 'red--text'"
             class="font-size-small"
-            :class="gameInfo.requester.isWin?'blue--text':'red--text'"
-          >{{gameInfo.requester.isWin?'승리':'패배'}}</span>
+          >
+            {{ gameInfo.requester.isWin ? '승리' : '패배' }}
+          </span>
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area3">
-        <v-layout fill-height column justify-center>
-          <span
-            class="font-size-small font-weight-bold"
-          >평점 {{((requester.stats.kills + requester.stats.assists) / requester.stats.deaths).toFixed(2)}}</span>
-          <span
-            class="caption"
-          >{{requester.stats.kills}} / {{requester.stats.deaths}} / {{requester.stats.assists}}</span>
-          <span class="font-size-small green--text">{{getSucceededKillString(requester)}}</span>
+        <v-layout column fill-height justify-center>
+          <span class="font-size-small font-weight-bold">
+            평점
+            {{
+              (
+                (requester.stats.kills + requester.stats.assists) /
+                requester.stats.deaths
+              ).toFixed(2)
+            }}
+          </span>
+          <span class="caption">
+            {{ requester.stats.kills }} / {{ requester.stats.deaths }} /
+            {{ requester.stats.assists }}
+          </span>
+          <span class="font-size-small green--text">
+            {{ getSucceededKillString(requester) }}
+          </span>
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area4">
-        <v-layout fill-height column justify-center>
-          <span class="font-size-small">레벨 {{requester.stats.champLevel}}</span>
-          <span class="font-size-small font-weight-bold">골드 {{requester.stats.goldEarned | gold}}</span>
-          <span class="font-size-small">CS {{requester.stats.totalMinionsKilled}}</span>
+        <v-layout column fill-height justify-center>
+          <span class="font-size-small">
+            레벨 {{ requester.stats.champLevel }}
+          </span>
+          <span class="font-size-small font-weight-bold">
+            골드 {{ requester.stats.goldEarned | gold }}
+          </span>
+          <span class="font-size-small">
+            CS {{ requester.stats.totalMinionsKilled }}
+          </span>
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area5">
-        <v-layout fill-height column justify-center>
+        <v-layout column fill-height justify-center>
           <div>
             <v-layout>
-              <v-img :src="spells[requester.spells[0]].iconUrl" class="requester-spell-icon" />
-              <v-img :src="spells[requester.spells[1]].iconUrl" class="requester-spell-icon" />
+              <v-img
+                :src="spells[requester.spells[0]].iconUrl"
+                class="requester-spell-icon"
+              />
+              <v-img
+                :src="spells[requester.spells[1]].iconUrl"
+                class="requester-spell-icon"
+              />
             </v-layout>
           </div>
           <div>
             <v-layout>
               <v-img
-                :src="`${perks.baseIconUrl}${perks[requester.stats.perkPrimaryStyle].icon}`"
+                :src="
+                  `${perks.baseIconUrl}${
+                    perks[requester.stats.perkPrimaryStyle].icon
+                  }`
+                "
                 class="requester-perk-icon"
               />
               <v-img
-                :src="`${perks.baseIconUrl}${perks[requester.stats.perkSubStyle].icon}`"
+                :src="
+                  `${perks.baseIconUrl}${
+                    perks[requester.stats.perkSubStyle].icon
+                  }`
+                "
                 class="requester-perk-icon"
               />
             </v-layout>
@@ -55,61 +95,61 @@
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area6">
-        <v-layout fill-height column justify-center>
+        <v-layout column fill-height justify-center>
           <div>
             <v-layout>
               <v-img
-                v-for="(item, index) in requester.items.slice(0,3)"
-                v-bind:key="index"
-                :src="item!==0?items[item].iconUrl:''"
+                :src="item !== 0 ? items[item].iconUrl : ''"
                 class="requester-item-icon grey darken-2"
+                v-bind:key="index"
+                v-for="(item, index) in requester.items.slice(0, 3)"
               />
             </v-layout>
           </div>
           <div>
             <v-layout>
               <v-img
-                v-for="(item, index) in requester.items.slice(3,7)"
-                v-bind:key="index"
-                :src="item!==0?items[item].iconUrl:''"
+                :src="item !== 0 ? items[item].iconUrl : ''"
                 class="requester-item-icon grey darken-2"
+                v-bind:key="index"
+                v-for="(item, index) in requester.items.slice(3, 7)"
               />
             </v-layout>
           </div>
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area7">
-        <v-layout fill-height column justify-center>
-          <span class="font-size-small">{{durationString}}</span>
-          <span class="font-size-small">{{timeDeltaTextByNow}}</span>
+        <v-layout column fill-height justify-center>
+          <span class="font-size-small">{{ durationString }}</span>
+          <span class="font-size-small">{{ timeDeltaTextByNow }}</span>
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area8">
-        <v-layout fill-height column justify-center>
+        <v-layout column fill-height justify-center>
           <div>
             <v-layout mb-1>
               <v-img
-                v-for="(participant, key) in gameInfo.teams['100'].participants"
-                v-bind:key="key"
                 :src="champions[participant.championId].iconUrl"
                 class="participant-icon"
+                v-bind:key="key"
+                v-for="(participant, key) in gameInfo.teams['100'].participants"
               />
             </v-layout>
           </div>
           <div>
             <v-layout>
               <v-img
-                v-for="(participant, key) in gameInfo.teams['200'].participants"
-                v-bind:key="key"
                 :src="champions[participant.championId].iconUrl"
                 class="participant-icon"
+                v-bind:key="key"
+                v-for="(participant, key) in gameInfo.teams['200'].participants"
               />
             </v-layout>
           </div>
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area9">
-        <v-layout fill-height align-center>
+        <v-layout align-center fill-height>
           <v-icon>expand_more</v-icon>
         </v-layout>
       </v-flex>
@@ -119,7 +159,7 @@
 
 <script lang="ts">
 import { format } from 'util';
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {},
@@ -135,18 +175,23 @@ export default class MatchCard extends Vue {
   get champions() {
     return this.$store.state.lolstatic.champions;
   }
+
   get items() {
     return this.$store.state.lolstatic.items;
   }
+
   get spells() {
     return this.$store.state.lolstatic.spells;
   }
+
   get perks() {
     return this.$store.state.lolstatic.perks;
   }
+
   get gameInfo() {
     return this.match.gameInfo;
   }
+
   get requester() {
     const { participantId, teamId } = this.gameInfo.requester;
     return this.gameInfo.teams[teamId].participants[participantId];
@@ -191,8 +236,7 @@ export default class MatchCard extends Vue {
       2,
       '0'
     );
-    const durationTimeStr = `${minuteStr}분 ${secondStr}초`;
-    return durationTimeStr;
+    return `${minuteStr}분 ${secondStr}초`;
   }
 
   public getSucceededKillString(participant: any) {
@@ -208,6 +252,7 @@ export default class MatchCard extends Vue {
       return '';
     }
   }
+
   public mounted() {}
 }
 </script>
@@ -215,45 +260,58 @@ export default class MatchCard extends Vue {
 .font-size-small {
   font-size: 12px;
 }
+
 .matchinfo-area1 {
   max-width: 50px;
 }
+
 .matchinfo-area2 {
   max-width: 70px;
 }
+
 .matchinfo-area3 {
   max-width: 60px;
 }
+
 .matchinfo-area4 {
   max-width: 80px;
 }
+
 .matchinfo-area5 {
   max-width: 50px;
 }
+
 .matchinfo-area6 {
   max-width: 90px;
 }
+
 .matchinfo-area7 {
   max-width: 60px;
 }
+
 .matchinfo-area8 {
   max-width: 110px;
 }
+
 .matchinfo-area9 {
   max-width: 25px;
 }
+
 .requester-champ-icon {
   width: 64px;
   height: 64px;
 }
+
 .requester-spell-icon {
   max-width: 23px;
   max-height: 23px;
 }
+
 .requester-perk-icon {
   max-width: 23px;
   max-height: 23px;
 }
+
 .requester-item-icon {
   min-width: 23px;
   min-height: 23px;
@@ -261,6 +319,7 @@ export default class MatchCard extends Vue {
   max-height: 23px;
   border-radius: 3px;
 }
+
 .participant-icon {
   max-width: 24px;
   max-height: 24px;
