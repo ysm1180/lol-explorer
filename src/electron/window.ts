@@ -73,7 +73,9 @@ export class AppWindow {
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
       this.window.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
-      if (!process.env.IS_TEST) { this.window.webContents.openDevTools(); }
+      if (!process.env.IS_TEST) {
+        this.window.webContents.openDevTools();
+      }
     } else {
       createProtocol('app');
       // Load the index.html when not in development
@@ -104,7 +106,11 @@ export class AppWindow {
   public sendConnect(data: lcuData) {
     this.show();
 
-    console.log(`Basic ${Buffer.from(`${data.username}:${data.password}`).toString('base64')}`);
+    console.log(
+      `Basic ${Buffer.from(`${data.username}:${data.password}`).toString(
+        'base64'
+      )}`
+    );
     this.connectRiotWebSocket(
       `wss://${data.username}:${data.password}@${data.address}:${data.port}/`
     );

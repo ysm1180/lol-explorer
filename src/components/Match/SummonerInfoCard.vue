@@ -1,26 +1,34 @@
 <template>
-  <v-card height="100%" flat class="summoner-info-card blue-grey darken-3">
+  <v-card class="summoner-info-card blue-grey darken-3" flat height="100%">
     <v-layout fill-height row>
       <v-flex xs3>
-        <v-layout fill-height align-center justify-center>
-          <v-img class="summoner-icon" :src="summoner.iconUrl">
+        <v-layout align-center fill-height justify-center>
+          <v-img :src="summoner.iconUrl" class="summoner-icon">
             <span
               class="summoner-level font-weight-bold text-xs-center white--text"
-            >{{summoner.summonerLevel}}</span>
+            >
+              {{ summoner.summonerLevel }}
+            </span>
           </v-img>
         </v-layout>
       </v-flex>
-      <v-flex xs3 pa-2>
-        <v-layout fill-height column align-baseline justify-center>
-          <span class="headline font-weight-bold mb-1 white--text">{{summoner.name}}</span>
-          <v-btn class="blue lighten-2" @click="$emit('renew')" :disabled="renewing">
+      <v-flex pa-2 xs3>
+        <v-layout align-baseline column fill-height justify-center>
+          <span class="headline font-weight-bold mb-1 white--text">
+            {{ summoner.name }}
+          </span>
+          <v-btn
+            :disabled="renewing"
+            @click="$emit('renew')"
+            class="blue lighten-2"
+          >
             <span class="white--text font-weight-bold">전적 갱신</span>
             <v-progress-circular
-              v-if="renewing"
               class="ml-3"
               color="white"
-              size="20"
               indeterminate
+              size="20"
+              v-if="renewing"
             />
           </v-btn>
         </v-layout>
@@ -36,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import TierCard from './TierCard.vue';
 
 @Component({
@@ -45,10 +53,10 @@ import TierCard from './TierCard.vue';
   },
 })
 export default class SummonerInfoCard extends Vue {
-  @Prop() public summoner: any;
-  @Prop() public renewing!: boolean;
-  public solo = null;
-  public free = null;
+  @Prop() private summoner: any;
+  @Prop() private renewing: boolean = false;
+  private solo = null;
+  private free = null;
 
   public mounted() {
     this.summoner.seasons.forEach((season: any) => {
@@ -67,15 +75,14 @@ export default class SummonerInfoCard extends Vue {
   max-width: 100px;
   max-height: 100px;
   background-size: cover;
-
 }
 
 .summoner-level {
+  text-align: center;
   position: absolute;
   bottom: 0;
   width: 50px;
   z-index: 3;
-  text-align: center;
 
   background-color: #212121;
   border: 1px solid darkorange;
