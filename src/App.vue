@@ -11,13 +11,14 @@
         </button>
       </div>
       <div class="buttons large">
-        <button title="소환사 정보" @click="enterHome()" class="icon-button selectable" :class="isHome() && 'selected'">
+        <button title="소환사 정보" @click="enterHome()" class="icon-button" :class="isHome() && 'selected'">
           <v-icon dark>home</v-icon>
         </button>
-        <button title="룬 관리" @click="enterRunePage()" class="icon-button selectable" :class="isRunePage() && 'selected'">
+        <button title="룬 관리" @click="enterRunePage()" class="icon-button" :class="isRunePage() && 'selected'">
           <v-icon dark>filter_none</v-icon>
         </button>
-        <button title="In Game" @click="enterChampionSelectPage()" class="icon-button selectable" :class="isChampionSelectInGame() && 'selected'">
+        <button title="In Game" @click="enterChampionSelectPage()" class="icon-button"
+                :class="isChampionSelectInGame() && 'selected'">
           <v-icon dark>wifi</v-icon>
         </button>
       </div>
@@ -33,7 +34,7 @@
     components: {},
     data() {
       return {
-        viewNav: true
+        viewNav: true,
       };
     },
     computed: {
@@ -45,11 +46,11 @@
       },
       status() {
         return this.$store.state.connection.status;
-      }
+      },
     },
     mounted() {
       // f5
-      document.addEventListener('keydown', e => {
+      document.addEventListener('keydown', (e) => {
         if (e.code === 'F5') {
           location.href = '/match';
         }
@@ -64,10 +65,8 @@
         this.$store.commit('connection/setStatus', 'WAITING_LOGIN');
         await this.$store.dispatch('connection/loadLcuSummoner', lcuData);
         if (this.status === 'LOGIN_COMPLETE') {
-          await this.$store.dispatch(
-            'connection/updateSummoner',
-            this.lcuSummoner.displayName
-          );
+          await this.$store.dispatch('connection/updateSummoner',
+                                     this.lcuSummoner.displayName);
           this.$router.push(`/match/${this.summoner.accountId}`);
         }
       });
@@ -84,10 +83,8 @@
         ) {
           await this.$store.commit('connection/setStatus', 'LOGIN_COMPLETE');
           await this.$store.commit('connection/setLcuSummoner', data.data);
-          await this.$store.dispatch(
-            'connection/updateSummoner',
-            this.lcuSummoner.displayName
-          );
+          await this.$store.dispatch('connection/updateSummoner',
+                                     this.lcuSummoner.displayName);
           this.$router.push(`/match/${this.summoner.accountId}`);
         } else if (
           data.uri === '/lol-champ-select/v1/session' &&
@@ -134,30 +131,29 @@
       },
 
       enterRunePage() {
-        let url = `/rune`;
+        const url = `/rune`;
         if (this.$router.currentRoute.path !== url) {
           this.$router.push(url);
         }
       },
 
       enterChampionSelectPage() {
-        let url = `/champselect`;
+        const url = `/champselect`;
         if (this.$router.currentRoute.path !== url) {
           this.$router.push(url);
         }
       },
 
       routerStartWith(...urls) {
-        for (let i = 0; i < urls.length; i++) {
-          const url = urls[i];
+        for (const url of urls) {
           if (this.$router.currentRoute.path.indexOf(url) === 0) {
             return true;
           }
         }
 
         return false;
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -207,7 +203,7 @@
     outline: 0;
   }
 
-  .icon-button.selectable.selected {
+  .icon-button.selected {
     box-shadow: 0 0 0 2px darkorange;
     border-radius: 10px;
   }
