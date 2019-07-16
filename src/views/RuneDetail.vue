@@ -26,8 +26,16 @@
 </template>
 
 <script lang="ts">
+<<<<<<< HEAD
+import axios from 'axios';
+import { mapGetters } from 'vuex';
+import { Component, Vue, Prop } from 'vue-property-decorator';
+=======
 import { Component, Prop, Vue } from 'vue-property-decorator';
+>>>>>>> 74d0d068b1fafce85678b75f2c5aad27cfdeb4e8
 import RunePage from '../components/Rune/RunePage.vue';
+
+const ENDPOINT = 'http://localhost:3000';
 
 @Component({
   components: {
@@ -36,27 +44,31 @@ import RunePage from '../components/Rune/RunePage.vue';
 })
 export default class Home extends Vue {
   @Prop() public championId!: number;
+  public statistic = {};
   public pageNum: number = 1;
   public items: any[] = [
     {
-      name: '추천1',
+      name: '룬페이지1',
       value: 1,
     },
     {
-      name: '추천2',
+      name: '룬페이지2',
       value: 2,
     },
     {
-      name: '사용자1',
+      name: '룬페이지3',
       value: 3,
     },
-    {
-      name: '사용자2',
-      value: 4,
-    },
   ];
+<<<<<<< HEAD
+  public async mounted(): Promise<any> {
+    const response = await axios.get(`${ENDPOINT}/statistics/champion/${this.championId}`);
+    console.log(response);
+  }
+=======
 
   public mounted(): void {}
+>>>>>>> 74d0d068b1fafce85678b75f2c5aad27cfdeb4e8
 
   get champions() {
     return this.$store.state.lolstatic.champions;
