@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { lcuData, lcuSummonerData } from 'models';
-import { Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
+import {
+  Module,
+  Mutation,
+  MutationAction,
+  VuexModule,
+} from 'vuex-module-decorators';
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -40,9 +45,15 @@ export default class Connection extends VuexModule {
   @MutationAction({ mutate: ['status', 'lcuSummoner'] })
   public async loadLcuSummoner(lcuData: lcuData) {
     const response = await axios.get(
-      `${lcuData.protocol}://${lcuData.address}:${lcuData.port}/lol-summoner/v1/current-summoner`,
+      `${lcuData.protocol}://${lcuData.address}:${
+        lcuData.port
+      }/lol-summoner/v1/current-summoner`,
       {
-        headers: { Authorization: `Basic ${btoa(`${lcuData.username}:${lcuData.password}`)}` },
+        headers: {
+          Authorization: `Basic ${btoa(
+            `${lcuData.username}:${lcuData.password}`
+          )}`,
+        },
       }
     );
     return {

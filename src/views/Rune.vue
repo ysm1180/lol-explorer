@@ -1,19 +1,32 @@
 <template>
-  <v-layout fill-height column id="rune-page">
+  <v-layout column fill-height id="rune-page">
     <div>
       <v-layout align-center justify-space-between px-5>
-        <v-flex xs4 text-xs-left>
+        <v-flex text-xs-left xs4>
           <span class="title">챔피언을 선택해주세요</span>
         </v-flex>
         <v-flex xs4>
-          <v-text-field v-model="keyword" label="검색" color="white" id="search-field" />
+          <v-text-field
+            color="white"
+            id="search-field"
+            label="검색"
+            v-model="keyword"
+          ></v-text-field>
         </v-flex>
       </v-layout>
     </div>
-    <v-layout wrap align-content-start>
-      <div v-for="(champion, index) in searchedChampions" v-bind:key="index" class="ma-2" style="">
-        <v-img :src="champion.iconUrl" :title="champion.name" class="champion-icon"
+    <v-layout align-content-start wrap>
+      <div
+        class="ma-2"
+        style=""
+        v-bind:key="index"
+        v-for="(champion, index) in searchedChampions"
+      >
+        <v-img
+          :src="champion.iconUrl"
+          :title="champion.name"
           @click="$router.push(`/rune/${champion.key}`)"
+          class="champion-icon"
         />
       </div>
     </v-layout>
@@ -21,20 +34,20 @@
 </template>
 
 <script lang="ts">
-import { mapGetters } from 'vuex';
-import { Component, Vue } from 'vue-property-decorator';
+  import {Component, Vue} from 'vue-property-decorator';
 
-@Component({
+  @Component({
   components: {},
 })
 export default class Home extends Vue {
-  public keyword: string = '';
+  private keyword: string = '';
 
   public mounted(): void {}
 
   get champions() {
     return this.$store.state.lolstatic.champions;
   }
+
   get sortedChampions() {
     const array = Object.values(this.champions);
     array.sort((a: any, b: any) => {
@@ -48,11 +61,11 @@ export default class Home extends Vue {
     });
     return array;
   }
-  get searchedChampions() {
-    const searchedChampions = this.sortedChampions.filter((element: any) => {
+
+  public get searchedChampions() {
+    return this.sortedChampions.filter((element: any) => {
       return element.name.includes(this.keyword);
     });
-    return searchedChampions;
   }
 }
 </script>
@@ -60,6 +73,7 @@ export default class Home extends Vue {
 #rune-page {
   overflow-y: auto;
 }
+
 .champion-icon {
   min-width: 50px;
   min-height: 50px;

@@ -1,9 +1,11 @@
 <template>
-  <v-layout align-center justify-center fill-height>
-    <span v-if="!champselecting" class="display-1 font-weight-bold">챔피언 선택중이 아닙니다.</span>
-    <v-layout v-else column fill-height justify-center align-center>
-      <v-flex v-for="(info,index) in myTeamInfo" v-bind:key="index">
-        {{info}}
+  <v-layout align-center fill-height justify-center>
+    <span class="display-1 font-weight-bold" v-if="!champSelecting">
+      챔피언 선택중이 아닙니다.
+    </span>
+    <v-layout align-center column fill-height justify-center v-else>
+      <v-flex v-bind:key="index" v-for="(info, index) in myTeamInfo">
+        {{ info }}
       </v-flex>
     </v-layout>
   </v-layout>
@@ -12,17 +14,17 @@
 <script lang="ts">
 import axios from 'axios';
 import { Component, Vue } from 'vue-property-decorator';
-import { IpcMessageEvent, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 
 const ENDPOINT = 'http://localhost:3000';
 @Component({
   components: {},
 })
 export default class Home extends Vue {
-  public champselecting: boolean = false;
-  public myTeam: any[] = [];
-  public myTeamName: any[] = [];
-  public myTeamInfo: any[] = [];
+  private champSelecting: boolean = false;
+  private myTeam: any[] = [];
+  private myTeamName: any[] = [];
+  private myTeamInfo: any[] = [];
 
   public async created() {
     ipcRenderer.on('lcu-api-message', async (event: any, data: any) => {
@@ -34,8 +36,8 @@ export default class Home extends Vue {
   }
 
   public async init() {
-    await this.checkIfChampselecting();
-    if (this.champselecting) {
+    await this.checkIfChampSelecting();
+    if (this.champSelecting) {
       await this.checkMyTeam();
       await this.checkMyTeamName();
       this.$nextTick(async () => {
@@ -43,36 +45,52 @@ export default class Home extends Vue {
       });
     }
   }
-  public async checkIfChampselecting() {
-    const response = await axios.get(
-      `${this.lcuData.protocol}://${this.lcuData.address}:${this.lcuData.port}/lol-gameflow/v1/gameflow-phase`,
-      {
-        headers: { Authorization: `Basic ${btoa(`${this.lcuData.username}:${this.lcuData.password}`)}` },
-      }
-    );
-    if (response.data === 'ChampSelect') {
-      this.champselecting = true;
-    } else {
-      this.champselecting = false;
-    }
+
+  public async checkIfChampSelecting() {
+    const url = `${this.lcuData.protocol}://${this.lcuData.address}:${
+      this.lcuData.port
+    }/lol-gameflow/v1/gameflow-phase`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Basic ${btoa(
+          `${this.lcuData.username}:${this.lcuData.password}`
+        )}`,
+      },
+    });
+
+    this.champSelecting = response.data === 'ChampSelect';
   }
+
   public async checkMyTeam() {
     const response = await axios.get(
-      `${this.lcuData.protocol}://${this.lcuData.address}:${this.lcuData.port}/lol-champ-select/v1/session`,
+      `${this.lcuData.protocol}://${this.lcuData.address}:${
+        this.lcuData.port
+      }/lol-champ-select/v1/session`,
       {
-        headers: { Authorization: `Basic ${btoa(`${this.lcuData.username}:${this.lcuData.password}`)}` },
+        headers: {
+          Authorization: `Basic ${btoa(
+            `${this.lcuData.username}:${this.lcuData.password}`
+          )}`,
+        },
       }
     );
     this.myTeam = response.data.myTeam;
   }
+
   public async checkMyTeamName() {
     for (const summoner of this.myTeam) {
       if (summoner.summonerId !== 0) {
-        const baseUrl = `${this.lcuData.protocol}://${this.lcuData.address}:${this.lcuData.port}`;
+        const baseUrl = `${this.lcuData.protocol}://${this.lcuData.address}:${
+          this.lcuData.port
+        }`;
         const response = await axios.get(
           `${baseUrl}/lol-summoner/v1/summoners/${summoner.summonerId}`,
           {
-            headers: { Authorization: `Basic ${btoa(`${this.lcuData.username}:${this.lcuData.password}`)}` },
+            headers: {
+              Authorization: `Basic ${btoa(
+                `${this.lcuData.username}:${this.lcuData.password}`
+              )}`,
+            },
           }
         );
         if (!this.myTeamName.includes(response.data.displayName)) {
@@ -81,6 +99,7 @@ export default class Home extends Vue {
       }
     }
   }
+
   public async checkMyTeamInfo() {
     for (const name of this.myTeamName) {
       const response = await axios.get(`${ENDPOINT}/summoner/${name}`);
@@ -88,7 +107,7 @@ export default class Home extends Vue {
     }
   }
 
-  get lcuData() {
+  public get lcuData() {
     return this.$store.state.connection.lcuData;
   }
 }

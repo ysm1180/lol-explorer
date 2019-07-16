@@ -76,7 +76,10 @@ export class RiotWSProtocol {
     }
   }
 
-  public on(event: string, listener: (this: WebSocket, ...args: any[]) => void) {
+  public on(
+    event: string,
+    listener: (this: WebSocket, ...args: any[]) => void
+  ) {
     this.listeners[event] = listener;
     if (this.ws) {
       this.ws.addListener(event, listener);
