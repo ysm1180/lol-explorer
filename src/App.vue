@@ -108,21 +108,17 @@ export default {
         data.uri === '/lol-champ-select/v1/session' &&
         data.data.actions[0][0].championId !== 0
       ) {
-        console.log(data);
-        console.log(data.data.actions[0][0]);
         this.$router.push(`/rune/${data.data.actions[0][0].championId}`);
       }
     });
   },
   methods: {
     isHome() {
-      if (this.status === 'LOGIN_COMPLETE') {
-        if (this.summoner) {
-          const homeUrl = `/match/${this.summoner.accountId}`;
-          return this.$router.currentRoute.path === homeUrl;
-        }
+      if (this.status === 'LOGIN_COMPLETE' && this.summoner) {
+        const homeUrl = `/match/${this.summoner.accountId}`;
+        return this.$router.currentRoute.path === homeUrl;
       } else {
-        return this.routerStartWith('/match');
+      return this.routerStartWith('/match');
       }
     },
 
@@ -177,7 +173,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="scss">
 #app {
   width: 100vw;
   min-width: 800px;
@@ -186,25 +182,24 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #333333;
-}
-
-.toolbar {
-  display: flex;
-
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-
-  padding: 10px;
-  margin-top: 0;
-  text-align: left;
-
-  background-color: #212121;
   color: white;
+  .toolbar {
+    display: flex;
 
-  z-index: 2;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+
+    padding: 10px;
+    margin-top: 0;
+    text-align: left;
+
+    background-color: #212121;
+    color: white;
+
+    z-index: 2;
+  }
 }
 
 .buttons {
@@ -221,10 +216,9 @@ export default {
 .icon-button {
   padding: 2px 5px;
   outline: 0;
-}
-
-.icon-button.selected {
-  box-shadow: 0 0 0 2px darkorange;
-  border-radius: 10px;
+  &.selected {
+    box-shadow: 0 0 0 2px darkorange;
+    border-radius: 10px;
+  }
 }
 </style>

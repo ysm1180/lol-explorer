@@ -26,13 +26,7 @@
 </template>
 
 <script lang="ts">
-<<<<<<< HEAD
-import axios from 'axios';
-import { mapGetters } from 'vuex';
-import { Component, Vue, Prop } from 'vue-property-decorator';
-=======
 import { Component, Prop, Vue } from 'vue-property-decorator';
->>>>>>> 74d0d068b1fafce85678b75f2c5aad27cfdeb4e8
 import RunePage from '../components/Rune/RunePage.vue';
 
 const ENDPOINT = 'http://localhost:3000';
@@ -60,15 +54,8 @@ export default class Home extends Vue {
       value: 3,
     },
   ];
-<<<<<<< HEAD
-  public async mounted(): Promise<any> {
-    const response = await axios.get(`${ENDPOINT}/statistics/champion/${this.championId}`);
-    console.log(response);
-  }
-=======
 
   public mounted(): void {}
->>>>>>> 74d0d068b1fafce85678b75f2c5aad27cfdeb4e8
 
   get champions() {
     return this.$store.state.lolstatic.champions;
