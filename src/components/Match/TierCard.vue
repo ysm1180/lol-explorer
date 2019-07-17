@@ -1,10 +1,5 @@
 <template>
-  <v-card
-    height="100%"
-    flat
-    class="tier-card"
-    color="blue-grey darken-3 white--text"
-  >
+  <v-card height="100%" flat class="tier-card" color="transparent">
     <v-layout fill-height align-center v-if="season !== null">
       <div class="mr-2">
         <v-flex v-if="queueType === 'free'" text-xs-center font-weight-bold>
