@@ -173,7 +173,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 #app {
   width: 100vw;
   min-width: 800px;
@@ -220,5 +220,13 @@ export default {
     box-shadow: 0 0 0 2px darkorange;
     border-radius: 10px;
   }
+}
+
+.cursor__none {
+  user-select: none;
+}
+
+.cursor__pointer {
+  cursor: pointer;
 }
 </style>

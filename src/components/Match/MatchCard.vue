@@ -148,12 +148,15 @@
           </div>
         </v-layout>
       </v-flex>
-      <v-flex class="matchinfo-area9">
+      <v-flex @click="toggle()" class="matchinfo-area9 cursor__pointer">
         <v-layout align-center fill-height>
           <v-icon>expand_more</v-icon>
         </v-layout>
       </v-flex>
     </v-layout>
+    <v-flex v-if="isToggle">
+      <slot></slot>
+    </v-flex>
   </v-card>
 </template>
 
@@ -171,6 +174,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 })
 export default class MatchCard extends Vue {
   @Prop() public match: any;
+  private isToggle: boolean = false;
+
+  public created() {
+    this.isToggle = false;
+  }
 
   get champions() {
     return this.$store.state.lolstatic.champions;
@@ -253,6 +261,10 @@ export default class MatchCard extends Vue {
     }
   }
 
+  public toggle() {
+    this.isToggle = !this.isToggle;
+  }
+
   public mounted() {}
 }
 </script>
@@ -263,6 +275,7 @@ export default class MatchCard extends Vue {
 
 .matchinfo-area1 {
   max-width: 50px;
+  padding: 5px;
 }
 
 .matchinfo-area2 {
@@ -270,7 +283,7 @@ export default class MatchCard extends Vue {
 }
 
 .matchinfo-area3 {
-  max-width: 60px;
+  max-width: 70px;
 }
 
 .matchinfo-area4 {
@@ -298,8 +311,9 @@ export default class MatchCard extends Vue {
 }
 
 .requester-champ-icon {
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
 
 .requester-spell-icon {
