@@ -117,8 +117,10 @@ export default {
   methods: {
     isHome() {
       if (this.status === 'LOGIN_COMPLETE') {
-        const homeUrl = `/match/${this.summoner.accountId}`;
-        return this.$router.currentRoute.path === homeUrl;
+        if (this.summoner) {
+          const homeUrl = `/match/${this.summoner.accountId}`;
+          return this.$router.currentRoute.path === homeUrl;
+        }
       } else {
         return this.routerStartWith('/match');
       }
