@@ -43,58 +43,38 @@
           />
         </v-layout>
       </v-flex>
-      <v-tabs
-        class="mb-1"
-        color="transparent"
-        dark
-        fixed-tabs
-        height="40"
-        slider-color="orange"
-        v-model="tab"
-      >
-        <v-tab class="cursor-pointer">전적</v-tab>
-        <v-tab class="cursor-pointer">챔피언 분석</v-tab>
-      </v-tabs>
-
-      <v-layout style="min-width:600px;width:700px;">
-        <v-flex>
-          <v-tabs-items v-model="tab">
-            <v-tab-item>
-              <v-layout column fill-height>
-                <v-flex
-                  mb-2
-                  v-bind:key="index"
-                  v-for="(match, index) in matches"
-                >
-                  <div
-                    @click="toggle(index)"
-                    class="match-card-wrap"
-                    style="cursor:pointer"
-                  >
-                    <match-card :match="match" />
-                  </div>
-                  <div
-                    class="match-detail-wrap"
-                    v-if="toggleArray.includes(index)"
-                  >
-                    <match-detail :match="match" />
-                  </div>
-                </v-flex>
-                <v-layout align-center fill-height justify-center>
-                  <v-icon class="cursor-none" v-if="!loadingMatches">
-                    arrow_drop_down_circle
-                  </v-icon>
-                </v-layout>
-                <v-flex text-xs-center>
-                  <v-progress-circular
-                    color="grey"
-                    indeterminate
-                    v-if="loadingMatches"
-                  />
-                </v-flex>
-              </v-layout>
-            </v-tab-item>
-            <v-tab-item>
+      <Tabs>
+        <Tab class="font-weight-bold cursor__pointer" name="전적">
+          <v-layout column fill-height style="min-width:600px;width:700px;">
+            <v-flex mb-2 v-bind:key="index" v-for="(match, index) in matches">
+              <div
+                @click="toggle(index)"
+                class="match-card-wrap"
+                style="cursor:pointer"
+              >
+                <match-card :match="match" />
+              </div>
+              <div class="match-detail-wrap" v-if="toggleArray.includes(index)">
+                <match-detail :match="match" />
+              </div>
+            </v-flex>
+            <v-layout align-center fill-height justify-center mb-2>
+              <v-icon class="cursor__none" v-if="!loadingMatches">
+                arrow_drop_down_circle
+              </v-icon>
+            </v-layout>
+            <v-flex text-xs-center>
+              <v-progress-circular
+                color="grey"
+                indeterminate
+                v-if="loadingMatches"
+              />
+            </v-flex>
+          </v-layout>
+        </Tab>
+        <Tab class="font-weight-bold cursor__pointer" name="챔피언 분석">
+          <v-layout style="min-width:600px;width:700px;">
+            <v-flex>
               <champion-info-card
                 :champions="champions"
                 v-if="champions !== null"
@@ -106,10 +86,10 @@
                   v-if="loadingChampion"
                 />
               </v-layout>
-            </v-tab-item>
-          </v-tabs-items>
-        </v-flex>
-      </v-layout>
+            </v-flex>
+          </v-layout>
+        </Tab>
+      </Tabs>
     </v-layout>
   </v-layout>
 </template>
@@ -121,11 +101,15 @@ import SummonerInfoCard from '../components/Match/SummonerInfoCard.vue';
 import ChampionInfoCard from '../components/Match/ChampionInfoCard.vue';
 import MatchCard from '../components/Match/MatchCard.vue';
 import MatchDetail from '../components/Match/MatchDetail.vue';
+import Tabs from '@/components/UI/Tab/Tabs.vue';
+import Tab from '@/components/UI/Tab/Tab.vue';
 
 const ENDPOINT = 'http://localhost:3000';
 
 @Component({
   components: {
+    Tab,
+    Tabs,
     'match-card': MatchCard,
     'champion-info-card': ChampionInfoCard,
     'match-detail': MatchDetail,
@@ -269,7 +253,11 @@ export default class Index extends Vue {
   height: 60px;
 }
 
-.cursor-none {
+.cursor__none {
   user-select: none;
+}
+
+.cursor__pointer {
+  cursor: pointer;
 }
 </style>

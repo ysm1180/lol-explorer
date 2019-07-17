@@ -1,156 +1,40 @@
 <template>
-  <v-card class="summoner-info-card blue-grey darken-3" dark flat height="100%">
-    <v-tabs
-      class="mb-1 grey darken-4"
-      dark
-      fixed-tabs
-      height="40"
-      slider-color="blue"
-      v-model="tab"
-    >
-      <v-tab class="cursor-pointer">전체</v-tab>
-      <v-tab class="cursor-pointer">솔랭</v-tab>
-      <v-tab class="cursor-pointer">자유랭</v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="tab">
-      <v-tab-item>
-        <v-layout class="grey darken-3" column fill-height>
-          <v-flex mb-3>
-            <v-layout>
-              <v-flex xs4>최근 {{ champions.totalGames }} 게임</v-flex>
-              <v-flex xs1>게임수</v-flex>
-              <v-flex xs1>승률</v-flex>
-              <v-flex xs3>K/D/A</v-flex>
-              <v-flex xs1>평균 CS</v-flex>
-              <v-flex xs2>평균 골드</v-flex>
-            </v-layout>
-          </v-flex>
-          <v-flex mb-2 v-bind:key="champion.key" v-for="champion in totalArray">
-            <v-layout v-if="champion.wins !== null">
-              <v-flex xs4>
-                <v-layout align-center>
-                  <v-img
-                    :src="staticChampions[champion.key].iconUrl"
-                    class="champion-icon mr-2"
-                  />
-                  <span>{{ staticChampions[champion.key].name }}</span>
-                </v-layout>
-              </v-flex>
-              <v-flex xs1>{{ champion.wins + champion.losses }}</v-flex>
-              <v-flex xs1>
-                {{
-                  (
-                    (champion.wins * 100) /
-                    (champion.wins + champion.losses)
-                  ).toFixed(2)
-                }}%
-              </v-flex>
-              <v-flex xs3>
-                {{ champion.averageKills.toFixed(1) }}/{{
-                  champion.averageDeaths.toFixed(1)
-                }}/{{ champion.averageAssists.toFixed(1) }}
-              </v-flex>
-              <v-flex xs1>{{ champion.averageCS.toFixed(2) }}</v-flex>
-              <v-flex xs2>{{ champion.averageEarnedGold.toFixed(2) }}</v-flex>
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-tab-item>
-      <v-tab-item>
-        <v-layout class="grey darken-3" column fill-height>
-          <v-flex mb-3>
-            <v-layout>
-              <v-flex xs4>최근 {{ champions.totalGames }} 게임</v-flex>
-              <v-flex xs1>게임수</v-flex>
-              <v-flex xs1>승률</v-flex>
-              <v-flex xs3>K/D/A</v-flex>
-              <v-flex xs1>평균 CS</v-flex>
-              <v-flex xs2>평균 골드</v-flex>
-            </v-layout>
-          </v-flex>
-          <v-flex mb-2 v-bind:key="champion.key" v-for="champion in soloArray">
-            <v-layout v-if="champion.wins !== null">
-              <v-flex xs4>
-                <v-layout align-center>
-                  <v-img
-                    :src="staticChampions[champion.key].iconUrl"
-                    class="champion-icon mr-2"
-                  />
-                  <span>{{ staticChampions[champion.key].name }}</span>
-                </v-layout>
-              </v-flex>
-              <v-flex xs1>{{ champion.wins + champion.losses }}</v-flex>
-              <v-flex xs1>
-                {{
-                  (
-                    (champion.wins * 100) /
-                    (champion.wins + champion.losses)
-                  ).toFixed(2)
-                }}%
-              </v-flex>
-              <v-flex xs3>
-                {{ champion.averageKills.toFixed(1) }}/{{
-                  champion.averageDeaths.toFixed(1)
-                }}/{{ champion.averageAssists.toFixed(1) }}
-              </v-flex>
-              <v-flex xs1>{{ champion.averageCS.toFixed(2) }}</v-flex>
-              <v-flex xs2>{{ champion.averageEarnedGold.toFixed(2) }}</v-flex>
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-tab-item>
-      <v-tab-item>
-        <v-layout class="grey darken-3" column fill-height>
-          <v-flex mb-3>
-            <v-layout>
-              <v-flex xs4>최근 {{ champions.totalGames }} 게임</v-flex>
-              <v-flex xs1>게임수</v-flex>
-              <v-flex xs1>승률</v-flex>
-              <v-flex xs3>K/D/A</v-flex>
-              <v-flex xs1>평균 CS</v-flex>
-              <v-flex xs2>평균 골드</v-flex>
-            </v-layout>
-          </v-flex>
-          <v-flex mb-2 v-bind:key="champion.key" v-for="champion in flexArray">
-            <v-layout v-if="champion.wins !== null">
-              <v-flex xs4>
-                <v-layout align-center>
-                  <v-img
-                    :src="staticChampions[champion.key].iconUrl"
-                    class="champion-icon mr-2"
-                  />
-                  <span>{{ staticChampions[champion.key].name }}</span>
-                </v-layout>
-              </v-flex>
-              <v-flex xs1>{{ champion.wins + champion.losses }}</v-flex>
-              <v-flex xs1>
-                {{
-                  (
-                    (champion.wins * 100) /
-                    (champion.wins + champion.losses)
-                  ).toFixed(2)
-                }}%
-              </v-flex>
-              <v-flex xs3>
-                {{ champion.averageKills.toFixed(1) }}/{{
-                  champion.averageDeaths.toFixed(1)
-                }}/{{ champion.averageAssists.toFixed(1) }}
-              </v-flex>
-              <v-flex xs1>{{ champion.averageCS.toFixed(2) }}</v-flex>
-              <v-flex xs2>{{ champion.averageEarnedGold.toFixed(2) }}</v-flex>
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-tab-item>
-    </v-tabs-items>
+  <v-card color="#EDEDED" class="summoner-info-card" height="100%">
+    <Tabs class="mb-1">
+      <Tab
+        class="cursor-pointer"
+        :name="'전체(' + champions.totalGames + ')'"
+        :selected="true"
+      >
+        <ChampionInfoDetail
+          :count="champions.totalGames"
+          :data="totalArray"
+        ></ChampionInfoDetail>
+      </Tab>
+      <Tab class="cursor-pointer" name="솔로 랭크">
+        <ChampionInfoDetail
+          :count="champions.totalGames"
+          :data="soloArray"
+        ></ChampionInfoDetail>
+      </Tab>
+      <Tab class="cursor-pointer" name="자유 랭크">
+        <ChampionInfoDetail
+          :count="champions.totalGames"
+          :data="flexArray"
+        ></ChampionInfoDetail>
+      </Tab>
+    </Tabs>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import Tabs from '@/components/UI/Tab/Tabs.vue';
+import Tab from '@/components/UI/Tab/Tab.vue';
+import ChampionInfoDetail from '@/components/Match/ChampionInfoDetail.vue';
 
 @Component({
-  components: {},
+  components: { ChampionInfoDetail, Tab, Tabs },
 })
 export default class ChampionInfoCard extends Vue {
   @Prop() public champions: any;
@@ -226,9 +110,4 @@ export default class ChampionInfoCard extends Vue {
   }
 }
 </script>
-<style scoped>
-.champion-icon {
-  max-width: 20px;
-  max-height: 20px;
-}
-</style>
+<style scoped></style>

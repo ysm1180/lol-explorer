@@ -24,7 +24,7 @@ export class AppWindow {
       width: 960,
       height: 660,
       minWidth: 800,
-      backgroundColor: '#2F3437',
+      backgroundColor: '#FAFAFA',
       show: false,
       webPreferences: {
         disableBlinkFeatures: 'Auxclick',

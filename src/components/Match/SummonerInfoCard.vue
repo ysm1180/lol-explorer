@@ -1,5 +1,5 @@
 <template>
-  <v-card class="summoner-info-card blue-grey darken-3" flat height="100%">
+  <v-card class="summoner-info-card" color="transparent" flat height="100%">
     <v-layout fill-height row>
       <v-flex xs3>
         <v-layout align-center fill-height justify-center>
@@ -14,7 +14,7 @@
       </v-flex>
       <v-flex pa-2 xs3>
         <v-layout align-baseline column fill-height justify-center>
-          <span class="headline font-weight-bold mb-1 white--text">
+          <span class="headline font-weight-bold mb-1">
             {{ summoner.name }}
           </span>
           <v-btn
