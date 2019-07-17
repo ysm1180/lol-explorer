@@ -1,25 +1,18 @@
 <template>
-  <v-card color="#EDEDED" class="summoner-info-card" height="100%">
+  <v-card class="summoner-info-card" color="#EDEDED" height="100%">
     <Tabs class="mb-1">
-      <Tab
-        class="cursor-pointer"
-        :name="'전체(' + champions.totalGames + ')'"
-        :selected="true"
-      >
+      <Tab :name="'전체(' + champions.totalGames + ' 게임)'" :selected="true">
         <ChampionInfoDetail
-          :count="champions.totalGames"
           :data="totalArray"
         ></ChampionInfoDetail>
       </Tab>
-      <Tab class="cursor-pointer" name="솔로 랭크">
+      <Tab :name="'솔로랭크(' + champions.soloGames + ' 게임)'">
         <ChampionInfoDetail
-          :count="champions.totalGames"
           :data="soloArray"
         ></ChampionInfoDetail>
       </Tab>
-      <Tab class="cursor-pointer" name="자유 랭크">
+      <Tab :name="'자유랭크(' + champions.flexGames + ' 게임)'">
         <ChampionInfoDetail
-          :count="champions.totalGames"
           :data="flexArray"
         ></ChampionInfoDetail>
       </Tab>
@@ -32,6 +25,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import ChampionInfoDetail from '@/components/Match/ChampionInfoDetail.vue';
+import { IChampionInfoApiData } from '@/components/Match/champion-info';
 
 @Component({
   components: { ChampionInfoDetail, Tab, Tabs },
@@ -45,7 +39,7 @@ export default class ChampionInfoCard extends Vue {
   get totalArray() {
     const champions = this.champions.champions;
     const championsArray = Object.values(champions);
-    const championsTotalArray: any[] = [];
+    const championsTotalArray: IChampionInfoApiData[] = [];
     championsArray.forEach((element: any) => {
       if (Object.entries(element.total).length !== 0) {
         championsTotalArray.push(element.total);
@@ -66,7 +60,7 @@ export default class ChampionInfoCard extends Vue {
   get soloArray() {
     const champions = this.champions.champions;
     const championsArray = Object.values(champions);
-    const championsSoloArray: any[] = [];
+    const championsSoloArray: IChampionInfoApiData[] = [];
     championsArray.forEach((element: any) => {
       if (element.solo) {
         championsSoloArray.push(element.solo);
@@ -87,7 +81,7 @@ export default class ChampionInfoCard extends Vue {
   get flexArray() {
     const champions = this.champions.champions;
     const championsArray = Object.values(champions);
-    const championsFlexArray: any[] = [];
+    const championsFlexArray: IChampionInfoApiData[] = [];
     championsArray.forEach((element: any) => {
       if (element.flex) {
         championsFlexArray.push(element.flex);

@@ -44,21 +44,14 @@
         </v-layout>
       </v-flex>
       <Tabs>
-        <Tab class="font-weight-bold cursor__pointer" name="전적">
-          <v-layout column fill-height style="min-width:600px;width:700px;">
-            <v-flex mb-2 v-bind:key="index" v-for="(match, index) in matches">
-              <div
-                @click="toggle(index)"
-                class="match-card-wrap"
-                style="cursor:pointer"
-              >
-                <match-card :match="match" />
-              </div>
-              <div class="match-detail-wrap" v-if="toggleArray.includes(index)">
+        <Tab class="font-weight-bold" name="전적" :selected="true">
+          <v-layout column fill-height mb-5 style="min-width:600px;width:700px;">
+            <v-flex v-bind:key="index" v-for="(match, index) in matches">
+              <match-card :match="match">
                 <match-detail :match="match" />
-              </div>
+              </match-card>
             </v-flex>
-            <v-layout align-center fill-height justify-center mb-2>
+            <v-layout align-center fill-height justify-center my-3>
               <v-icon class="cursor__none" v-if="!loadingMatches">
                 arrow_drop_down_circle
               </v-icon>
@@ -72,19 +65,20 @@
             </v-flex>
           </v-layout>
         </Tab>
-        <Tab class="font-weight-bold cursor__pointer" name="챔피언 분석">
-          <v-layout style="min-width:600px;width:700px;">
+        <Tab class="font-weight-bold" name="챔피언 분석">
+          <v-layout style="min-width:700px;width:800px;" mb-5>
             <v-flex>
               <champion-info-card
                 :champions="champions"
                 v-if="champions !== null"
               />
-              <v-layout align-center fill-height justify-center>
-                <v-progress-circular
-                  color="grey"
-                  indeterminate
-                  v-if="loadingChampion"
-                />
+              <v-layout
+                align-center
+                fill-height
+                justify-center
+                v-if="loadingChampion"
+              >
+                <v-progress-circular color="grey" indeterminate />
               </v-layout>
             </v-flex>
           </v-layout>
@@ -172,6 +166,7 @@ export default class Index extends Vue {
   }
 
   get champions() {
+    console.log(this.$store.state.match.champions);
     return this.$store.state.match.champions;
   }
 
@@ -250,14 +245,6 @@ export default class Index extends Vue {
 
 .match-card-wrap {
   width: 100%;
-  height: 60px;
-}
-
-.cursor__none {
-  user-select: none;
-}
-
-.cursor__pointer {
-  cursor: pointer;
+  height: 70px;
 }
 </style>
