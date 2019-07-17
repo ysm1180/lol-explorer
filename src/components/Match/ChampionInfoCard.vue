@@ -68,7 +68,7 @@ export default class ChampionInfoCard extends Vue {
     const championsArray = Object.values(champions);
     const championsSoloArray: any[] = [];
     championsArray.forEach((element: any) => {
-      if (Object.entries(element.solo).length !== 0) {
+      if (element.solo) {
         championsSoloArray.push(element.solo);
       }
     });
@@ -89,7 +89,7 @@ export default class ChampionInfoCard extends Vue {
     const championsArray = Object.values(champions);
     const championsFlexArray: any[] = [];
     championsArray.forEach((element: any) => {
-      if (Object.entries(element.flex).length !== 0) {
+      if (element.flex) {
         championsFlexArray.push(element.flex);
       }
     });
