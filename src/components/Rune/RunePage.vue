@@ -2,11 +2,12 @@
   <v-layout fill-height>
     <v-flex fill-height>
       <v-layout column fill-height>
-        <v-flex>
+        <div>
           <v-layout fill-height>
             <v-btn
               icon v-for="perkId in perkIdList" v-bind:key="perkId"
               @click="perk.primary.id=perkId"
+              :color="perkId===perk.primary.id?'orange':''" :outline="perkId===perk.primary.id"
             >
               <v-img
                 :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[perkId].icon}`"
@@ -14,12 +15,13 @@
               />
             </v-btn>
           </v-layout>
-        </v-flex>
-        <v-flex v-for="line in [0, 1, 2, 3]" v-bind:key="line">
+        </div>
+        <div v-for="line in [0, 1, 2, 3]" v-bind:key="line">
           <v-layout fill-height>
             <v-btn
               icon v-for="perkId in Object.keys(lolstatic.perks[perk.primary.id].slots[line].runes)" v-bind:key="perkId"
               @click="perk.primary[`slot${line}`] = perkId"
+              :color="perk.primary[`slot${line}`]===perkId?'orange':''" :outline="perk.primary[`slot${line}`]===perkId"
             >
             <v-img
               :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[perk.primary.id].slots[line].runes[perkId].icon}`"
@@ -27,17 +29,18 @@
             />
             </v-btn>
           </v-layout>
-        </v-flex>
+        </div>
       </v-layout>
     </v-flex>
     <v-flex fill-height>
       <v-layout column fill-height>
-        <v-flex>
+        <div>
           <v-layout fill-height>
             <v-btn
               icon v-for="perkId in perkIdList" v-bind:key="perkId"
               v-show="perkId !== perk.primary.id"
               @click="perk.secondary.id=perkId"
+              :color="perkId===perk.secondary.id?'orange':''" :outline="perkId===perk.secondary.id"
             >
               <v-img
                 :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[perkId].icon}`"
@@ -45,12 +48,13 @@
               />
             </v-btn>
           </v-layout>
-        </v-flex>
-        <v-flex v-for="line in [1, 2, 3]" v-bind:key="line">
+        </div>
+        <div v-for="line in [1, 2, 3]" v-bind:key="line">
           <v-layout fill-height>
             <v-btn
               icon v-for="perkId in Object.keys(lolstatic.perks[perk.secondary.id].slots[line].runes)" v-bind:key="perkId"
               @click="perk.secondary[`slot${line}`] = perkId"
+              :color="perk.secondary[`slot${line}`]===perkId?'orange':''" :outline="perk.secondary[`slot${line}`]===perkId"
             >
             <v-img
               :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[perk.secondary.id].slots[line].runes[perkId].icon}`"
@@ -58,7 +62,49 @@
             />
             </v-btn>
           </v-layout>
-        </v-flex>
+        </div>
+          <v-layout fill-height>
+            <v-btn
+              icon v-for="perkId in [5008, 5005, 5007]" v-bind:Key="perkId"
+              @click="perk.stat.stat1=perkId"
+              :color="perk.stat.stat1===perkId?'orange':''" :outline="perk.stat.stat1===perkId"
+            >
+              <v-img
+                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[5000].slots[0].runes[perkId].icon}`"
+                class="perk-icon" :class="perk.stat.stat1===perkId?'selected':''"
+              />
+            </v-btn>
+          </v-layout>
+        <div>
+          </div>
+          <v-layout fill-height>
+            <v-btn
+              icon v-for="perkId in [5008, 5002, 5003]" v-bind:Key="perkId"
+              @click="perk.stat.stat2=perkId"
+              :color="perk.stat.stat2===perkId?'orange':''" :outline="perk.stat.stat2===perkId"
+            >
+              <v-img
+                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[5000].slots[0].runes[perkId].icon}`"
+                class="perk-icon" :class="perk.stat.stat2===perkId?'selected':''"
+              />
+            </v-btn>
+          </v-layout>
+        <div>
+          </div>
+          <v-layout fill-height>
+            <v-btn
+              icon v-for="perkId in [5001, 5002, 5003]" v-bind:Key="perkId"
+              @click="perk.stat.stat3=perkId"
+              :color="perk.stat.stat3===perkId?'orange':''" :outline="perk.stat.stat3===perkId"
+            >
+              <v-img
+                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[5000].slots[0].runes[perkId].icon}`"
+                class="perk-icon" :class="perk.stat.stat3===perkId?'selected':''"
+              />
+            </v-btn>
+          </v-layout>
+        <div>
+        </div>
       </v-layout>
     </v-flex>
   </v-layout>
@@ -85,6 +131,11 @@ export default class ChampionInfoCard extends Vue {
       slot1: 0,
       slot2: 0,
       slot3: 0,
+    },
+    stat: {
+      stat1: 0,
+      stat2: 0,
+      stat3: 0,
     },
   };
   get lolstatic() {
