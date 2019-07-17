@@ -108,19 +108,17 @@ export default {
         data.uri === '/lol-champ-select/v1/session' &&
         data.data.actions[0][0].championId !== 0
       ) {
-        console.log(data);
-        console.log(data.data.actions[0][0]);
         this.$router.push(`/rune/${data.data.actions[0][0].championId}`);
       }
     });
   },
   methods: {
     isHome() {
-      if (this.status === 'LOGIN_COMPLETE') {
+      if (this.status === 'LOGIN_COMPLETE' && this.summoner) {
         const homeUrl = `/match/${this.summoner.accountId}`;
         return this.$router.currentRoute.path === homeUrl;
       } else {
-        return this.routerStartWith('/match');
+      return this.routerStartWith('/match');
       }
     },
 
