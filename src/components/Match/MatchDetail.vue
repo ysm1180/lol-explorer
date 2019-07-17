@@ -27,7 +27,7 @@
         </v-flex>
         <v-flex
           :class="
-            gameInfo.requester.participantId === key ? 'orange lighten-2' : ''
+            gameInfo.requester.participantId === Number(key) ? 'orange lighten-2' : ''
           "
           class="participant-row"
           v-bind:key="key"
@@ -188,7 +188,7 @@
         </v-flex>
         <v-flex
           :class="
-            gameInfo.requester.participantId === key ? 'orange lighten-2' : ''
+            gameInfo.requester.participantId === Number(key) ? 'orange lighten-2' : ''
           "
           class="participant-row"
           v-bind:key="key"
