@@ -116,11 +116,11 @@
                 <div>
                   <v-layout>
                     <v-img
-                      :src="spells[participant.spells[0]].iconUrl"
+                      :src="spells[participant.spells[0]] ? spells[participant.spells[0]].iconUrl : ''"
                       class="spell-icon"
                     />
                     <v-img
-                      :src="spells[participant.spells[1]].iconUrl"
+                      :src="spells[participant.spells[1]] ? spells[participant.spells[1]].iconUrl: ''"
                       class="spell-icon"
                     />
                   </v-layout>
@@ -277,11 +277,11 @@
                 <div>
                   <v-layout>
                     <v-img
-                      :src="spells[participant.spells[0]].iconUrl"
+                      :src="spells[participant.spells[0]] ? spells[participant.spells[0]].iconUrl : ''"
                       class="spell-icon"
                     />
                     <v-img
-                      :src="spells[participant.spells[1]].iconUrl"
+                      :src="spells[participant.spells[1]] ? spells[participant.spells[1]].iconUrl : ''"
                       class="spell-icon"
                     />
                   </v-layout>
