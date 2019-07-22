@@ -30,10 +30,10 @@
           <span class="font-size-small font-weight-bold">
             평점
             {{
-              (
+              requester.stats.deaths > 0 ? (
                 (requester.stats.kills + requester.stats.assists) /
                 requester.stats.deaths
-              ).toFixed(2)
+              ).toFixed(2) : 'Perfect'
             }}
           </span>
           <span class="caption">
@@ -63,11 +63,19 @@
           <div>
             <v-layout>
               <v-img
-                :src="spells[requester.spells[0]].iconUrl"
+                :src="
+                  spells[requester.spells[0]]
+                    ? spells[requester.spells[0]].iconUrl
+                    : ''
+                "
                 class="requester-spell-icon"
               />
               <v-img
-                :src="spells[requester.spells[1]].iconUrl"
+                :src="
+                  spells[requester.spells[1]]
+                    ? spells[requester.spells[1]].iconUrl
+                    : ''
+                "
                 class="requester-spell-icon"
               />
             </v-layout>
