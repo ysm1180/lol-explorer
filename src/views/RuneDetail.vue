@@ -13,14 +13,16 @@
       <v-select
         :items="items"
         attach
-        dark
         item-text="name"
         item-value="value"
         v-model="pageNum"
       ></v-select>
     </div>
     <div class="ml-5">
-      <rune-page />
+      <rune-page
+        :perk="perk"
+        @save="save"
+      />
     </div>
   </v-layout>
 </template>
@@ -38,7 +40,6 @@ const ENDPOINT = 'http://localhost:3000';
 })
 export default class Home extends Vue {
   @Prop() public championId!: number;
-  public statistic = {};
   public pageNum: number = 1;
   public items: any[] = [
     {
@@ -59,6 +60,51 @@ export default class Home extends Vue {
 
   get champions() {
     return this.$store.state.lolstatic.champions;
+  }
+  get perk() {
+    const fs = require('fs');
+    try {
+      const data = fs.readFileSync(`perk/${this.championId}_${this.pageNum}.json`, 'utf8');
+      const perk = JSON.parse(data);
+      return perk;
+    } catch (e) {
+      const perk = {
+        primary: {
+          id: '8000',
+          slot0: '0',
+          slot1: '0',
+          slot2: '0',
+          slot3: '0',
+        },
+        secondary: {
+          id: '8100',
+          slot1: '0',
+          slot2: '0',
+          slot3: '0',
+        },
+        stat: {
+          stat1: '0',
+          stat2: '0',
+          stat3: '0',
+        },
+      };
+      return perk;
+    }
+  }
+
+  public save(perk: any) {
+    const content = {
+      [this.championId]: perk,
+    };
+    const fs = require('fs');
+    try {
+      if (!fs.existsSync('perk')) {
+        fs.mkdirSync('perk');
+      }
+      fs.writeFileSync(`perk/${this.championId}_${this.pageNum}.json`, JSON.stringify(perk), 'utf-8');
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 </script>
