@@ -166,7 +166,6 @@ export default class Index extends Vue {
   }
 
   get champions() {
-    console.log(this.$store.state.match.champions);
     return this.$store.state.match.champions;
   }
 

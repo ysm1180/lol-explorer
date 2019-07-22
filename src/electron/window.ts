@@ -106,11 +106,6 @@ export class AppWindow {
   public sendConnect(data: lcuData) {
     this.show();
 
-    console.log(
-      `Basic ${Buffer.from(`${data.username}:${data.password}`).toString(
-        'base64'
-      )}`
-    );
     this.connectRiotWebSocket(
       `wss://${data.username}:${data.password}@${data.address}:${data.port}/`
     );
