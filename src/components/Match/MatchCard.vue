@@ -30,10 +30,12 @@
           <span class="font-size-small font-weight-bold">
             평점
             {{
-              requester.stats.deaths > 0 ? (
-                (requester.stats.kills + requester.stats.assists) /
-                requester.stats.deaths
-              ).toFixed(2) : 'Perfect'
+              requester.stats.deaths > 0
+                ? (
+                    (requester.stats.kills + requester.stats.assists) /
+                    requester.stats.deaths
+                  ).toFixed(2)
+                : 'Perfect'
             }}
           </span>
           <span class="caption">
@@ -103,26 +105,20 @@
         </v-layout>
       </v-flex>
       <v-flex class="matchinfo-area6">
-        <v-layout column fill-height justify-center>
+        <v-layout align-baseline column fill-height justify-center>
           <div>
-            <v-layout>
-              <v-img
-                :src="item !== 0 ? items[item].iconUrl : ''"
-                class="requester-item-icon grey darken-2"
-                v-bind:key="index"
-                v-for="(item, index) in requester.items.slice(0, 3)"
-              />
-            </v-layout>
+            <item-icon
+              :itemId="item"
+              v-bind:key="index"
+              v-for="(item, index) in requester.items.slice(0, 3)"
+            />
           </div>
           <div>
-            <v-layout>
-              <v-img
-                :src="item !== 0 ? items[item].iconUrl : ''"
-                class="requester-item-icon grey darken-2"
-                v-bind:key="index"
-                v-for="(item, index) in requester.items.slice(3, 7)"
-              />
-            </v-layout>
+            <item-icon
+              :itemId="item"
+              v-bind:key="index"
+              v-for="(item, index) in requester.items.slice(3, 7)"
+            />
           </div>
         </v-layout>
       </v-flex>
@@ -171,9 +167,12 @@
 <script lang="ts">
 import { format } from 'util';
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import ItemIcon from '@/components/Icon/ItemIcon.vue';
 
 @Component({
-  components: {},
+  components: {
+    ItemIcon,
+  },
   filters: {
     gold(val: number) {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -303,7 +302,7 @@ export default class MatchCard extends Vue {
 }
 
 .matchinfo-area6 {
-  max-width: 90px;
+  max-width: 95px;
 }
 
 .matchinfo-area7 {
@@ -332,14 +331,6 @@ export default class MatchCard extends Vue {
 .requester-perk-icon {
   max-width: 23px;
   max-height: 23px;
-}
-
-.requester-item-icon {
-  min-width: 23px;
-  min-height: 23px;
-  max-width: 23px;
-  max-height: 23px;
-  border-radius: 3px;
 }
 
 .participant-icon {
