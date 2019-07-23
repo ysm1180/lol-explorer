@@ -2,19 +2,13 @@
   <v-card class="summoner-info-card" color="#EDEDED" height="100%">
     <Tabs class="mb-1">
       <Tab :name="'전체(' + champions.totalGames + ' 게임)'" :selected="true">
-        <ChampionInfoDetail
-          :data="totalArray"
-        ></ChampionInfoDetail>
+        <ChampionInfoDetail :data="totalArray"></ChampionInfoDetail>
       </Tab>
       <Tab :name="'솔로랭크(' + champions.soloGames + ' 게임)'">
-        <ChampionInfoDetail
-          :data="soloArray"
-        ></ChampionInfoDetail>
+        <ChampionInfoDetail :data="soloArray"></ChampionInfoDetail>
       </Tab>
       <Tab :name="'자유랭크(' + champions.flexGames + ' 게임)'">
-        <ChampionInfoDetail
-          :data="flexArray"
-        ></ChampionInfoDetail>
+        <ChampionInfoDetail :data="flexArray"></ChampionInfoDetail>
       </Tab>
     </Tabs>
   </v-card>
@@ -25,7 +19,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import ChampionInfoDetail from '@/components/Match/ChampionInfoDetail.vue';
-import { IChampionInfoApiData } from '@/components/Match/champion-info';
+import { IChampionInfoApiData } from '@/typings/match';
 
 @Component({
   components: { ChampionInfoDetail, Tab, Tabs },

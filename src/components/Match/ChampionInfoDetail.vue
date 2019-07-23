@@ -56,10 +56,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import {
-  IChampionDetail,
-  IChampionInfoApiData,
-} from '@/components/Match/champion-info';
+import { IChampionDetail, IChampionInfoApiData } from '@/typings/match';
 
 @Component
 export default class ChampionInfoDetail extends Vue {
@@ -136,7 +133,6 @@ export default class ChampionInfoDetail extends Vue {
         font-weight: normal;
       }
     }
-
   }
 }
 
