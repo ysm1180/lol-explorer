@@ -4,7 +4,7 @@ import {
   IStaticChampion,
   IStaticItem,
   IStaticSpell,
-} from '@/store/modules/lolstatic/static-data';
+} from '@/typings/static-data';
 
 const ENDPOINT = 'http://localhost:3000';
 

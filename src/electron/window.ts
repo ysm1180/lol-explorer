@@ -1,6 +1,6 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { Disposable, Emitter } from 'event-kit';
-import { lcuData } from 'models';
+import { ILcuData } from 'models';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import { RiotWSProtocol } from './riot-ws';
 
@@ -10,7 +10,7 @@ function now(): number {
 }
 
 export class AppWindow {
-  private lcuData: lcuData | null = null;
+  private lcuData: ILcuData | null = null;
   private window: BrowserWindow;
   private emitter = new Emitter();
   private riotWs: RiotWSProtocol | null = null;
@@ -103,7 +103,7 @@ export class AppWindow {
     this.window.show();
   }
 
-  public sendConnect(data: lcuData) {
+  public sendConnect(data: ILcuData) {
     this.show();
 
     this.connectRiotWebSocket(

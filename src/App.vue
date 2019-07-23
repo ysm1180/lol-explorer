@@ -118,7 +118,7 @@ export default {
         const homeUrl = `/match/${this.summoner.accountId}`;
         return this.$router.currentRoute.path === homeUrl;
       } else {
-      return this.routerStartWith('/match');
+        return this.routerStartWith('/match');
       }
     },
 
@@ -216,6 +216,7 @@ export default {
 .icon-button {
   padding: 2px 5px;
   outline: 0;
+
   &.selected {
     box-shadow: 0 0 0 2px darkorange;
     border-radius: 10px;
@@ -228,5 +229,16 @@ export default {
 
 .cursor__pointer {
   cursor: pointer;
+}
+
+.html-content {
+  a {
+    text-decoration: none;
+    color: #00bfa5;
+  }
+
+  hr {
+    margin: 5px 0;
+  }
 }
 </style>

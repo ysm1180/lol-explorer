@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { lcuData, lcuSummonerData } from 'models';
+import { ILcuData, ILcuSummonerData } from 'models';
 import {
   Module,
   Mutation,
@@ -12,8 +12,8 @@ const ENDPOINT = 'http://localhost:3000';
 @Module({ namespaced: true, name: 'connection' })
 export default class Connection extends VuexModule {
   public status: string = 'WAITING_CLIENT';
-  public lcuData: lcuData | undefined = undefined;
-  public lcuSummoner: lcuSummonerData | undefined = undefined;
+  public lcuData: ILcuData | undefined = undefined;
+  public lcuSummoner: ILcuSummonerData | undefined = undefined;
   public summoner = undefined;
 
   @Mutation
@@ -21,11 +21,11 @@ export default class Connection extends VuexModule {
     this.status = status;
   }
   @Mutation
-  public setLcuData(lcuData: lcuData) {
+  public setLcuData(lcuData: ILcuData) {
     this.lcuData = lcuData;
   }
   @Mutation
-  public setLcuSummoner(data: lcuSummonerData) {
+  public setLcuSummoner(data: ILcuSummonerData) {
     this.lcuSummoner = data;
   }
   @Mutation
@@ -43,7 +43,7 @@ export default class Connection extends VuexModule {
     };
   }
   @MutationAction({ mutate: ['status', 'lcuSummoner'] })
-  public async loadLcuSummoner(lcuData: lcuData) {
+  public async loadLcuSummoner(lcuData: ILcuData) {
     const response = await axios.get(
       `${lcuData.protocol}://${lcuData.address}:${
         lcuData.port

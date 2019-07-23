@@ -1,5 +1,5 @@
 declare module 'models' {
-  export type lcuData = {
+  export interface ILcuData {
     address: string;
     port: number;
     username: string;
@@ -7,7 +7,7 @@ declare module 'models' {
     protocol: string;
   }
 
-  export type lcuSummonerData = {
+  export interface ILcuSummonerData {
     accountId: number;
     displayName: string;
     internalName: string;
