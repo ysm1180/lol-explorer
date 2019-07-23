@@ -211,6 +211,7 @@ export default class Index extends Vue {
       scrollTop + clientHeight >= scrollHeight
     ) {
       this.loadingMatches = true;
+      this.loadingChampion = true;
       this.prevScrollEnd = false;
       this.page += 1;
       await this.$store.dispatch('match/updateMatches', {
@@ -218,6 +219,11 @@ export default class Index extends Vue {
         page: this.page,
       });
       this.loadingMatches = false;
+      await this.$store.dispatch('match/fetchChampions', {
+        seasonId: 13,
+        accountId: this.accountId,
+      });
+      this.loadingChampion = false;
     } else if (
       !this.prevScrollEnd &&
       !this.loadingMatches &&
