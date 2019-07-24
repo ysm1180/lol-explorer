@@ -37,15 +37,20 @@
         />
         <v-layout align-center fill-height justify-center>
           <v-progress-circular
-            color="grey"
+            color="deep-orange lighten-2"
             indeterminate
             v-if="loadingSummoner"
           />
         </v-layout>
       </v-flex>
       <Tabs>
-        <Tab class="font-weight-bold" name="전적" :selected="true">
-          <v-layout column fill-height mb-5 style="min-width:600px;width:700px;">
+        <Tab :selected="true" class="font-weight-bold" name="전적">
+          <v-layout
+            column
+            fill-height
+            mb-5
+            style="min-width:600px;width:700px;"
+          >
             <v-flex v-bind:key="index" v-for="(match, index) in matches">
               <match-card :match="match">
                 <match-detail :match="match" />
@@ -58,7 +63,7 @@
             </v-layout>
             <v-flex text-xs-center>
               <v-progress-circular
-                color="grey"
+                color="deep-orange lighten-2"
                 indeterminate
                 v-if="loadingMatches"
               />
@@ -66,7 +71,7 @@
           </v-layout>
         </Tab>
         <Tab class="font-weight-bold" name="챔피언 분석">
-          <v-layout style="min-width:700px;width:800px;" mb-5>
+          <v-layout mb-5 style="min-width:700px;width:800px;">
             <v-flex>
               <champion-info-card
                 :champions="champions"
@@ -89,16 +94,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import axios from 'axios';
-import SummonerInfoCard from '../components/Match/SummonerInfoCard.vue';
-import ChampionInfoCard from '../components/Match/ChampionInfoCard.vue';
-import MatchCard from '../components/Match/MatchCard.vue';
-import MatchDetail from '../components/Match/MatchDetail.vue';
-import Tabs from '@/components/UI/Tab/Tabs.vue';
+import ChampionInfoCard from '@/components/Match/ChampionInfoCard.vue';
+import MatchCard from '@/components/Match/MatchCard.vue';
+import MatchDetail from '@/components/Match/MatchDetail.vue';
+import SummonerInfoCard from '@/components/Match/SummonerInfoCard.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
-
-const ENDPOINT = 'http://localhost:3000';
+import Tabs from '@/components/UI/Tab/Tabs.vue';
+import { END_POINT } from '@/config';
+import axios from 'axios';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -111,7 +115,7 @@ const ENDPOINT = 'http://localhost:3000';
   },
 })
 export default class Index extends Vue {
-  @Prop() private accountId!: string;
+  @Prop(String) private accountId!: string;
   private summoner: any = null;
   private page: number = 0;
   private toggleArray: number[] = [];
@@ -133,14 +137,14 @@ export default class Index extends Vue {
     this.init();
   }
 
-  public async mounted() {
+  public mounted() {
     this.init();
   }
 
   public async init() {
     if (this.accountId) {
       const response = await axios.get(
-        `${ENDPOINT}/summoner/byAccount/${this.accountId}`
+        `${END_POINT}/summoner/byAccount/${this.accountId}`
       );
       this.summoner = response.data;
       this.loadingSummoner = false;
@@ -172,10 +176,10 @@ export default class Index extends Vue {
   public async renew() {
     this.renewing = true;
     try {
-      await axios.post(`${ENDPOINT}/summoner/${this.summoner.name}`);
+      await axios.post(`${END_POINT}/summoner/${this.summoner.name}`);
       this.page = 0;
       const response = await axios.get(
-        `${ENDPOINT}/summoner/byAccount/${this.accountId}`
+        `${END_POINT}/summoner/byAccount/${this.accountId}`
       );
       this.summoner = response.data;
       await this.$store.dispatch('match/updateMatches', {
@@ -248,8 +252,4 @@ export default class Index extends Vue {
   min-width: 600px;
 }
 
-.match-card-wrap {
-  width: 100%;
-  height: 70px;
-}
 </style>

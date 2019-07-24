@@ -11,56 +11,56 @@
       <span class="font-size-small mr-2">바론: {{ team.baronKills }}</span>
       <span class="font-size-small mr-4">용: {{ team.dragonKills }}</span>
     </v-flex>
-    <v-flex
-      :class="requester.participantId === Number(key) ? 'orange lighten-2' : ''"
-      class="participant-row"
-      v-bind:key="key"
-      v-for="(participant, key) in team.participants"
-    >
-      <v-layout fill-height justify-space-between>
-        <v-flex class="participant-row-area1" fill-height>
-          <v-layout align-center fill-height>
-            <v-img
-              :src="champions[participant.championId].iconUrl"
-              class="champion-icon"
-              style="position:relative"
-            >
-              <span
-                class="white--text font-size-tiny"
-                style="position:absolute;right:0;bottom:0;"
-              >
-                {{ participant.stats.champLevel }}
-              </span>
-            </v-img>
-          </v-layout>
-        </v-flex>
-        <v-flex class="participant-row-area2" fill-height>
-          <v-layout align-center fill-height>
+    <table class="participant-detail">
+      <tbody class="body">
+        <tr
+          :class="
+            requester.participantId === Number(key) ? 'orange lighten-2' : ''
+          "
+          class="row"
+          v-bind:key="key"
+          v-for="(participant, key) in team.participants"
+        >
+          <td class="cell">
+            <champion-icon
+              :championId="participant.championId"
+              :level="participant.stats.champLevel"
+              small
+            />
+          </td>
+          <td class="cell summoner-tier">
+            <div v-if="summonerTiers[key] !== undefined">
+              {{ summonerTiers[key] }}
+            </div>
+            <div v-else>
+              <v-progress-circular
+                color="deep-orange lighten-2"
+                indeterminate
+                size="16"
+              />
+            </div>
+          </td>
+          <td class="cell summoner-name">
             <div
               @click="toMatch(participant.player.accountId)"
               class="font-size-small pointer"
             >
               {{ participant.player.summonerName }}
             </div>
-          </v-layout>
-        </v-flex>
-        <v-flex class="participant-row-area3" fill-height>
-          <v-layout align-center fill-height>
-            <span class="font-size-small">티어</span>
-          </v-layout>
-        </v-flex>
-        <v-flex class="participant-row-area4" fill-height>
-          <v-layout column fill-height justify-center>
-            <span class="font-size-small font-weight-bold">
+          </td>
+          <td class="cell">
+            <div class="font-size-small font-weight-bold">
               평점
               {{
-                (
-                  (participant.stats.kills + participant.stats.assists) /
-                  participant.stats.deaths
-                ).toFixed(2)
+                participant.stats.deaths > 0
+                  ? (
+                      (participant.stats.kills + participant.stats.assists) /
+                      participant.stats.deaths
+                    ).toFixed(2)
+                  : 'Perfect'
               }}
-            </span>
-            <span class="font-size-small">
+            </div>
+            <div class="font-size-small">
               {{ participant.stats.kills }}/{{ participant.stats.deaths }}/{{
                 participant.stats.assists
               }}
@@ -71,33 +71,36 @@
                   team.totalKills
                 ).toFixed(2)
               }}%)
-            </span>
-          </v-layout>
-        </v-flex>
-        <v-flex class="participant-row-area5" fill-height>
-          <v-layout column fill-height justify-center>
-            <span class="font-size-small font-weight-bold">
+            </div>
+          </td>
+          <td class="cell">
+            <div class="font-size-small font-weight-bold">
               골드 {{ participant.stats.goldEarned | gold }}
-            </span>
-            <span class="font-size-small">
+            </div>
+            <div class="font-size-small">
               CS
               {{
                 participant.stats.totalMinionsKilled +
                   participant.stats.neutralMinionsKilled
               }}
-            </span>
-          </v-layout>
-        </v-flex>
-        <v-flex class="participant-row-area6" fill-height>
-          <v-layout column fill-height justify-center>
-            <span class="font-size-small">피해량</span>
-            <span class="font-size-small">
-              {{ participant.stats.totalDamageDealtToChampions }}
-            </span>
-          </v-layout>
-        </v-flex>
-        <v-flex class="participant-row-area7" fill-height>
-          <v-layout column fill-height justify-center>
+            </div>
+          </td>
+          <td class="cell damage">
+            <div>
+              <v-progress-linear
+                color="pink"
+                height="10"
+                :value="
+                  participant.stats.totalDamageDealtToChampions / maxDamage * 100
+                "
+              >
+                <span class="progress-text">
+                  {{ participant.stats.totalDamageDealtToChampions }}
+                </span>
+              </v-progress-linear>
+            </div>
+          </td>
+          <td class="cell">
             <div>
               <v-layout>
                 <v-img
@@ -138,30 +141,33 @@
                 />
               </v-layout>
             </div>
-          </v-layout>
-        </v-flex>
-        <v-flex class="participant-row-area8" fill-height>
-          <v-layout align-center fill-height>
+          </td>
+          <td class="cell">
             <item-icon
               :itemId="item"
               v-bind:key="index"
               v-for="(item, index) in participant.items"
             />
-          </v-layout>
-        </v-flex>
-      </v-layout>
-    </v-flex>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </v-layout>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IGameRequester, IGameTeam } from '@/typings/match';
+import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import ItemIcon from '@/components/Icon/ItemIcon.vue';
+import { END_POINT } from '@/config';
+import { IGameRequester, IGameTeam } from '@/typings/match';
+import { ISummonerApiData } from '@/typings/summoner';
+import axios from 'axios';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {
-    'item-icon': ItemIcon,
+    ChampionIcon,
+    ItemIcon,
   },
   filters: {
     gold(val: number) {
@@ -173,6 +179,8 @@ export default class MatchTeamDetail extends Vue {
   @Prop() private team!: IGameTeam;
   @Prop() private requester!: IGameRequester;
   @Prop() private teamName!: string;
+  private summonerTiers: { [id: string]: string } = {};
+  private maxDamage: number = 0;
 
   get champions() {
     return this.$store.state.lolstatic.champions;
@@ -193,12 +201,96 @@ export default class MatchTeamDetail extends Vue {
   public toMatch(accountId: string) {
     this.$router.push(`/match/${accountId}`);
   }
+
+  public mounted() {
+    this.maxDamage = 0;
+
+    for (const key in this.team.participants) {
+      const participant = this.team.participants[key];
+      axios
+        .get<ISummonerApiData>(
+          `${END_POINT}/summoner/byAccount/${participant.player.accountId}`
+        )
+        .then(({ data }) => {
+          const soloRank = data.seasons.find(
+            (season) => season.queueType === 'RANKED_SOLO_5x5'
+          );
+          if (soloRank) {
+            this.$set(
+              this.summonerTiers,
+              key,
+              `${soloRank.tier} ${this.romanToNumber(soloRank.rank)}`
+            );
+          } else {
+            this.$set(this.summonerTiers, key, 'Unranked');
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      if (this.maxDamage < participant.stats.totalDamageDealtToChampions) {
+        this.maxDamage = participant.stats.totalDamageDealtToChampions;
+      }
+    }
+  }
+
+  private romanToNumber(romanNumber: string) {
+    if (romanNumber === 'I') {
+      return 1;
+    } else if (romanNumber === 'II') {
+      return 2;
+    } else if (romanNumber === 'III') {
+      return 3;
+    } else if (romanNumber === 'IV') {
+      return 4;
+    } else if (romanNumber === 'V') {
+      return 5;
+    }
+
+    return 0;
+  }
 }
 </script>
 
-<style scoped>
-.font-size-tiny {
-  font-size: 9px;
+<style lang="scss" scoped>
+.participant-detail {
+  border-spacing: 0;
+
+  .body {
+    .row {
+      .cell {
+        padding: 2px;
+
+        &.summoner-name {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          text-align: left;
+
+          width: 100px;
+        }
+
+        &.summoner-tier {
+          font-size: 10px;
+
+          width: 70px;
+        }
+
+        &.damage {
+          width: 100px;
+          padding: 2px 10px;
+        }
+      }
+    }
+  }
+}
+
+.progress-text {
+  font-size: 10px;
+  font-weight: normal;
+  color: white;
+  vertical-align: top;
 }
 
 .font-size-small {
@@ -210,56 +302,17 @@ export default class MatchTeamDetail extends Vue {
   cursor: pointer;
 }
 
-.participant-row {
-  padding: 5px;
-}
-
-.participant-row-area1 {
-  max-width: 30px;
-}
-
-.participant-row-area2 {
-  max-width: 80px;
-}
-
-.participant-row-area3 {
-  max-width: 40px;
-}
-
-.participant-row-area4 {
-  max-width: 90px;
-}
-
-.participant-row-area5 {
-  max-width: 60px;
-}
-
-.participant-row-area6 {
-  max-width: 50px;
-}
-
-.participant-row-area7 {
-  max-width: 40px;
-}
-
-.participant-row-area8 {
-  max-width: 150px;
-}
-
-.champion-icon {
-  max-width: 32px;
-  max-height: 32px;
-}
-
 .spell-icon {
-  max-width: 12px;
-  max-height: 12px;
-  margin-right: 1px;
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
 }
 
 .perk-icon {
-  max-width: 12px;
-  max-height: 12px;
-  margin-right: 1px;
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
 }
 </style>

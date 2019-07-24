@@ -122,7 +122,7 @@ export interface IGameInfoData {
   gameDuration: number;
   mapId: number;
   requester: IGameRequester;
-  teams: IGameTeam;
+  teams: { [id: string]: IGameTeam };
 }
 
 export interface IMatchApiData {
