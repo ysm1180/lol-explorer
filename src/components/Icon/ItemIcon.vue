@@ -1,15 +1,21 @@
 <template>
-  <v-layout class="item-icon-container" d-inline-block>
-    <div ref="tooltip" class="item-tooltip" v-if="item && isHover">
-      <div class="tooltip-title">
-        {{ item.name }}
+  <v-layout class="item-icon-container" d-inline-block ref="container">
+    <div
+      :class="{ bottom: isBottom, top: !isBottom }"
+      class="tooltip-container"
+      v-if="item && isHover"
+    >
+      <div class="item-tooltip">
+        <div class="tooltip-title">
+          {{ item.name }}
+        </div>
+        <div class="tooltip-content html-content" v-html="itemContent"></div>
       </div>
-      <div class="tooltip-content html-content" v-html="itemContent"></div>
     </div>
     <v-img
+      :src="item ? item.iconUrl : ''"
       @mouseenter="hover()"
       @mouseleave="leave()"
-      :src="item ? item.iconUrl : ''"
       class="item-icon grey darken-2"
     />
   </v-layout>
@@ -23,9 +29,33 @@ import { IStaticItem } from '@/typings/static-data';
 export default class ItemIcon extends Vue {
   @Prop() private itemId!: number;
   private isHover: boolean = false;
+  private isBottom: boolean = false;
 
   public hover() {
     this.isHover = true;
+    this.isBottom = false;
+
+    if (this.item) {
+      const computing = document.createElement('div');
+      computing.style.verticalAlign = 'top';
+      computing.style.opacity = '0';
+      computing.innerHTML = `<div style="width:max-content;max-width:330px;padding:10px;">
+        <div>
+          <div style="font-size:13px;font-weight:bold;margin-bottom:5px;">
+            ${this.item.name}
+          </div>
+          <div style="font-size:11px;font-weight:normal;line-height:1.5;">
+            ${this.itemContent}
+          </div>
+        </div>
+      </div>`;
+      document.body.appendChild(computing);
+      const rect = (this.$refs.container as Element).getBoundingClientRect();
+      if (rect.top - (computing.offsetHeight + 20 + 48) < 0) {
+        this.isBottom = true;
+      }
+      document.body.removeChild(computing);
+    }
   }
 
   public leave() {
@@ -50,46 +80,69 @@ export default class ItemIcon extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .item-icon-container {
   position: relative;
   vertical-align: top;
   text-align: left;
 
-  .item-tooltip {
+  .tooltip-container {
     position: absolute;
-    background-color: black;
-    color: white;
-    bottom: 150%;
-    width: 330px;
-    padding: 10px;
-    z-index: 3;
-    left: -155px;
-
-    & > .tooltip-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: orange;
-      margin-bottom: 5px;
-    }
-
-    & > .tooltip-content {
-      font-size: 11px;
-      font-weight: normal;
-      color: white;
-      line-height: 1.5;
-    }
-  }
-
-  .item-tooltip::after {
-    content: ' ';
-    position: absolute;
-    top: 100%; /* At the bottom of the tooltip */
     left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
+    transform: translateX(-50%);
+    background-color: #222;
+    color: white;
+    width: max-content;
+    max-width: 330px;
+    padding: 10px;
+    z-index: 6;
+
+    .item-tooltip {
+      & > .tooltip-title {
+        font-size: 13px;
+        font-weight: bold;
+        color: orange;
+        margin-bottom: 5px;
+      }
+
+      & > .tooltip-content {
+        font-size: 11px;
+        font-weight: normal;
+        color: white;
+        line-height: 1.5;
+      }
+    }
+
+    &.top {
+      top: -70%;
+      transform: translateX(-50%) translateY(-100%);
+
+      &::after {
+        content: ' ';
+        position: absolute;
+        top: 100%; /* At the bottom of the tooltip */
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: #222 transparent transparent transparent;
+      }
+    }
+
+    &.bottom {
+      top: 160%;
+
+      &::after {
+        content: ' ';
+        position: absolute;
+        bottom: 100%; /* At the bottom of the tooltip */
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent #222 transparent;
+      }
+    }
   }
 
   .item-icon {
