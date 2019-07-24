@@ -1,5 +1,10 @@
 <template>
-  <v-layout class="champion-icon-container" d-inline-block ref="container">
+  <v-layout
+    :class="{ small: !!small }"
+    class="champion-icon-container"
+    d-inline-block
+    ref="container"
+  >
     <div
       :class="{ bottom: isBottom, top: !isBottom }"
       class="tooltip-container"
@@ -17,7 +22,11 @@
       @mouseenter="hover()"
       @mouseleave="leave()"
       class="champion-icon grey darken-2"
-    />
+    >
+      <span class="white--text font-size-tiny champion-level" v-if="!!level">
+        {{ level }}
+      </span>
+    </v-img>
   </v-layout>
 </template>
 
@@ -29,6 +38,9 @@ import { IStaticChampion } from '@/typings/static-data';
 export default class ChampionIcon extends Vue {
   @Prop(Number) private championId!: number;
   @Prop(Boolean) private circle?: boolean;
+  @Prop(Number) private level?: number;
+  @Prop(Boolean) private small?: boolean;
+
   private isHover: boolean = false;
   private isBottom: boolean = false;
 
@@ -39,7 +51,9 @@ export default class ChampionIcon extends Vue {
     const computing = document.createElement('div');
     computing.style.opacity = '0';
     computing.style.padding = '5px 10px';
-    computing.innerHTML = `<div style="font-size: 11px;font-weight: normal;line-height: 1.5;">${this.champion.name}</div>`;
+    computing.innerHTML = `<div style="font-size: 11px;font-weight: normal;line-height: 1.5;">${
+      this.champion.name
+    }</div>`;
     document.body.appendChild(computing);
     const rect = (this.$refs.container as Element).getBoundingClientRect();
     if (rect.top - (computing.offsetHeight + 10 + 48) < 0) {
@@ -125,6 +139,13 @@ export default class ChampionIcon extends Vue {
     }
   }
 
+  &.small .champion-icon {
+    min-width: 36px;
+    min-height: 36px;
+    max-width: 36px;
+    max-height: 36px;
+  }
+
   .champion-icon {
     vertical-align: top;
 
@@ -135,6 +156,17 @@ export default class ChampionIcon extends Vue {
 
     &.circle {
       border-radius: 50%;
+    }
+
+    .champion-level {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0 5px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      font-size: 10px;
     }
   }
 }
