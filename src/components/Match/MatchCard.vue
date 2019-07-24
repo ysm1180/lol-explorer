@@ -7,10 +7,7 @@
   >
     <v-layout justify-space-between>
       <v-flex class="matchinfo-area1">
-        <v-img
-          :src="champions[requester.championId].iconUrl"
-          class="requester-champ-icon"
-        ></v-img>
+        <champion-icon :championId="requester.championId" circle />
       </v-flex>
       <v-flex class="matchinfo-area2">
         <v-layout column fill-height justify-center>
@@ -168,9 +165,11 @@
 import { format } from 'util';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import ItemIcon from '@/components/Icon/ItemIcon.vue';
+import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 
 @Component({
   components: {
+    ChampionIcon,
     ItemIcon,
   },
   filters: {
