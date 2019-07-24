@@ -7,7 +7,11 @@
   >
     <v-layout justify-space-between>
       <v-flex class="matchinfo-area1">
-        <champion-icon :championId="requester.championId" circle />
+        <champion-icon
+          :championId="requester.championId"
+          circle
+          :level="requester.stats.champLevel"
+        />
       </v-flex>
       <v-flex class="matchinfo-area2">
         <v-layout column fill-height justify-center>
@@ -151,11 +155,12 @@
       </v-flex>
       <v-flex @click="toggle()" class="matchinfo-area9 cursor__pointer">
         <v-layout align-center fill-height>
-          <v-icon>expand_more</v-icon>
+          <v-icon v-if="!isToggle">expand_more</v-icon>
+          <v-icon v-if="isToggle">expand_less</v-icon>
         </v-layout>
       </v-flex>
     </v-layout>
-    <v-flex v-if="isToggle">
+    <v-flex v-if="isCreatedDetail" v-show="isToggle">
       <slot></slot>
     </v-flex>
   </v-card>
@@ -166,6 +171,7 @@ import { format } from 'util';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import ItemIcon from '@/components/Icon/ItemIcon.vue';
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
+import { IMatchApiData } from '@/typings/match';
 
 @Component({
   components: {
@@ -179,11 +185,13 @@ import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
   },
 })
 export default class MatchCard extends Vue {
-  @Prop() public match: any;
+  @Prop() public match!: IMatchApiData;
   private isToggle: boolean = false;
+  private isCreatedDetail: boolean = false;
 
   public created() {
     this.isToggle = false;
+    this.isCreatedDetail = false;
   }
 
   get champions() {
@@ -269,9 +277,10 @@ export default class MatchCard extends Vue {
 
   public toggle() {
     this.isToggle = !this.isToggle;
+    if (!this.isCreatedDetail) {
+      this.isCreatedDetail = true;
+    }
   }
-
-  public mounted() {}
 }
 </script>
 <style scoped>
@@ -314,12 +323,6 @@ export default class MatchCard extends Vue {
 
 .matchinfo-area9 {
   max-width: 25px;
-}
-
-.requester-champ-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
 }
 
 .requester-spell-icon {
