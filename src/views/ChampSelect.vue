@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts">
+import { END_POINT } from '@/config';
 import axios from 'axios';
-import { Component, Vue } from 'vue-property-decorator';
 import { ipcRenderer } from 'electron';
+import { Component, Vue } from 'vue-property-decorator';
 
-const ENDPOINT = 'http://localhost:3000';
 @Component({
   components: {},
 })
@@ -102,7 +102,7 @@ export default class Home extends Vue {
 
   public async checkMyTeamInfo() {
     for (const name of this.myTeamName) {
-      const response = await axios.get(`${ENDPOINT}/summoner/${name}`);
+      const response = await axios.get(`${END_POINT}/summoner/${name}`);
       this.myTeamInfo.push(response.data);
     }
   }
