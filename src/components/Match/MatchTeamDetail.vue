@@ -8,8 +8,8 @@
         {{ team.totalKills }} / {{ team.totalDeaths }} /
         {{ team.totalAssists }}
       </span>
-      <span class="font-size-small mr-2">바론: {{ team.baronKills }}</span>
-      <span class="font-size-small mr-4">용: {{ team.dragonKills }}</span>
+      <span class="font-size__small mr-2">바론: {{ team.baronKills }}</span>
+      <span class="font-size__small mr-4">용: {{ team.dragonKills }}</span>
     </v-flex>
     <table class="participant-detail">
       <tbody class="body">
@@ -28,8 +28,28 @@
               small
             />
           </td>
+          <td class="cell">
+            <div>
+              <spell-icon :spellId="participant.spells[0]" small />
+              <spell-icon :spellId="participant.spells[1]" small />
+            </div>
+            <div>
+              <rune-icon
+                :runeId="participant.stats.perks[0]"
+                :runeStyleId="participant.stats.perkPrimaryStyle"
+                small
+              />
+              <rune-style-icon
+                :runeStyleId="participant.stats.perkSubStyle"
+                small
+              />
+            </div>
+          </td>
           <td class="cell summoner-tier">
-            <div v-if="summonerTiers[key] !== undefined">
+            <div
+              class="font-weight-bold"
+              v-if="summonerTiers[key] !== undefined"
+            >
               {{ summonerTiers[key] }}
             </div>
             <div v-else>
@@ -43,13 +63,13 @@
           <td class="cell summoner-name">
             <div
               @click="toMatch(participant.player.accountId)"
-              class="font-size-small pointer"
+              class="font-size__small cursor__pointer"
             >
               {{ participant.player.summonerName }}
             </div>
           </td>
           <td class="cell">
-            <div class="font-size-small font-weight-bold">
+            <div class="font-size__small font-weight-bold">
               평점
               {{
                 participant.stats.deaths > 0
@@ -60,24 +80,30 @@
                   : 'Perfect'
               }}
             </div>
-            <div class="font-size-small">
-              {{ participant.stats.kills }}/{{ participant.stats.deaths }}/{{
-                participant.stats.assists
-              }}
-              ({{
-                (
-                  ((participant.stats.kills + participant.stats.assists) *
-                    100) /
-                  team.totalKills
-                ).toFixed(2)
-              }}%)
-            </div>
+            <span class="font-size__small">
+              {{ participant.stats.kills }} / {{ participant.stats.deaths }} /
+              {{ participant.stats.assists }}
+              <tooltip content="킬관여율" inline>
+                <span>
+                  ({{
+                    team.totalKills === 0
+                      ? 0
+                      : (
+                          ((participant.stats.kills +
+                            participant.stats.assists) *
+                            100) /
+                          team.totalKills
+                        ).toFixed(2)
+                  }}%)
+                </span>
+              </tooltip>
+            </span>
           </td>
           <td class="cell">
-            <div class="font-size-small font-weight-bold">
+            <div class="font-size__small font-weight-bold">
               골드 {{ participant.stats.goldEarned | gold }}
             </div>
-            <div class="font-size-small">
+            <div class="font-size__small">
               CS
               {{
                 participant.stats.totalMinionsKilled +
@@ -86,62 +112,26 @@
             </div>
           </td>
           <td class="cell damage">
-            <div>
+            <tooltip content="챔피언에게 가한 데미지" fullWidth>
               <v-progress-linear
-                color="pink"
-                height="10"
                 :value="
-                  participant.stats.totalDamageDealtToChampions / maxDamage * 100
+                  Math.floor(
+                    (participant.stats.totalDamageDealtToChampions /
+                      maxDamage) *
+                      100
+                  )
                 "
+                class="margin__none"
+                color="pink"
+                height="15"
               >
                 <span class="progress-text">
                   {{ participant.stats.totalDamageDealtToChampions }}
                 </span>
               </v-progress-linear>
-            </div>
+            </tooltip>
           </td>
-          <td class="cell">
-            <div>
-              <v-layout>
-                <v-img
-                  :src="
-                    spells[participant.spells[0]]
-                      ? spells[participant.spells[0]].iconUrl
-                      : ''
-                  "
-                  class="spell-icon"
-                />
-                <v-img
-                  :src="
-                    spells[participant.spells[1]]
-                      ? spells[participant.spells[1]].iconUrl
-                      : ''
-                  "
-                  class="spell-icon"
-                />
-              </v-layout>
-            </div>
-            <div>
-              <v-layout>
-                <v-img
-                  :src="
-                    `${perks.baseIconUrl}${
-                      perks[participant.stats.perkPrimaryStyle].icon
-                    }`
-                  "
-                  class="perk-icon"
-                />
-                <v-img
-                  :src="
-                    `${perks.baseIconUrl}${
-                      perks[participant.stats.perkSubStyle].icon
-                    }`
-                  "
-                  class="perk-icon"
-                />
-              </v-layout>
-            </div>
-          </td>
+
           <td class="cell">
             <item-icon
               :itemId="item"
@@ -158,6 +148,10 @@
 <script lang="ts">
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import ItemIcon from '@/components/Icon/ItemIcon.vue';
+import RuneIcon from '@/components/Icon/RuneIcon.vue';
+import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
+import SpellIcon from '@/components/Icon/SpellIcon.vue';
+import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
 import { END_POINT } from '@/config';
 import { IGameRequester, IGameTeam } from '@/typings/match';
 import { ISummonerApiData } from '@/typings/summoner';
@@ -166,6 +160,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {
+    RuneIcon,
+    RuneStyleIcon,
+    SpellIcon,
+    Tooltip,
     ChampionIcon,
     ItemIcon,
   },
@@ -206,31 +204,33 @@ export default class MatchTeamDetail extends Vue {
     this.maxDamage = 0;
 
     for (const key in this.team.participants) {
-      const participant = this.team.participants[key];
-      axios
-        .get<ISummonerApiData>(
-          `${END_POINT}/summoner/byAccount/${participant.player.accountId}`
-        )
-        .then(({ data }) => {
-          const soloRank = data.seasons.find(
-            (season) => season.queueType === 'RANKED_SOLO_5x5'
-          );
-          if (soloRank) {
-            this.$set(
-              this.summonerTiers,
-              key,
-              `${soloRank.tier} ${this.romanToNumber(soloRank.rank)}`
+      if (this.team.participants.hasOwnProperty(key)) {
+        const participant = this.team.participants[key];
+        axios
+          .get<ISummonerApiData>(
+            `${END_POINT}/summoner/byAccount/${participant.player.accountId}`
+          )
+          .then(({ data }) => {
+            const soloRank = data.seasons.find(
+              (season) => season.queueType === 'RANKED_SOLO_5x5'
             );
-          } else {
-            this.$set(this.summonerTiers, key, 'Unranked');
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+            if (soloRank) {
+              this.$set(
+                this.summonerTiers,
+                key,
+                `${soloRank.tier} ${this.romanToNumber(soloRank.rank)}`
+              );
+            } else {
+              this.$set(this.summonerTiers, key, 'Unranked');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
-      if (this.maxDamage < participant.stats.totalDamageDealtToChampions) {
-        this.maxDamage = participant.stats.totalDamageDealtToChampions;
+        if (this.maxDamage < participant.stats.totalDamageDealtToChampions) {
+          this.maxDamage = participant.stats.totalDamageDealtToChampions;
+        }
       }
     }
   }
@@ -249,6 +249,20 @@ export default class MatchTeamDetail extends Vue {
     }
 
     return 0;
+  }
+
+  public getSucceededKillString(participant: any) {
+    if (participant.stats.pentaKills !== 0) {
+      return '펜타킬';
+    } else if (participant.stats.quadraKills !== 0) {
+      return '쿼드라킬';
+    } else if (participant.stats.tripleKills !== 0) {
+      return '트리플킬';
+    } else if (participant.stats.doubleKills !== 0) {
+      return '더블킬';
+    } else {
+      return '';
+    }
   }
 }
 </script>
@@ -287,19 +301,11 @@ export default class MatchTeamDetail extends Vue {
 }
 
 .progress-text {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: normal;
   color: white;
-  vertical-align: top;
-}
-
-.font-size-small {
-  font-size: 11px;
-  font-weight: normal;
-}
-
-.pointer {
-  cursor: pointer;
+  vertical-align: middle;
+  user-select: none;
 }
 
 .spell-icon {

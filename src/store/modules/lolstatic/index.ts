@@ -1,10 +1,11 @@
-import axios from 'axios';
-import { Module, MutationAction, VuexModule } from 'vuex-module-decorators';
 import {
   IStaticChampion,
   IStaticItem,
+  IStaticPerk,
   IStaticSpell,
 } from '@/typings/static-data';
+import axios from 'axios';
+import { Module, MutationAction, VuexModule } from 'vuex-module-decorators';
 
 const ENDPOINT = 'http://localhost:3000';
 
@@ -20,16 +21,20 @@ interface IStaticSpells {
   [key: string]: IStaticSpell;
 }
 
+interface IStaticPerks {
+  [key: string]: IStaticPerk;
+}
+
 @Module({ namespaced: true, name: 'lolstatic' })
 export default class Lolstatic extends VuexModule {
   public champions: IStaticChampions = {};
   public spells: IStaticSpells = {};
   public items: IStaticItems = {};
-  public perks: any[] = [];
+  public perks: IStaticPerks = {};
 
-  @MutationAction({ mutate: ['champions', 'spells', 'items'] })
+  @MutationAction({ mutate: ['champions', 'spells', 'items', 'perks'] })
   public async initializeState() {
-    return { champions: {}, spells: {}, items: {} };
+    return { champions: {}, spells: {}, items: {}, perks: {} };
   }
 
   @MutationAction({ mutate: ['champions'] })

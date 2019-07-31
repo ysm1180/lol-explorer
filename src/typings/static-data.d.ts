@@ -135,3 +135,19 @@ interface ISpellVarsItem {
   coeff: number;
   key: string;
 }
+
+export interface IStaticPerk {
+  id: number;
+  name: string;
+  iconUrl: string;
+  slots: Array<{
+    runes: { [id: string]: IStaticRune };
+  }>;
+}
+
+export interface IStaticRune {
+  name: string;
+  iconUrl: string;
+  shortDesc: string;
+  longDesc: string;
+}
