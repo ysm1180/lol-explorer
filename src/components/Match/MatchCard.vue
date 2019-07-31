@@ -1,165 +1,167 @@
 <template>
   <v-card
-    :class="gameInfo.requester.isWin ? 'blue' : 'red'"
-    class="lighten-4"
+    :class="isAgain ? 'grey' : gameInfo.requester.isWin ? 'blue' : 'red'"
+    class="lighten-5"
     flat
     height="100%"
   >
-    <v-layout justify-space-between>
-      <v-flex class="matchinfo-area1">
-        <champion-icon
-          :championId="requester.championId"
-          circle
-          :level="requester.stats.champLevel"
-        />
-      </v-flex>
-      <v-flex class="matchinfo-area2">
-        <v-layout column fill-height justify-center>
-          <span class="font-size-small font-weight-bold">
-            {{ queueString }}
-          </span>
-          <span
-            :class="gameInfo.requester.isWin ? 'blue--text' : 'red--text'"
-            class="font-size-small"
+    <table class="match">
+      <tbody class="body">
+        <tr class="row">
+          <td
+            :class="
+              isAgain ? 'grey' : gameInfo.requester.isWin ? 'blue' : 'red'
+            "
+            class="cell match-summary lighten-4"
           >
-            {{ gameInfo.requester.isWin ? '승리' : '패배' }}
-          </span>
-        </v-layout>
-      </v-flex>
-      <v-flex class="matchinfo-area3">
-        <v-layout column fill-height justify-center>
-          <span class="font-size-small font-weight-bold">
-            평점
-            {{
-              requester.stats.deaths > 0
-                ? (
-                    (requester.stats.kills + requester.stats.assists) /
-                    requester.stats.deaths
-                  ).toFixed(2)
-                : 'Perfect'
-            }}
-          </span>
-          <span class="caption">
-            {{ requester.stats.kills }} / {{ requester.stats.deaths }} /
-            {{ requester.stats.assists }}
-          </span>
-          <span class="font-size-small green--text">
-            {{ getSucceededKillString(requester) }}
-          </span>
-        </v-layout>
-      </v-flex>
-      <v-flex class="matchinfo-area4">
-        <v-layout column fill-height justify-center>
-          <span class="font-size-small">
-            레벨 {{ requester.stats.champLevel }}
-          </span>
-          <span class="font-size-small font-weight-bold">
-            골드 {{ requester.stats.goldEarned | gold }}
-          </span>
-          <span class="font-size-small">
-            CS {{ requester.stats.totalMinionsKilled }}
-          </span>
-        </v-layout>
-      </v-flex>
-      <v-flex class="matchinfo-area5">
-        <v-layout column fill-height justify-center>
-          <div>
-            <v-layout>
-              <v-img
-                :src="
-                  spells[requester.spells[0]]
-                    ? spells[requester.spells[0]].iconUrl
-                    : ''
+            <v-layout column fill-height justify-center>
+              <span
+                :class="
+                  isAgain
+                    ? 'grey--text'
+                    : gameInfo.requester.isWin
+                    ? 'blue--text'
+                    : 'red--text'
                 "
-                class="requester-spell-icon"
-              />
-              <v-img
-                :src="
-                  spells[requester.spells[1]]
-                    ? spells[requester.spells[1]].iconUrl
-                    : ''
-                "
-                class="requester-spell-icon"
-              />
+                class="match-title"
+              >
+                {{
+                  isAgain
+                    ? '다시하기'
+                    : gameInfo.requester.isWin
+                    ? '승리'
+                    : '패배'
+                }}
+              </span>
+              <span>
+                {{ queueString }}
+              </span>
+              <span>{{ durationString }}</span>
+              <span>{{ timeDeltaTextByNow }}</span>
             </v-layout>
-          </div>
-          <div>
-            <v-layout>
-              <v-img
-                :src="
-                  `${perks.baseIconUrl}${
-                    perks[requester.stats.perkPrimaryStyle].icon
-                  }`
-                "
-                class="requester-perk-icon"
-              />
-              <v-img
-                :src="
-                  `${perks.baseIconUrl}${
-                    perks[requester.stats.perkSubStyle].icon
-                  }`
-                "
-                class="requester-perk-icon"
-              />
-            </v-layout>
-          </div>
-        </v-layout>
-      </v-flex>
-      <v-flex class="matchinfo-area6">
-        <v-layout align-baseline column fill-height justify-center>
-          <div>
-            <item-icon
-              :itemId="item"
-              v-bind:key="index"
-              v-for="(item, index) in requester.items.slice(0, 3)"
+          </td>
+          <td class="cell">
+            <champion-icon
+              :championId="requester.championId"
+              :level="requester.stats.champLevel"
+              circle
             />
-          </div>
-          <div>
-            <item-icon
-              :itemId="item"
-              v-bind:key="index"
-              v-for="(item, index) in requester.items.slice(3, 7)"
-            />
-          </div>
-        </v-layout>
-      </v-flex>
-      <v-flex class="matchinfo-area7">
-        <v-layout column fill-height justify-center>
-          <span class="font-size-small">{{ durationString }}</span>
-          <span class="font-size-small">{{ timeDeltaTextByNow }}</span>
-        </v-layout>
-      </v-flex>
-      <v-flex class="matchinfo-area8">
-        <v-layout column fill-height justify-center>
-          <div>
-            <v-layout mb-1>
-              <v-img
-                :src="champions[participant.championId].iconUrl"
-                class="participant-icon"
-                v-bind:key="key"
-                v-for="(participant, key) in gameInfo.teams['100'].participants"
-              />
+          </td>
+          <td class="cell">
+            <v-layout column fill-height justify-center>
+              <div>
+                <spell-icon :spellId="requester.spells[0]"></spell-icon>
+                <spell-icon :spellId="requester.spells[1]"></spell-icon>
+              </div>
+              <div>
+                <rune-icon
+                  :runeId="requester.stats.perks[0]"
+                  :runeStyleId="requester.stats.perkPrimaryStyle"
+                />
+                <rune-style-icon
+                  :runeStyleId="requester.stats.perkSubStyle"
+                />
+              </div>
             </v-layout>
-          </div>
-          <div>
-            <v-layout>
-              <v-img
-                :src="champions[participant.championId].iconUrl"
-                class="participant-icon"
-                v-bind:key="key"
-                v-for="(participant, key) in gameInfo.teams['200'].participants"
-              />
+          </td>
+          <td class="cell kda">
+            <v-layout column fill-height justify-center>
+              <span class="font-weight-bold">
+                평점
+                {{
+                  requester.stats.deaths > 0
+                    ? (
+                        (requester.stats.kills + requester.stats.assists) /
+                        requester.stats.deaths
+                      ).toFixed(2)
+                    : 'Perfect'
+                }}
+              </span>
+              <span class="font-size__small">
+                {{ requester.stats.kills }} / {{ requester.stats.deaths }} /
+                {{ requester.stats.assists }}
+                <tooltip content="킬관여율" inline>
+                  <span>
+                    ({{
+                      requesterTeam.totalKills === 0
+                        ? 0
+                        : (
+                            ((requester.stats.kills + requester.stats.assists) *
+                              100) /
+                            requesterTeam.totalKills
+                          ).toFixed(2)
+                    }}%)
+                  </span>
+                </tooltip>
+              </span>
+              <span class="font-size__small green--text">
+                {{ getSucceededKillString(requester) }}
+              </span>
             </v-layout>
-          </div>
-        </v-layout>
-      </v-flex>
-      <v-flex @click="toggle()" class="matchinfo-area9 cursor__pointer">
-        <v-layout align-center fill-height>
-          <v-icon v-if="!isToggle">expand_more</v-icon>
-          <v-icon v-if="isToggle">expand_less</v-icon>
-        </v-layout>
-      </v-flex>
-    </v-layout>
+          </td>
+          <td class="cell stats">
+            <v-layout column fill-height justify-center>
+              <span class="font-size__small font-weight-bold">
+                골드 {{ requester.stats.goldEarned | gold }}
+              </span>
+              <span class="font-size__small">
+                CS {{ requester.stats.totalMinionsKilled }}
+              </span>
+            </v-layout>
+          </td>
+          <td class="cell">
+            <v-layout align-baseline column fill-height justify-center>
+              <div>
+                <item-icon
+                  :itemId="item"
+                  v-bind:key="index"
+                  v-for="(item, index) in requester.items.slice(0, 3)"
+                />
+              </div>
+              <div>
+                <item-icon
+                  :itemId="item"
+                  v-bind:key="index"
+                  v-for="(item, index) in requester.items.slice(3, 7)"
+                />
+              </div>
+            </v-layout>
+          </td>
+          <td class="cell">
+            <v-layout column fill-height justify-center>
+              <div>
+                <v-layout mb-1>
+                  <v-img
+                    :src="champions[participant.championId].iconUrl"
+                    class="participant-icon"
+                    v-bind:key="key"
+                    v-for="(participant, key) in gameInfo.teams['100']
+                      .participants"
+                  />
+                </v-layout>
+              </div>
+              <div>
+                <v-layout>
+                  <v-img
+                    :src="champions[participant.championId].iconUrl"
+                    class="participant-icon"
+                    v-bind:key="key"
+                    v-for="(participant, key) in gameInfo.teams['200']
+                      .participants"
+                  />
+                </v-layout>
+              </div>
+            </v-layout>
+          </td>
+          <td @click="toggle()" class="cell cursor__pointer">
+            <v-layout align-center fill-height>
+              <v-icon v-if="!isToggle">expand_more</v-icon>
+              <v-icon v-if="isToggle">expand_less</v-icon>
+            </v-layout>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <v-flex v-if="isCreatedDetail" v-show="isToggle">
       <slot></slot>
     </v-flex>
@@ -167,14 +169,22 @@
 </template>
 
 <script lang="ts">
+import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
+import ItemIcon from '@/components/Icon/ItemIcon.vue';
+import RuneIcon from '@/components/Icon/RuneIcon.vue';
+import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
+import SpellIcon from '@/components/Icon/SpellIcon.vue';
+import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
+import { IMatchApiData } from '@/typings/match';
 import { format } from 'util';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import ItemIcon from '@/components/Icon/ItemIcon.vue';
-import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
-import { IMatchApiData } from '@/typings/match';
 
 @Component({
   components: {
+    RuneStyleIcon,
+    RuneIcon,
+    SpellIcon,
+    Tooltip,
     ChampionIcon,
     ItemIcon,
   },
@@ -192,6 +202,14 @@ export default class MatchCard extends Vue {
   public created() {
     this.isToggle = false;
     this.isCreatedDetail = false;
+  }
+
+  public get isAgain() {
+    return (
+      this.match.gameInfo.gameDuration <= 240 &&
+      !this.match.gameInfo.teams[100].firstBlood &&
+      !this.match.gameInfo.teams[200].firstBlood
+    );
   }
 
   get champions() {
@@ -217,6 +235,11 @@ export default class MatchCard extends Vue {
   get requester() {
     const { participantId, teamId } = this.gameInfo.requester;
     return this.gameInfo.teams[teamId].participants[participantId];
+  }
+
+  get requesterTeam() {
+    const { teamId } = this.gameInfo.requester;
+    return this.gameInfo.teams[teamId];
   }
 
   get queueString() {
@@ -283,59 +306,59 @@ export default class MatchCard extends Vue {
   }
 }
 </script>
-<style scoped>
-.font-size-small {
-  font-size: 12px;
-}
 
-.matchinfo-area1 {
-  max-width: 50px;
-  padding: 5px;
-}
+<style lang="scss" scoped>
 
-.matchinfo-area2 {
-  max-width: 70px;
-}
 
-.matchinfo-area3 {
-  max-width: 70px;
-}
+.match {
+  width: 100%;
+  border-spacing: 0;
 
-.matchinfo-area4 {
-  max-width: 80px;
-}
+  .body {
+    .row {
+      .cell {
+        padding: 5px;
+        font-size: 12px;
 
-.matchinfo-area5 {
-  max-width: 50px;
-}
+        &.match-summary {
+          width: 100px;
+          font-size: 11px;
 
-.matchinfo-area6 {
-  max-width: 95px;
-}
+          .match-title {
+            font-size: 13px;
+            font-weight: bold;
+          }
+        }
 
-.matchinfo-area7 {
-  max-width: 60px;
-}
+        &.kda {
+          width: 120px;
+        }
 
-.matchinfo-area8 {
-  max-width: 110px;
-}
-
-.matchinfo-area9 {
-  max-width: 25px;
+        &.stats {
+          width: 80px;
+        }
+      }
+    }
+  }
 }
 
 .requester-spell-icon {
-  max-width: 23px;
-  max-height: 23px;
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 24px;
+  max-height: 24px;
 }
 
 .requester-perk-icon {
-  max-width: 23px;
-  max-height: 23px;
+  min-width: 24px;
+  min-height: 24px;
+  max-width: 24px;
+  max-height: 24px;
 }
 
 .participant-icon {
+  min-width: 24px;
+  min-height: 24px;
   max-width: 24px;
   max-height: 24px;
   border-radius: 3px;

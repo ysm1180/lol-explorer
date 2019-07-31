@@ -176,7 +176,7 @@ export default {
 <style lang="scss">
 #app {
   width: 100vw;
-  min-width: 800px;
+  min-width: 860px;
   height: 100vh;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -240,5 +240,13 @@ export default {
   hr {
     margin: 5px 0;
   }
+}
+
+.margin__none {
+  margin: 0 !important;
+}
+
+.font-size__small {
+  font-size: 11px;
 }
 </style>

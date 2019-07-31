@@ -21,9 +21,9 @@ export class AppWindow {
     const windowOptions: BrowserWindowConstructorOptions = {
       x: 100,
       y: 100,
-      width: 960,
-      height: 660,
-      minWidth: 800,
+      width: 1024,
+      height: 960,
+      minWidth: 860,
       backgroundColor: '#FAFAFA',
       show: false,
       webPreferences: {

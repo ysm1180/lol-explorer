@@ -11,6 +11,12 @@ export interface ISummonerApiData {
   iconUrl: string;
 }
 
+interface ISeasonMiniSeries {
+  wins: number;
+  losses: number;
+  progress: string;
+}
+
 export interface ISummonerSeason {
   leagueId: string;
   queueType: string;
@@ -26,5 +32,5 @@ export interface ISummonerSeason {
   freshBlood: boolean;
   hotStreak: boolean;
   season: number;
-  miniSeries?: string[];
+  miniSeries?: ISeasonMiniSeries[];
 }
