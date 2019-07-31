@@ -3,8 +3,8 @@
     <div class="tabs">
       <nav>
         <button
-          @click="selectTab(tab)"
           :class="{ active: tab.isActive }"
+          @click="selectTab(tab)"
           v-for="tab in tabs"
         >
           {{ tab.name }}
@@ -19,10 +19,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Tabs extends Vue {
+  @Prop() onSelected?: (index: number) => void;
   private tabs: any[] = [];
 
   public mounted() {
@@ -30,8 +31,13 @@ export default class Tabs extends Vue {
   }
 
   public selectTab(selectedTab: any) {
-    this.tabs.forEach((tab) => {
+    this.tabs.forEach((tab, index) => {
       tab.isActive = tab.name === selectedTab.name;
+      if (tab.isActive) {
+        if (this.onSelected) {
+          this.onSelected(index);
+        }
+      }
     });
   }
 }
@@ -41,6 +47,7 @@ export default class Tabs extends Vue {
 .tabs {
   margin-bottom: 5px;
 }
+
 .tabs button {
   display: inline-block;
   margin: 0;

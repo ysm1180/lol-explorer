@@ -28,28 +28,29 @@
       id="match-page"
       v-if="status === 'LOGIN_COMPLETE'"
     >
-      <v-flex id="summoner-info" ma-5>
+      <v-flex id="summoner-info" mt-4 mb-3 style="min-width:800px;width:800px;max-height:284px;">
         <summoner-info-card
           :renewing="renewing"
           :summoner="summoner"
           @renew="renew"
           v-if="summoner !== null"
         />
-        <v-layout align-center fill-height justify-center>
-          <v-progress-circular
-            color="deep-orange lighten-2"
-            indeterminate
-            v-if="loadingSummoner"
-          />
+        <v-layout
+          align-center
+          fill-height
+          justify-center
+          v-if="loadingSummoner"
+        >
+          <v-progress-circular color="deep-orange lighten-2" indeterminate />
         </v-layout>
       </v-flex>
-      <Tabs>
-        <Tab :selected="true" class="font-weight-bold" name="전적">
+      <Tabs :onSelected="onTabSelected">
+        <Tab :selected="true" name="전적">
           <v-layout
             column
             fill-height
             mb-5
-            style="min-width:600px;width:700px;"
+            style="min-width:800px;width:800px;"
           >
             <v-flex v-bind:key="index" v-for="(match, index) in matches">
               <match-card :match="match">
@@ -82,9 +83,7 @@
                 fill-height
                 justify-center
                 v-if="loadingChampion"
-              >
-                <v-progress-circular color="grey" indeterminate />
-              </v-layout>
+              ></v-layout>
             </v-flex>
           </v-layout>
         </Tab>
@@ -108,10 +107,10 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
   components: {
     Tab,
     Tabs,
-    'match-card': MatchCard,
-    'champion-info-card': ChampionInfoCard,
-    'match-detail': MatchDetail,
-    'summoner-info-card': SummonerInfoCard,
+    MatchCard,
+    ChampionInfoCard,
+    MatchDetail,
+    SummonerInfoCard,
   },
 })
 export default class Index extends Vue {
@@ -123,8 +122,8 @@ export default class Index extends Vue {
   private loadingSummoner: boolean = true;
   private loadingChampion: boolean = true;
   private loadingMatches: boolean = true;
-  private tab: number = 0;
   private prevScrollEnd: boolean = false;
+  private selectedTabIndex: number = 0;
 
   @Watch('$route')
   public onRouteChanged(to: any, from: any) {
@@ -209,7 +208,7 @@ export default class Index extends Vue {
     const { scrollTop, clientHeight, scrollHeight } = target;
 
     if (
-      this.tab === 0 &&
+      this.selectedTabIndex === 0 &&
       !this.loadingMatches &&
       this.prevScrollEnd &&
       scrollTop + clientHeight >= scrollHeight
@@ -237,19 +236,14 @@ export default class Index extends Vue {
       this.prevScrollEnd = true;
     }
   }
+
+  public onTabSelected(index: number) {
+    this.selectedTabIndex = index;
+  }
 }
 </script>
 <style scoped>
 #match-page {
   overflow-y: auto;
 }
-
-#summoner-info {
-  width: 70%;
-  min-height: 100px;
-  max-height: 100px;
-  max-width: 750px;
-  min-width: 600px;
-}
-
 </style>

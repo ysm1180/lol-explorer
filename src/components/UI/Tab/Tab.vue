@@ -9,8 +9,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class Tab extends Vue {
-  @Prop(String) public name!: string;
-  @Prop({ type: Boolean, default: false }) public selected!: boolean;
+  @Prop(String) private name!: string;
+  @Prop({ type: Boolean, default: false }) private selected!: boolean;
+  @Prop() private onselected?: () => void;
   public isActive: boolean = false;
 
   public mounted() {
