@@ -23,7 +23,8 @@ export class AppWindow {
       y: 100,
       width: 1024,
       height: 960,
-      minWidth: 860,
+      minWidth: 1024,
+      minHeight: 960,
       backgroundColor: '#FAFAFA',
       show: false,
       webPreferences: {
