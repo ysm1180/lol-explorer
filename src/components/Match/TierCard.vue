@@ -46,10 +46,9 @@
         </div>
       </div>
 
-      <div v-if="season">
+      <div v-if="season && season.miniSeries && season.miniSeries.length > 0">
         <div
           class="promotion d-inline-block"
-          v-if="season.miniSeries && season.miniSeries.length > 0"
           v-for="result in season.miniSeries[0].progress.split('')"
         >
           <div class="blue lighten-4 blue--text" v-if="result === 'W'">

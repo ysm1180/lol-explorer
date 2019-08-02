@@ -37,7 +37,7 @@
               <rune-icon
                 :runeId="participant.stats.perks[0]"
                 :runeStyleId="participant.stats.perkPrimaryStyle"
-                small
+                tiny
               />
               <rune-style-icon
                 :runeStyleId="participant.stats.perkSubStyle"

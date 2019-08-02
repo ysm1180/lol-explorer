@@ -176,8 +176,10 @@ export default {
 <style lang="scss">
 #app {
   width: 100vw;
-  min-width: 860px;
+  min-width: 1024px;
+
   height: 100vh;
+  min-height: 960px;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -225,6 +227,10 @@ export default {
 
 .cursor__none {
   user-select: none;
+}
+
+.cursor__normal {
+  cursor: default !important;
 }
 
 .cursor__pointer {

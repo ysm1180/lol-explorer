@@ -23,5 +23,5 @@ yarn-error.log*
 #Electron-builder output
 /dist_electron
 
-# Perk config files
-/perk
+# Rune config files
+/runes
