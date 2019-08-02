@@ -1,8 +1,9 @@
 <template>
   <v-layout
-    :class="{ small: !!small }"
+    :class="{ small: !!small, large: !!large, extralarge: !!extralarge }"
     class="champion-icon-container"
     d-inline-block
+    @click="click"
   >
     <tooltip :content="champion.name" v-if="champion">
       <v-img
@@ -36,6 +37,8 @@
     @Prop(Boolean) private circle?: boolean;
     @Prop(Number) private level?: number;
     @Prop(Boolean) private small?: boolean;
+    @Prop(Boolean) private large?: boolean;
+    @Prop(Boolean) private extralarge?: boolean;
 
     public get champion() {
       return (
@@ -43,6 +46,10 @@
           this.championId
           ] as IStaticChampion) || null
       );
+    }
+
+    public click() {
+      this.$emit('click');
     }
   }
 </script>
@@ -58,6 +65,20 @@
       min-height: 36px;
       max-width: 36px;
       max-height: 36px;
+    }
+
+    &.large .champion-icon {
+      min-width: 64px;
+      min-height: 64px;
+      max-width: 64px;
+      max-height: 64px;
+    }
+
+    &.extralarge .champion-icon {
+      min-width: 96px;
+      min-height: 96px;
+      max-width: 96px;
+      max-height: 96px;
     }
 
     .champion-icon {

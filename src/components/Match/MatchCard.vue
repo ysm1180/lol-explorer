@@ -57,10 +57,9 @@
                 <rune-icon
                   :runeId="requester.stats.perks[0]"
                   :runeStyleId="requester.stats.perkPrimaryStyle"
+                  small
                 />
-                <rune-style-icon
-                  :runeStyleId="requester.stats.perkSubStyle"
-                />
+                <rune-style-icon :runeStyleId="requester.stats.perkSubStyle" />
               </div>
             </v-layout>
           </td>
@@ -308,8 +307,6 @@ export default class MatchCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
-
 .match {
   width: 100%;
   border-spacing: 0;

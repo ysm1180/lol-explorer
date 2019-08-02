@@ -28,15 +28,14 @@ export default new Router({
       component: () => import('./views/Rune.vue'),
     },
     {
-      path: '/rune/:championId',
-      name: 'rune-detail',
-      component: () => import('./views/RuneDetail.vue'),
-      props: true,
-    },
-    {
       path: '/champselect',
       name: 'champ-select',
       component: () => import('./views/ChampSelect.vue'),
+    },
+    {
+      path: '/champion/:championId',
+      name: 'champion',
+      component: () => import('./views/ChampionInfo.vue'),
     },
   ],
 });

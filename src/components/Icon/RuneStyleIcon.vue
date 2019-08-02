@@ -1,14 +1,23 @@
 <template>
   <v-layout
-    :class="{ small: !!small }"
+    :class="{ small: !!small, large: !!large }"
     class="rune-style-icon-container"
     d-inline-block
     ref="container"
   >
-    <tooltip :title="perk.name" html v-if="perk">
-      <v-img :src="perk ? perk.iconUrl : ''" class="rune-style-icon" />
+    <tooltip :title="rune.name" html v-if="rune" center>
+      <div class="d-inline-block rune-style-icon">
+        <v-img
+          class="image"
+          :class="[backgroundColorClass, { hover: !!hover }]"
+          :src="`/assets/runes/${runeStyleId}.svg`"
+          @click="click()"
+          :width="!!large ? 32 : 23"
+          :height="!!large ? 32 : 23"
+          contain
+        />
+      </div>
     </tooltip>
-    <v-img class="rune-style-icon grey" v-else />
   </v-layout>
 </template>
 
@@ -23,11 +32,26 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class RuneStyleIcon extends Vue {
   @Prop() private runeStyleId!: number;
   @Prop(Boolean) private small?: boolean;
+  @Prop(Boolean) private large?: boolean;
+  @Prop(Boolean) private hover?: boolean;
+  @Prop() private backgroundColor?: string;
 
-  public get perk() {
+  public get backgroundColorClass() {
+    if (this.backgroundColor) {
+      return !this.backgroundColor.startsWith('#') && this.backgroundColor;
+    } else {
+      return '';
+    }
+  }
+
+  public get rune() {
     return this.$store.state.lolstatic.perks[
       this.runeStyleId
     ] as IStaticPerk | null;
+  }
+
+  public click() {
+    this.$emit('click');
   }
 }
 </script>
@@ -45,14 +69,27 @@ export default class RuneStyleIcon extends Vue {
     max-height: 15px;
   }
 
-  .rune-style-icon {
-    vertical-align: top;
+  &.large .rune-style-icon {
+    width: 32px;
+    height: 32px;
+  }
 
-    min-width: 22px;
-    min-height: 22px;
-    max-width: 22px;
-    max-height: 22px;
-    border-radius: 50%;
+  .rune-style-icon {
+    position: relative;
+    vertical-align: top;
+    overflow: hidden;
+
+    width: 23px;
+    height: 23px;
+
+    .image {
+      &.hover {
+        filter: brightness(0.5);
+        &:hover {
+          filter: brightness(1);
+        }
+      }
+    }
   }
 }
 </style>

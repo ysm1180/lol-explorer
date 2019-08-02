@@ -1,149 +1,275 @@
 <template>
-  <v-layout fill-height>
-    <v-flex fill-height>
-      <v-layout column fill-height>
-        <div>
-          <v-layout fill-height>
-            <v-btn
-              icon v-for="perkId in perkIdList" v-bind:key="perkId"
-              @click="copyPerk.primary.id=perkId"
-              :color="perkId===copyPerk.primary.id?'orange':''" :outline="perkId===copyPerk.primary.id"
-            >
-              <v-img
-                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[perkId].icon}`"
-                class="perk-icon" :class="perkId===copyPerk.primary.id?'selected':''"
-              />
-            </v-btn>
-          </v-layout>
+  <div @click="click" class="modal-mask">
+    <div class="modal-wrapper">
+      <div @click.stop.prevent.self="" class="modal-container">
+        <div class="rune-page mb-2">
+          <v-img :src="`/assets/runes/${copyRune.primary.id}_back.jpg`" />
+          <div class="pa-5 rune-content">
+            <v-layout d-inline class="mr-5">
+              <champion-icon :championId="championId" circle large />
+            </v-layout>
+            <v-layout class="rune-type mr-5" d-inline-block>
+              <v-layout justify-between-space>
+                <rune-style-icon
+                  :hover="runeId !== copyRune.primary.id"
+                  :runeStyleId="runeId"
+                  @click="selectPrimaryRuneStyle(runeId)"
+                  class="mb-5 cursor__pointer"
+                  large
+                  v-bind:key="runeId"
+                  v-for="runeId in runeIdList"
+                />
+              </v-layout>
+              <v-layout
+                class="mb-4"
+                justify-between-space
+                v-bind:key="line"
+                v-for="line in [0, 1, 2, 3]"
+              >
+                <rune-icon
+                  :borderColor="runeBorderColor[copyRune.primary.id]"
+                  :grayscale="runeId !== copyRune.primary.slots[line]"
+                  :runeId="runeId"
+                  :runeStyleId="copyRune.primary.id"
+                  @click="selectPrimaryRune(runeId, line)"
+                  class="cursor__pointer"
+                  large
+                  v-bind:key="runeId"
+                  v-for="runeId in Object.keys(
+                    perks[copyRune.primary.id].slots[line].runes
+                  )"
+                />
+              </v-layout>
+            </v-layout>
+            <v-layout class="rune-type" d-inline-block>
+              <v-layout justify-between-space>
+                <rune-style-icon
+                  v-if="runeId !== copyRune.primary.id"
+                  :hover="runeId !== copyRune.secondary.id"
+                  :runeStyleId="runeId"
+                  @click="selectSecondaryRuneStyle(runeId)"
+                  class="mb-5 cursor__pointer"
+                  large
+                  v-bind:key="runeId"
+                  v-for="runeId in runeIdList"
+                />
+              </v-layout>
+              <v-layout
+                justify-between-space
+                v-bind:key="line"
+                v-for="line in [1, 2, 3]"
+              >
+                <rune-icon
+                  :borderColor="runeBorderColor[copyRune.secondary.id]"
+                  :grayscale="
+                    !copyRune.secondary.slots.find(
+                      (slot) => slot.slot === runeId
+                    )
+                  "
+                  :runeId="runeId"
+                  :runeStyleId="copyRune.secondary.id"
+                  @click="selectSecondaryRune(runeId, line)"
+                  class="mb-4 cursor__pointer"
+                  large
+                  v-bind:key="runeId"
+                  v-for="runeId in Object.keys(
+                    perks[copyRune.secondary.id].slots[line].runes
+                  )"
+                />
+              </v-layout>
+
+              <v-layout class="rune-type" d-inline-block>
+                <v-layout justify-between-space>
+                  <rune-icon
+                    :grayscale="copyRune.stat[0] !== runeId"
+                    :runeId="runeId"
+                    @click="selectStatRune(runeId, 0)"
+                    borderColor="yellow"
+                    class="mb-2 cursor__pointer"
+                    runeStyleId="5000"
+                    v-bind:Key="runeId"
+                    v-for="runeId in ['5008', '5005', '5007']"
+                  />
+                </v-layout>
+                <v-layout justify-between-space>
+                  <rune-icon
+                    :grayscale="copyRune.stat[1] !== runeId"
+                    :runeId="runeId"
+                    @click="selectStatRune(runeId, 1)"
+                    borderColor="yellow"
+                    class="mb-2 cursor__pointer"
+                    runeStyleId="5000"
+                    v-bind:Key="runeId"
+                    v-for="runeId in ['5008', '5002', '5003']"
+                  />
+                </v-layout>
+                <v-layout justify-between-space>
+                  <rune-icon
+                    :grayscale="copyRune.stat[2] !== runeId"
+                    :runeId="runeId"
+                    @click="selectStatRune(runeId, 2)"
+                    borderColor="yellow"
+                    class="mb-2 cursor__pointer"
+                    runeStyleId="5000"
+                    v-bind:Key="runeId"
+                    v-for="runeId in ['5001', '5002', '5003']"
+                  />
+                </v-layout>
+              </v-layout>
+            </v-layout>
+          </div>
         </div>
-        <div v-for="line in [0, 1, 2, 3]" v-bind:key="line">
-          <v-layout fill-height>
-            <v-btn
-              icon v-for="perkId in Object.keys(lolstatic.perks[copyPerk.primary.id].slots[line].runes)" v-bind:key="perkId"
-              @click="copyPerk.primary[`slot${line}`] = perkId"
-              :color="copyPerk.primary[`slot${line}`]===perkId?'orange':''" :outline="copyPerk.primary[`slot${line}`]===perkId"
-            >
-            <v-img
-              :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[copyPerk.primary.id].slots[line].runes[perkId].icon}`"
-              class="perk-icon" :class="copyPerk.primary[`slot${line}`]===perkId?'selected':''"
-            />
+        <v-layout d-block>
+          <tooltip
+            content="룬을 모두 선택해주세요."
+            inline
+            v-if="!isAvailableSave()"
+          >
+            <v-btn disabled class="lighten-2 deep-orange white--text" flat>
+              SAVE
             </v-btn>
-          </v-layout>
-        </div>
-      </v-layout>
-    </v-flex>
-    <v-flex fill-height>
-      <v-layout column fill-height>
-        <div>
-          <v-layout fill-height>
-            <v-btn
-              icon v-for="perkId in perkIdList" v-bind:key="perkId"
-              v-show="perkId !== copyPerk.primary.id"
-              @click="copyPerk.secondary.id=perkId"
-              :color="perkId===copyPerk.secondary.id?'orange':''" :outline="perkId===copyPerk.secondary.id"
-            >
-              <v-img
-                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[perkId].icon}`"
-                class="perk-icon" :class="perkId===copyPerk.secondary.id?'selected':''"
-              />
-            </v-btn>
-          </v-layout>
-        </div>
-        <div v-for="line in [1, 2, 3]" v-bind:key="line">
-          <v-layout fill-height>
-            <v-btn
-              icon v-for="perkId in Object.keys(lolstatic.perks[copyPerk.secondary.id].slots[line].runes)" v-bind:key="perkId"
-              @click="copyPerk.secondary[`slot${line}`] = perkId"
-              :color="copyPerk.secondary[`slot${line}`]===perkId?'orange':''" :outline="copyPerk.secondary[`slot${line}`]===perkId"
-            >
-            <v-img
-              :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks[copyPerk.secondary.id].slots[line].runes[perkId].icon}`"
-              class="perk-icon" :class="copyPerk.secondary[`slot${line}`]===perkId?'selected':''"
-            />
-            </v-btn>
-          </v-layout>
-        </div>
-        <div>
-          <v-layout fill-height>
-            <v-btn
-              icon v-for="perkId in ['5008', '5005', '5007']" v-bind:Key="perkId"
-              @click="copyPerk.stat.stat1=perkId"
-              :color="copyPerk.stat.stat1===perkId?'orange':''" :outline="copyPerk.stat.stat1===perkId"
-            >
-              <v-img
-                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks['5000'].slots[0].runes[perkId].icon}`"
-                class="perk-icon" :class="copyPerk.stat.stat1===perkId?'selected':''"
-              />
-            </v-btn>
-          </v-layout>
-        </div>
-        <div>
-          <v-layout fill-height>
-            <v-btn
-              icon v-for="perkId in ['5008', '5002', '5003']" v-bind:Key="perkId"
-              @click="copyPerk.stat.stat2=perkId"
-              :color="copyPerk.stat.stat2===perkId?'orange':''" :outline="copyPerk.stat.stat2===perkId"
-            >
-              <v-img
-                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks['5000'].slots[0].runes[perkId].icon}`"
-                class="perk-icon" :class="copyPerk.stat.stat2===perkId?'selected':''"
-              />
-            </v-btn>
-          </v-layout>
-        </div>
-        <div>
-          <v-layout fill-height>
-            <v-btn
-              icon v-for="perkId in ['5001', '5002', '5003']" v-bind:Key="perkId"
-              @click="copyPerk.stat.stat3=perkId"
-              :color="copyPerk.stat.stat3===perkId?'orange':''" :outline="copyPerk.stat.stat3===perkId"
-            >
-              <v-img
-                :src="`${lolstatic.perks.baseIconUrl}${lolstatic.perks['5000'].slots[0].runes[perkId].icon}`"
-                class="perk-icon" :class="copyPerk.stat.stat3===perkId?'selected':''"
-              />
-            </v-btn>
-          </v-layout>
-        </div>
-        <v-btn @click="save">save</v-btn>
-      </v-layout>
-    </v-flex>
-  </v-layout>
+          </tooltip>
+          <v-btn
+            v-else
+            @click="save()"
+            class="lighten-2 deep-orange white--text"
+            flat
+          >
+            SAVE
+          </v-btn>
+          <v-btn @click="click" class="grey white--text" flat>CANCEL</v-btn>
+        </v-layout>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
+import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
+import RuneIcon from '@/components/Icon/RuneIcon.vue';
+import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
+import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
+import { ICustomRune } from '@/typings/rune';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
-  components: {},
+  components: { Tooltip, ChampionIcon, RuneStyleIcon, RuneIcon },
 })
-export default class ChampionInfoCard extends Vue {
-  @Prop() public perk!: any;
-  public copyPerk: any = this.perk;
-  public perkIdList: any[] = ['8000', '8100', '8200', '8300', '8400'];
+export default class RunePage extends Vue {
+  @Prop() private championId!: number;
+  @Prop() private rune!: ICustomRune;
+  private copyRune: ICustomRune = this.rune;
+  private runeIdList: string[] = ['8000', '8100', '8200', '8300', '8400'];
+  private runeBorderColor = {
+    '8000': 'yellow',
+    '8100': 'red',
+    '8200': 'purple',
+    '8300': 'blue',
+    '8400': 'green',
+  };
 
-  @Watch('perk')
-  public onPerkChange(to: any, from: any) {
-    this.copyPerk = to;
+  @Watch('rune')
+  private onRuneChanged(val: ICustomRune, oldVal: ICustomRune) {
+    this.copyRune = val;
   }
 
-  get lolstatic() {
-    return this.$store.state.lolstatic;
+  get perks() {
+    return this.$store.state.lolstatic.perks;
   }
+
   public save() {
-    this.$emit('save', this.copyPerk);
+    this.$emit('save', this.copyRune);
+  }
+
+  public click() {
+    this.$emit('click');
+  }
+
+  public selectPrimaryRuneStyle(runeStyleId: string) {
+    this.copyRune.primary.id = runeStyleId;
+    this.copyRune.primary.slots = ['0', '0', '0', '0'];
+    if (this.copyRune.secondary.id === runeStyleId) {
+      this.copyRune.secondary.id = '0';
+      this.copyRune.secondary.slots = [];
+    }
+  }
+
+  public selectPrimaryRune(runeId: string, line: number) {
+    Vue.set(this.copyRune.primary.slots, line, runeId);
+  }
+  public selectSecondaryRuneStyle(runeStyleId: string) {
+    this.copyRune.secondary.id = runeStyleId;
+    this.copyRune.secondary.slots = [];
+  }
+
+  public selectSecondaryRune(runeId: string, line: number) {
+    const lineSlot = this.copyRune.secondary.slots.find(
+      (slot) => slot.line === line
+    );
+    if (lineSlot) {
+      lineSlot.slot = runeId;
+    } else {
+      this.copyRune.secondary.slots.unshift({ slot: runeId, line });
+      this.copyRune.secondary.slots = this.copyRune.secondary.slots.slice(0, 2);
+    }
+  }
+
+  public selectStatRune(runeId: string, line: number) {
+    Vue.set(this.copyRune.stat, line, runeId);
+  }
+
+  public isAvailableSave() {
+    return (
+      this.copyRune.primary.id !== '0' &&
+      !this.copyRune.primary.slots.includes('0') &&
+      this.copyRune.secondary.id !== '0' &&
+      this.copyRune.secondary.slots.length === 2 &&
+      !this.copyRune.stat.includes('0')
+    );
   }
 }
 </script>
-<style scoped>
-.perk-icon {
-  max-width: 30px;
-  max-height: 30px;
-  -webkit-filter: grayscale(100%);
-  filter:black;
+<style lang="scss" scoped>
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
 }
-.perk-icon.selected, .perk-icon:hover {
-  -webkit-filter: grayscale(0%);
-  filter:none;
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 1030px;
+  height: 700px;
+  margin: 0px auto;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.rune-page {
+  position: relative;
+
+  .rune-content {
+    position: absolute;
+    top: 0;
+
+    .rune-type {
+      width: 250px;
+      vertical-align: top;
+    }
+  }
 }
 </style>

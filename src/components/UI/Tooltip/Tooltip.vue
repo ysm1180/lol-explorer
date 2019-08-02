@@ -1,6 +1,6 @@
 <template>
   <v-layout
-    :class="{ 'd-inline': !!inline }"
+    :class="{ 'd-inline': !!inline, 'justify-center': !!center }"
     class="tooltip-layout"
     ref="container"
   >
@@ -42,6 +42,7 @@ export default class Tooltip extends Vue {
   @Prop(Boolean) private html?: boolean;
   @Prop(Boolean) private inline?: boolean;
   @Prop(Boolean) private fullWidth?: boolean;
+  @Prop(Boolean) private center?: boolean;
   private isHover: boolean = false;
   private isBottom: boolean = false;
 
