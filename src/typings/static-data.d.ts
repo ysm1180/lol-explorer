@@ -73,33 +73,14 @@ interface IChampionStats {
 interface IChampionSpellsItem {
   id: string;
   name: string;
-  description: string;
   tooltip: string;
-  leveltip: IChampionLeveltip;
-  maxrank: number;
-  cooldown: number[];
   cooldownBurn: string;
-  cost: number[];
-  costBurn: string;
-  datavalues: {};
-  vars: IChampionVarsItem[];
   costType: string;
   maxammo: string;
-  range: number[];
   rangeBurn: string;
   resource: string;
   iconUrl: string;
-}
-
-interface IChampionLeveltip {
-  label: string[];
-  effect: string[];
-}
-
-interface IChampionVarsItem {
-  link: string;
-  coeff: number;
-  key: string;
+  secret?: boolean;
 }
 
 interface IChampionPassive {
