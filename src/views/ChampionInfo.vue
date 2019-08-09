@@ -97,9 +97,8 @@
                     </thead>
                     <tbody class="table-content">
                       <tr
-                        v-for="(n, i) in selectedPositionData.spells.length > 2
-                          ? 2
-                          : selectedPositionData.spells.length"
+                        v-for="(n, i) in selectedPositionData.spells.length > 2 ? 2 : selectedPositionData.spells.length"
+                        v-bind:key="i"
                       >
                         <td>
                           <spell-icon
@@ -136,20 +135,15 @@
                     </thead>
                     <tbody class="table-content">
                       <tr
-                        v-for="(n, i) in selectedPositionData.startItems
-                          .length > 3
-                          ? 3
-                          : selectedPositionData.startItems.length"
+                        v-for="(n, i) in selectedPositionData.startItems.length > 3 ? 3 : selectedPositionData.startItems.length"
+                        v-bind:key="i"
                       >
                         <td>
                           <item-icon
-                            :itemId="
-                              selectedPositionData.startItems[i].ids[idx - 1]
-                            "
-                            class="mr-1"
-                            large
-                            v-for="idx in selectedPositionData.startItems[i].ids
-                              .length"
+                            :itemId="selectedPositionData.startItems[i].ids[idx - 1]"
+                            class="mr-1" large
+                            v-for="idx in selectedPositionData.startItems[i].ids.length"
+                            v-bind:key="idx"
                           />
                         </td>
                         <td>
@@ -199,19 +193,19 @@ const POSITION_ID: { [position: string]: number } = {
 };
 
 interface IPositionData {
-  spells: {
+  spells: Array<{
     id1: number;
     id2: number;
     count: number;
     pickRate: number;
     winRate: number;
-  }[];
-  startItems: {
+  }>;
+  startItems: Array<{
     ids: number[];
     count: number;
     pickRate: number;
     winRate: number;
-  }[];
+  }>;
 }
 
 @Component({
@@ -251,11 +245,11 @@ export default class ChampionInfo extends Vue {
         POSITION_ID[position]
       }`
     );
-    const data: {
+    const data: Array<{
       _id: number[];
       count: number;
       win: number;
-    }[] = response.data;
+    }> = response.data;
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
     const spells = data.map((spell) => ({
       id1: spell._id[0],
@@ -280,11 +274,11 @@ export default class ChampionInfo extends Vue {
         POSITION_ID[position]
       }`
     );
-    const data: {
+    const data: Array<{
       _id: number[];
       count: number;
       win: number;
-    }[] = response.data;
+    }> = response.data;
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
     const startItems = data.map((item) => ({
       ids: item._id,
@@ -323,7 +317,7 @@ export default class ChampionInfo extends Vue {
     const response = await axios.get(
       `${END_POINT}/statistics/champion/positions/${this.championId}`
     );
-    const data: { _id: number; count: number; win: number }[] = response.data;
+    const data: Array<{ _id: number; count: number; win: number }> = response.data;
     this.totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
     data.forEach((position) => {
       this.$set(this.counts, POSITION_NAME[position._id], position.count);
