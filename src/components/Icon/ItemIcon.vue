@@ -1,5 +1,7 @@
 <template>
-  <v-layout class="item-icon-container" d-inline-block ref="container">
+  <v-layout
+    :class="{ small: !!small, large: !!large }"
+    class="item-icon-container" d-inline-block ref="container">
     <tooltip :content="itemContent" :title="item.name" html v-if="item">
       <v-img :src="item ? item.iconUrl : ''" class="item-icon grey" />
     </tooltip>
@@ -17,13 +19,15 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 })
 export default class ItemIcon extends Vue {
   @Prop() private itemId!: number;
+  @Prop(Boolean) private small?: boolean;
+  @Prop(Boolean) private large?: boolean;
 
   public get itemContent() {
     return (
       (this.item.plaintext !== '' ? this.item.plaintext + '<br />' : '') +
       this.item.description +
       '<br />가격 : <span class="yellow--text">' +
-      this.item.gold.total +
+      this.item.gold.total + ' (' + this.item.gold.base + ')' +
       '</span>'
     );
   }
@@ -41,6 +45,20 @@ export default class ItemIcon extends Vue {
   position: relative;
   vertical-align: top;
   text-align: left;
+
+  &.small .item-icon {
+    min-width: 16px;
+    min-height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+  }
+
+  &.large .item-icon {
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+  }
 
   .item-icon {
     vertical-align: top;

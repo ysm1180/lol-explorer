@@ -3,6 +3,8 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
+const parsingId = (route: any) => ({ championId: Number(route.params.championId) })
+
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -36,6 +38,7 @@ export default new Router({
       path: '/champion/:championId',
       name: 'champion',
       component: () => import('./views/ChampionInfo.vue'),
+      props: parsingId,
     },
   ],
 });

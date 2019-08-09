@@ -1,6 +1,6 @@
 <template>
   <v-layout
-    :class="{ small: !!small }"
+    :class="{ small: !!small, large: !!large }"
     class="spell-icon-container"
     d-inline-block
     ref="container"
@@ -23,6 +23,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class SpellIcon extends Vue {
   @Prop() private spellId!: number;
   @Prop(Boolean) private small?: boolean;
+  @Prop(Boolean) private large?: boolean;
 
   public get spellContent() {
     return `${this.spell.description}<br /><br />재사용 대기시간 : ${
@@ -49,6 +50,13 @@ export default class SpellIcon extends Vue {
     min-height: 16px;
     max-width: 16px;
     max-height: 16px;
+  }
+
+  &.large .spell-icon {
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
   }
 
   .spell-icon {

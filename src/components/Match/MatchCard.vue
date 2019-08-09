@@ -44,7 +44,13 @@
             <champion-icon
               :championId="requester.championId"
               :level="requester.stats.champLevel"
+              @click="
+                () => {
+                  $router.push(`/champion/${requester.championId}`);
+                }
+              "
               circle
+              class="cursor__pointer"
             />
           </td>
           <td class="cell">
