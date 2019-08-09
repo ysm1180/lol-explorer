@@ -24,7 +24,7 @@
           <v-layout align-center>
             <v-img
               :src="staticChampions[championData.championKey].iconUrl"
-              class="champion-icon mr-2"
+              class="champion-passive-icon mr-2"
             />
             <span>{{ championData.championName }}</span>
           </v-layout>
@@ -136,7 +136,7 @@ export default class ChampionInfoDetail extends Vue {
   }
 }
 
-.champion-icon {
+.champion-passive-icon {
   min-width: 32px;
   min-height: 32px;
   max-width: 32px;

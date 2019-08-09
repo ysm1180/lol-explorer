@@ -1,0 +1,90 @@
+<template>
+  <tooltip
+    :content="count > 0 ? `승률: ${Math.floor((win / count) * 1000) / 10}%` : '승률: 데이터 없음'"
+    inlineBlock
+  >
+    <div :class="{ selected: !!selected }" @click="click()" class="position">
+      <v-img
+        :src="
+          selected
+            ? `/assets/positions/${position}.svg`
+            : `/assets/positions/${position}-disabled.svg`
+        "
+        class="position-image"
+      />
+      <div class="position-name">{{ name }}</div>
+      <div class="position-percent">{{ percent }}%</div>
+    </div>
+  </tooltip>
+</template>
+
+<script lang="ts">
+import { toPercentage } from '@/base/math';
+import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+@Component({
+  components: { Tooltip },
+})
+export default class Position extends Vue {
+  @Prop(String) private position!: string;
+  @Prop(String) private name!: string;
+  @Prop(Number) private count!: number;
+  @Prop(Number) private win!: number;
+  @Prop(Number) private totalCount!: number;
+  @Prop(Boolean) private selected?: boolean;
+
+  public get percent() {
+    if (this.totalCount > 0) {
+    return this.count ? toPercentage(this.count, this.totalCount) : 0;
+    } else {
+      return 0;
+    }
+  }
+
+  public click() {
+    this.$emit('click');
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.position {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 5px 10px 5px 5px;
+  cursor: pointer;
+  background-color: #532929;
+  color: #c7c7c7;
+
+  &.selected {
+    background-color: #e57c5b;
+    color: white;
+  }
+
+  .position-name {
+    display: table-cell;
+    width: 80px;
+    vertical-align: middle;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .position-image {
+    display: table-cell;
+    vertical-align: middle;
+    min-width: 28px;
+    min-height: 28px;
+    max-width: 28px;
+    max-height: 28px;
+  }
+
+  .position-percent {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+    width: 50px;
+    font-size: 14px;
+  }
+}
+</style>
