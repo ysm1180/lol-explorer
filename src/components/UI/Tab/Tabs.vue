@@ -23,7 +23,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Tabs extends Vue {
-  @Prop() onSelected?: (index: number) => void;
+  @Prop() private onSelected?: (index: number) => void;
   private tabs: any[] = [];
 
   public mounted() {

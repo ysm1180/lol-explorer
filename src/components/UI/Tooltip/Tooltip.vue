@@ -5,7 +5,7 @@
     ref="container"
   >
     <div
-      :class="{ bottom: isBottom, top: !isBottom }"
+      :class="{ bottom: isBottom, top: !isBottom, indent: isIndent }"
       class="tooltip-container"
       v-if="isHover"
     >
@@ -45,12 +45,15 @@ export default class Tooltip extends Vue {
   @Prop(Boolean) private center?: boolean;
   private isHover: boolean = false;
   private isBottom: boolean = false;
+  private isIndent: boolean = false;
 
   public hover() {
     this.isHover = true;
     this.isBottom = false;
+    this.isIndent = false;
 
     const computing = document.createElement('div');
+    computing.style.position = 'absolute';
     computing.style.verticalAlign = 'top';
     computing.style.opacity = '0';
     computing.innerHTML = `<div style="width:max-content;max-width:330px;padding:10px;">
@@ -64,9 +67,13 @@ export default class Tooltip extends Vue {
         </div>
       </div>`;
     document.body.appendChild(computing);
+
     const rect = (this.$refs.container as Element).getBoundingClientRect();
     if (rect.top - (computing.offsetHeight + 20 + 48) < 0) {
       this.isBottom = true;
+    }
+    if (rect.left + rect.width / 2 - computing.offsetWidth / 2 < 0) {
+      this.isIndent = true;
     }
     document.body.removeChild(computing);
   }
@@ -116,6 +123,15 @@ export default class Tooltip extends Vue {
       top: 0;
       transform: translateX(-50%) translateY(calc(-100% - 10px));
 
+      &.indent {
+        left: 0;
+        transform: translateY(calc(-100% - 10px));
+
+        &:after {
+          left: 20px;
+        }
+      }
+
       &::after {
         content: ' ';
         position: absolute;
@@ -131,6 +147,15 @@ export default class Tooltip extends Vue {
     &.bottom {
       bottom: 0;
       transform: translateX(-50%) translateY(calc(100% + 10px));
+
+      &.indent {
+        left: 0;
+        transform: translateY(calc(100% + 10px));
+
+        &:after {
+          left: 20px;
+        }
+      }
 
       &::after {
         content: ' ';

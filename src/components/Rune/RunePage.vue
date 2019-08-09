@@ -188,8 +188,9 @@ export default class RunePage extends Vue {
   public selectPrimaryRuneStyle(runeStyleId: string) {
     this.copyRune.primary.id = runeStyleId;
     this.copyRune.primary.slots = ['0', '0', '0', '0'];
+
     if (this.copyRune.secondary.id === runeStyleId) {
-      this.copyRune.secondary.id = '0';
+      this.copyRune.secondary.id = ['8000', '8100', '8200', '8300', '8400'].filter(id => id !== runeStyleId)[0];
       this.copyRune.secondary.slots = [];
     }
   }
