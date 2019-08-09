@@ -32,10 +32,10 @@ export default new Router({
       name: 'champ-select',
       component: () => import('./views/ChampSelect.vue'),
     },
-    {
-      path: '/champion/:championId',
-      name: 'champion',
-      component: () => import('./views/ChampionInfo.vue'),
-    },
+    // {
+    //   path: '/champion/:championId',
+    //   name: 'champion',
+    //   component: () => import('./views/ChampionInfo.vue'),
+    // },
   ],
 });

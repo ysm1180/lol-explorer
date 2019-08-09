@@ -5,7 +5,8 @@
         <button
           :class="{ active: tab.isActive }"
           @click="selectTab(tab)"
-          v-for="tab in tabs"
+          v-for="(tab,index) in tabs"
+          v-bind:key="index"
         >
           {{ tab.name }}
         </button>
@@ -23,7 +24,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Tabs extends Vue {
-  @Prop() onSelected?: (index: number) => void;
+  @Prop() private onSelected?: (index: number) => void;
   private tabs: any[] = [];
 
   public mounted() {
