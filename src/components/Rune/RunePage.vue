@@ -16,14 +16,14 @@
                   @click="selectPrimaryRuneStyle(runeId)"
                   class="mb-5 cursor__pointer"
                   large
-                  v-bind:key="runeId"
+                  v-bind:key="`${runeId}`"
                   v-for="runeId in runeIdList"
                 />
               </v-layout>
               <v-layout
                 class="mb-4"
                 justify-between-space
-                v-bind:key="line"
+                v-bind:key="`${line}`"
                 v-for="line in [0, 1, 2, 3]"
               >
                 <rune-icon
@@ -34,7 +34,7 @@
                   @click="selectPrimaryRune(runeId, line)"
                   class="cursor__pointer"
                   large
-                  v-bind:key="runeId"
+                  v-bind:key="`${runeId}`"
                   v-for="runeId in Object.keys(
                     perks[copyRune.primary.id].slots[line].runes
                   )"
@@ -44,19 +44,19 @@
             <v-layout class="rune-type" d-inline-block>
               <v-layout justify-between-space>
                 <rune-style-icon
-                  v-if="runeId !== copyRune.primary.id"
+                  v-show="runeId !== copyRune.primary.id"
                   :hover="runeId !== copyRune.secondary.id"
                   :runeStyleId="runeId"
                   @click="selectSecondaryRuneStyle(runeId)"
                   class="mb-5 cursor__pointer"
                   large
-                  v-bind:key="runeId"
+                  v-bind:key="`${runeId}`"
                   v-for="runeId in runeIdList"
                 />
               </v-layout>
               <v-layout
                 justify-between-space
-                v-bind:key="line"
+                v-bind:key="`${line}`"
                 v-for="line in [1, 2, 3]"
               >
                 <rune-icon
@@ -71,7 +71,7 @@
                   @click="selectSecondaryRune(runeId, line)"
                   class="mb-4 cursor__pointer"
                   large
-                  v-bind:key="runeId"
+                  v-bind:key="`${runeId}`"
                   v-for="runeId in Object.keys(
                     perks[copyRune.secondary.id].slots[line].runes
                   )"
@@ -87,7 +87,7 @@
                     borderColor="yellow"
                     class="mb-2 cursor__pointer"
                     runeStyleId="5000"
-                    v-bind:Key="runeId"
+                    v-bind:key="`${runeId}`"
                     v-for="runeId in ['5008', '5005', '5007']"
                   />
                 </v-layout>
@@ -99,7 +99,7 @@
                     borderColor="yellow"
                     class="mb-2 cursor__pointer"
                     runeStyleId="5000"
-                    v-bind:Key="runeId"
+                    v-bind:key="`${runeId}`"
                     v-for="runeId in ['5008', '5002', '5003']"
                   />
                 </v-layout>
@@ -111,7 +111,7 @@
                     borderColor="yellow"
                     class="mb-2 cursor__pointer"
                     runeStyleId="5000"
-                    v-bind:Key="runeId"
+                    v-bind:key="`${runeId}`"
                     v-for="runeId in ['5001', '5002', '5003']"
                   />
                 </v-layout>
@@ -161,11 +161,11 @@ export default class RunePage extends Vue {
   private copyRune: ICustomRune = this.rune;
   private runeIdList: string[] = ['8000', '8100', '8200', '8300', '8400'];
   private runeBorderColor = {
-    '8000': 'yellow',
-    '8100': 'red',
-    '8200': 'purple',
-    '8300': 'blue',
-    '8400': 'green',
+    8000: 'yellow',
+    8100: 'red',
+    8200: 'purple',
+    8300: 'blue',
+    8400: 'green',
   };
 
   @Watch('rune')
@@ -190,7 +190,7 @@ export default class RunePage extends Vue {
     this.copyRune.primary.slots = ['0', '0', '0', '0'];
 
     if (this.copyRune.secondary.id === runeStyleId) {
-      this.copyRune.secondary.id = ['8000', '8100', '8200', '8300', '8400'].filter(id => id !== runeStyleId)[0];
+      this.copyRune.secondary.id = ['8000', '8100', '8200', '8300', '8400'].filter((id) => id !== runeStyleId)[0];
       this.copyRune.secondary.slots = [];
     }
   }

@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-const parsingId = (route: any) => ({ championId: Number(route.params.championId) })
+const parsingId = (route: any) => ({ championId: Number(route.params.championId) });
 
 export default new Router({
   mode: 'history',

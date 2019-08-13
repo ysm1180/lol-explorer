@@ -66,7 +66,8 @@ export default class ChampionSpellIcon extends Vue {
       content += `<span class="grey--text">사거리: ${this.spell.rangeBurn}</span><br /><br />`;
       content += this.spell.tooltip;
       if (this.spell.secret) {
-        content += '<br /><br /><span class="deep-orange--text">"?"는 라이엇 API 에서 제공하지 않는 값입니다. 정확한 값은 롤 클라이언트에서 확인할 수 있습니다.</span>';
+        content += '<br /><br /><span class="deep-orange--text">"?"는 라이엇 API 에서 제공하지 않는 값입니다. ';
+        content += '정확한 값은 롤 클라이언트에서 확인할 수 있습니다.</span>';
       }
       return content;
     } else {

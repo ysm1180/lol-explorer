@@ -5,7 +5,8 @@
         <button
           :class="{ active: tab.isActive }"
           @click="selectTab(tab)"
-          v-for="tab in tabs"
+          v-for="(tab,index) in tabs"
+          v-bind:key="index"
         >
           {{ tab.name }}
         </button>
