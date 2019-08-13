@@ -2,7 +2,6 @@
   <v-layout
     :class="{ small: !!small, large: !!large }"
     class="rune-style-icon-container"
-    d-inline-block
     ref="container"
   >
     <tooltip :title="rune.name" html v-if="rune" center>
@@ -61,7 +60,7 @@ export default class RuneStyleIcon extends Vue {
   position: relative;
   vertical-align: top;
   text-align: left;
-
+  display: inline-block;
   &.small .rune-style-icon {
     min-width: 15px;
     min-height: 15px;
