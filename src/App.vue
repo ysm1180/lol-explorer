@@ -92,6 +92,7 @@ export default {
       this.$router.push('/match/q');
     });
     ipcRenderer.on('lcu-api-message', async (event, data) => {
+      console.log(data);
       if (
         this.status !== 'LOGIN_COMPLETE' &&
         data.uri === '/lol-summoner/v1/current-summoner' &&
@@ -180,7 +181,7 @@ export default {
 
   height: 100vh;
   min-height: 960px;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -254,5 +255,9 @@ export default {
 
 .font-size__small {
   font-size: 11px;
+}
+
+.vertical__top {
+  vertical-align: top !important;
 }
 </style>
