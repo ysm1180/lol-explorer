@@ -249,7 +249,7 @@ export default class RunePage extends Vue {
 }
 
 .modal-container {
-  width: 1030px;
+  width: 990px;
   height: 700px;
   margin: 0px auto;
   padding: 10px;
