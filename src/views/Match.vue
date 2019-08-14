@@ -1,5 +1,5 @@
 <template>
-  <v-layout align-center fill-height justify-center>
+  <v-layout fill-height justify-center>
     <v-layout
       align-center
       fill-height

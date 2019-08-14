@@ -1,20 +1,39 @@
 <template>
-  <v-layout
+  <div
     :class="{ tiny: !!tiny, small: !!small, large: !!large }"
     class="rune-icon-container"
-    d-inline-block
     ref="container"
   >
-    <tooltip :content="runeContent" :title="rune.name" html v-if="rune" center>
+    <tooltip
+      :content="runeContent"
+      :title="rune.name"
+      center
+      html
+      v-if="!notooltip && rune"
+    >
       <v-img
-        style="margin:auto"
-        :class="[backgroundColorClass, { grayscale: !!grayscale }, borderColorClass]"
+        :class="[
+          backgroundColorClass,
+          { grayscale: !!grayscale },
+          borderColorClass,
+        ]"
         :src="rune ? rune.iconUrl : ''"
-        class="rune-icon"
         @click="click()"
+        class="rune-icon"
       />
     </tooltip>
-  </v-layout>
+    <v-img
+      :class="[
+        backgroundColorClass,
+        { grayscale: !!grayscale },
+        borderColorClass,
+      ]"
+      :src="rune ? rune.iconUrl : ''"
+      @click="click()"
+      class="rune-icon"
+      v-else
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -32,6 +51,7 @@ export default class RuneIcon extends Vue {
   @Prop(Boolean) private small?: boolean;
   @Prop(Boolean) private large?: boolean;
   @Prop(Boolean) private grayscale?: boolean;
+  @Prop(Boolean) private notooltip?: boolean;
   @Prop() private backgroundColor?: string;
   @Prop() private borderColor?: string;
 
@@ -79,6 +99,7 @@ export default class RuneIcon extends Vue {
 
 <style lang="scss" scoped>
 .rune-icon-container {
+  display: inline-block;
   position: relative;
   vertical-align: top;
   text-align: left;
@@ -116,23 +137,23 @@ export default class RuneIcon extends Vue {
     border-radius: 50%;
 
     &.border__yellow:before {
-      box-shadow: inset 0 0 0 2px #C8AA6F;
+      box-shadow: inset 0 0 0 2px #c8aa6f;
     }
 
     &.border__red:before {
-      box-shadow: inset 0 0 0 2px #DC4747;
+      box-shadow: inset 0 0 0 2px #dc4747;
     }
 
     &.border__purple:before {
-      box-shadow: inset 0 0 0 2px #9FA9FC;
+      box-shadow: inset 0 0 0 2px #9fa9fc;
     }
 
     &.border__blue:before {
-      box-shadow: inset 0 0 0 2px #48B3BE;
+      box-shadow: inset 0 0 0 2px #48b3be;
     }
 
     &.border__green:before {
-      box-shadow: inset 0 0 0 2px #A1D586;
+      box-shadow: inset 0 0 0 2px #a1d586;
     }
 
     &:before {

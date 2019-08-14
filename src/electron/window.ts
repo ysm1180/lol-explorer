@@ -15,8 +15,6 @@ export class AppWindow {
   private emitter = new Emitter();
   private riotWs: RiotWSProtocol | null = null;
 
-  private _loadTime: number | null = null;
-
   constructor() {
     const windowOptions: BrowserWindowConstructorOptions = {
       x: 100,
@@ -35,6 +33,16 @@ export class AppWindow {
     };
 
     this.window = new BrowserWindow(windowOptions);
+  }
+
+  private _loadTime: number | null = null;
+
+  public get loadTime(): number | null {
+    return this._loadTime;
+  }
+
+  private get rendererLoaded(): boolean {
+    return !!this.loadTime;
   }
 
   public load() {
@@ -125,20 +133,12 @@ export class AppWindow {
     this.window.webContents.send('lcu-disconnect');
   }
 
-  private get rendererLoaded(): boolean {
-    return !!this.loadTime;
-  }
-
   public onClose(fn: () => void) {
     this.window.on('closed', fn);
   }
 
   public onDidLoad(fn: () => void): Disposable {
     return this.emitter.on('did-load', fn);
-  }
-
-  public get loadTime(): number | null {
-    return this._loadTime;
   }
 
   public destroy() {

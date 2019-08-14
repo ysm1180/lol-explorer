@@ -5,7 +5,11 @@
     class="champion-passive-icon-container"
     d-inline-block
   >
-    <tooltip :title="passive.name" :content="passive.description" v-if="passive">
+    <tooltip
+      :content="passive.description"
+      :title="passive.name"
+      v-if="passive"
+    >
       <v-img
         :class="{ circle: !!circle }"
         :src="passive ? passive.iconUrl : ''"
@@ -16,7 +20,7 @@
       :class="{ circle: !!circle }"
       class="champion-passive-icon grey darken-2"
       v-else
-    ></v-img>
+    />
   </v-layout>
 </template>
 

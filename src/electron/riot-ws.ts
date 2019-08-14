@@ -20,45 +20,6 @@ export class RiotWSProtocol {
 
   constructor(private url: string) {}
 
-  private registerListeners() {
-    if (this.ws) {
-      for (const event in this.listeners) {
-        if (this.listeners.hasOwnProperty(event)) {
-          this.ws.on(event, this.listeners[event]);
-        }
-      }
-
-      this.ws.on('open', () => {
-        log.info(`[RiotWSProtocol] ${this.url} Connected.`);
-        this.retryCount = 0;
-      });
-
-      this.ws.on('error', (e: { code: string; message: string }) => {
-        if (e.code === 'ECONNREFUSED') {
-          setTimeout(() => {
-            if (this.retryCount < 3) {
-              log.info('[RiotWSProtocol] Retry connection...');
-              this.connect();
-              this.retryCount++;
-            } else {
-              log.info('[RiotWSProtocol] Fail to connection!!!');
-            }
-          }, 1000);
-        } else {
-          log.error(e.message);
-          throw new Error(e.message);
-        }
-      });
-
-      this.ws.on('message', this._onMessage.bind(this));
-
-      this.ws.on('close', (code, reason) => {
-        log.info(`[RiotWSProtocol] ${code} ${reason} Closed connection...`);
-        this.dispose();
-      });
-    }
-  }
-
   public connect() {
     this.ws = new WebSocket(this.url, 'wamp', { rejectUnauthorized: false });
     this.registerListeners();
@@ -106,6 +67,56 @@ export class RiotWSProtocol {
     }
   }
 
+  public dispose() {
+    if (this.ws) {
+      for (const event in this.listeners) {
+        if (this.listeners.hasOwnProperty(event)) {
+          this.ws.removeListener(event, this.listeners[event]);
+        }
+      }
+    }
+
+    this.ws = null;
+  }
+
+  private registerListeners() {
+    if (this.ws) {
+      for (const event in this.listeners) {
+        if (this.listeners.hasOwnProperty(event)) {
+          this.ws.on(event, this.listeners[event]);
+        }
+      }
+
+      this.ws.on('open', () => {
+        log.info(`[RiotWSProtocol] ${this.url} Connected.`);
+        this.retryCount = 0;
+      });
+
+      this.ws.on('error', (e: { code: string; message: string }) => {
+        if (e.code === 'ECONNREFUSED') {
+          setTimeout(() => {
+            if (this.retryCount < 3) {
+              log.info('[RiotWSProtocol] Retry connection...');
+              this.connect();
+              this.retryCount++;
+            } else {
+              log.info('[RiotWSProtocol] Fail to connection!!!');
+            }
+          }, 1000);
+        } else {
+          log.error(e.message);
+        }
+      });
+
+      this.ws.on('message', this._onMessage.bind(this));
+
+      this.ws.on('close', (code, reason) => {
+        log.info(`[RiotWSProtocol] ${code} ${reason} Closed connection...`);
+        this.dispose();
+      });
+    }
+  }
+
   private _onMessage(message: any) {
     const [type, ...data] = JSON.parse(message);
 
@@ -126,17 +137,5 @@ export class RiotWSProtocol {
         log.log('Unknown type: ', [type, data]);
         break;
     }
-  }
-
-  public dispose() {
-    if (this.ws) {
-      for (const event in this.listeners) {
-        if (this.listeners.hasOwnProperty(event)) {
-          this.ws.removeListener(event, this.listeners[event]);
-        }
-      }
-    }
-
-    this.ws = null;
   }
 }

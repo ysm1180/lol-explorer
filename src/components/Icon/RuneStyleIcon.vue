@@ -1,23 +1,33 @@
 <template>
-  <v-layout
+  <div
     :class="{ small: !!small, large: !!large }"
     class="rune-style-icon-container"
     ref="container"
   >
-    <tooltip :title="rune.name" html v-if="rune" center>
-      <div class="d-inline-block rune-style-icon">
-        <v-img
-          class="image"
-          :class="[backgroundColorClass, { hover: !!hover }]"
-          :src="`/assets/runes/${runeStyleId}.svg`"
-          @click="click()"
-          :width="!!large ? 32 : 23"
-          :height="!!large ? 32 : 23"
-          contain
-        />
-      </div>
+    <tooltip :title="rune.name" center html v-if="!notooltip && rune">
+      <v-img
+        :class="[
+          backgroundColorClass,
+          { grayscale: !!grayscale, hover: !!hover },
+        ]"
+        :src="`/assets/runes/${runeStyleId}.svg`"
+        @click="click()"
+        class="rune-style-icon"
+        contain
+      />
     </tooltip>
-  </v-layout>
+    <v-img
+      :class="[
+        backgroundColorClass,
+        { grayscale: !!grayscale, hover: !!hover },
+      ]"
+      :src="`/assets/runes/${runeStyleId}.svg`"
+      @click="click()"
+      class="rune-style-icon"
+      contain
+      v-else
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -33,6 +43,8 @@ export default class RuneStyleIcon extends Vue {
   @Prop(Boolean) private small?: boolean;
   @Prop(Boolean) private large?: boolean;
   @Prop(Boolean) private hover?: boolean;
+  @Prop(Boolean) private grayscale?: boolean;
+  @Prop(Boolean) private notooltip?: boolean;
   @Prop() private backgroundColor?: string;
 
   public get backgroundColorClass() {
@@ -57,10 +69,11 @@ export default class RuneStyleIcon extends Vue {
 
 <style lang="scss" scoped>
 .rune-style-icon-container {
+  display: inline-block;
   position: relative;
   vertical-align: top;
   text-align: left;
-  display: inline-block;
+
   &.small .rune-style-icon {
     min-width: 15px;
     min-height: 15px;
@@ -69,8 +82,10 @@ export default class RuneStyleIcon extends Vue {
   }
 
   &.large .rune-style-icon {
-    width: 32px;
-    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
   }
 
   .rune-style-icon {
@@ -78,16 +93,21 @@ export default class RuneStyleIcon extends Vue {
     vertical-align: top;
     overflow: hidden;
 
-    width: 23px;
-    height: 23px;
+    min-width: 23px;
+    min-height: 23px;
+    max-width: 23px;
+    max-height: 23px;
 
-    .image {
-      &.hover {
-        filter: brightness(0.5);
-        &:hover {
-          filter: brightness(1);
-        }
+    &.hover {
+      filter: brightness(0.5);
+
+      &:hover {
+        filter: brightness(1);
       }
+    }
+
+    &.grayscale {
+      filter: grayscale(100%);
     }
   }
 }
