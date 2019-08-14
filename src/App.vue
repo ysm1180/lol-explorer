@@ -37,7 +37,7 @@
         </button>
       </div>
     </div>
-    <router-view style="padding-top:50px;" />
+    <router-view style="padding-top:48px;" />
   </div>
 </template>
 <script>
@@ -89,7 +89,6 @@ export default {
     ipcRenderer.on('lcu-disconnect', () => {
       this.$store.dispatch('connection/initializeState');
       this.$store.dispatch('match/initializeState');
-      this.$router.push('/match/q');
     });
     ipcRenderer.on('lcu-api-message', async (event, data) => {
       console.log(data);
@@ -178,9 +177,7 @@ export default {
 #app {
   width: 100vw;
   min-width: 1024px;
-
   height: 100vh;
-  min-height: 960px;
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -259,5 +256,9 @@ export default {
 
 .vertical__top {
   vertical-align: top !important;
+}
+
+.float__right {
+  float: right;
 }
 </style>
