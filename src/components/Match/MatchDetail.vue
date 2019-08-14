@@ -2,12 +2,14 @@
   <v-card flat>
     <v-layout column>
       <match-team-detail
+        :queue="match.queue"
         :requester="gameInfo.requester"
         :team="gameInfo.teams['200']"
         teamName="레드"
       />
 
       <match-team-detail
+        :queue="match.queue"
         :requester="gameInfo.requester"
         :team="gameInfo.teams['100']"
         teamName="블루"
