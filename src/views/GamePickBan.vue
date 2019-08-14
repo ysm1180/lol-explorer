@@ -20,7 +20,7 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   components: {},
 })
-export default class Home extends Vue {
+export default class GamePickBan extends Vue {
   private champSelecting: boolean = false;
   private myTeam: any[] = [];
   private myTeamName: any[] = [];

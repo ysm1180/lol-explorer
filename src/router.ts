@@ -30,9 +30,9 @@ export default new Router({
       component: () => import('./views/Rune.vue'),
     },
     {
-      path: '/champselect',
-      name: 'champ-select',
-      component: () => import('./views/ChampSelect.vue'),
+      path: '/gamepickban',
+      name: 'game-pick-ban',
+      component: () => import('./views/GamePickBan.vue'),
     },
     {
       path: '/champion/:championId',
