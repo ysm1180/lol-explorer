@@ -28,7 +28,7 @@
           <v-icon dark>filter_none</v-icon>
         </button>
         <button
-          :class="isChampionSelectInGame() && 'selected'"
+          :class="isGamePickBan() && 'selected'"
           @click="enterChampionSelectPage()"
           class="icon-button"
           title="In Game"
@@ -127,8 +127,8 @@ export default {
       return this.routerStartWith('/rune');
     },
 
-    isChampionSelectInGame() {
-      return this.routerStartWith('/champselect');
+    isGamePickBan() {
+      return this.routerStartWith('/gamepickban');
     },
 
     enterHome() {
@@ -155,7 +155,7 @@ export default {
     },
 
     enterChampionSelectPage() {
-      const url = `/champselect`;
+      const url = `/gamepickban`;
       if (this.$router.currentRoute.path !== url) {
         this.$router.push(url);
       }
