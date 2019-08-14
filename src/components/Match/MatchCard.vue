@@ -37,7 +37,9 @@
                 {{ queueString }}
               </span>
               <span>{{ durationString }}</span>
-              <span>{{ timeDeltaTextByNow }}</span>
+              <tooltip :content="timestampToString" center>
+                <span>{{ timeDeltaTextByNow }}</span>
+              </tooltip>
             </v-layout>
           </td>
           <td class="cell">
@@ -135,8 +137,11 @@
           <td class="cell">
             <v-layout column fill-height justify-center>
               <div>
-                <v-layout mb-1>
+                <v-layout align-center justify-space-around mb-1>
                   <v-img
+                    :class="{
+                      mine: gameInfo.requester.participantId === Number(key),
+                    }"
                     :src="champions[participant.championId].iconUrl"
                     class="participant-icon"
                     v-bind:key="key"
@@ -146,8 +151,11 @@
                 </v-layout>
               </div>
               <div>
-                <v-layout>
+                <v-layout align-center justify-space-around>
                   <v-img
+                    :class="{
+                      mine: gameInfo.requester.participantId === Number(key),
+                    }"
                     :src="champions[participant.championId].iconUrl"
                     class="participant-icon"
                     v-bind:key="key"
@@ -261,6 +269,10 @@ export default class MatchCard extends Vue {
     return str;
   }
 
+  get timestampToString() {
+    return new Date(this.match.timestamp).toLocaleString();
+  }
+
   get timeDeltaTextByNow() {
     const utcNow = new Date(new Date().toUTCString()).getTime();
     const sinceAfterSeconds = Math.floor(
@@ -365,5 +377,10 @@ export default class MatchCard extends Vue {
   max-width: 24px;
   max-height: 24px;
   border-radius: 3px;
+
+  &.mine {
+    border: 2px solid #ff8a65;
+    box-sizing: content-box;
+  }
 }
 </style>
