@@ -1,8 +1,7 @@
 <template>
-  <v-layout
+  <div
     :class="{ tiny: !!tiny, small: !!small, large: !!large }"
     class="rune-icon-container"
-    d-inline-block
     ref="container"
   >
     <tooltip :content="runeContent" :title="rune.name" html v-if="rune" center>
@@ -14,7 +13,7 @@
         @click="click()"
       />
     </tooltip>
-  </v-layout>
+  </div>
 </template>
 
 <script lang="ts">
@@ -79,6 +78,7 @@ export default class RuneIcon extends Vue {
 
 <style lang="scss" scoped>
 .rune-icon-container {
+  display: inline-block;
   position: relative;
   vertical-align: top;
   text-align: left;
