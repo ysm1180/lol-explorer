@@ -73,7 +73,7 @@ export default class Tooltip extends Vue {
     if (rect.top - (computing.offsetHeight + 20 + 48) < 0) {
       this.isBottom = true;
     }
-    if (rect.left + rect.width / 2 - computing.offsetWidth / 2 < 0) {
+    if (rect.left + rect.width / 2 - computing.offsetWidth / 2 < 10) {
       this.isIndent = true;
     }
     document.body.removeChild(computing);
