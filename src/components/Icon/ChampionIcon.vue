@@ -15,6 +15,9 @@
           {{ level }}
         </span>
       </v-img>
+      <div class="sub-text" v-if="subText !== undefined">
+        {{ subText }}
+      </div>
     </tooltip>
     <v-img
       :class="{ circle: !!circle }"
@@ -39,6 +42,7 @@ export default class ChampionIcon extends Vue {
   @Prop(Boolean) private small?: boolean;
   @Prop(Boolean) private large?: boolean;
   @Prop(Boolean) private extralarge?: boolean;
+  @Prop(String) private subText?: string;
 
   public get champion() {
     return (
@@ -103,6 +107,11 @@ export default class ChampionIcon extends Vue {
       border-radius: 50%;
       font-size: 10px;
     }
+  }
+  .sub-text {
+    padding: 2px 0;
+    font-size: 12px;
+    text-align: center;
   }
 }
 </style>
