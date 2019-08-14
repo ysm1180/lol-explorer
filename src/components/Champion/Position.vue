@@ -1,9 +1,17 @@
 <template>
   <tooltip
-    :content="count > 0 ? `승률: ${Math.floor((win / count) * 1000) / 10}%` : '승률: 데이터 없음'"
+    :content="
+      count > 0
+        ? `승률: ${Math.floor((win / count) * 1000) / 10}%`
+        : '승률: 데이터 없음'
+    "
     inlineBlock
   >
-    <div :class="{ selected: !!selected }" @click="click()" class="position">
+    <div
+      :class="{ selected: !!selected, disabled: !(count > 0) }"
+      @click="count && click()"
+      class="position"
+    >
       <v-img
         :src="
           selected
@@ -36,7 +44,7 @@ export default class Position extends Vue {
 
   public get percent() {
     if (this.totalCount > 0) {
-    return this.count ? toPercentage(this.count, this.totalCount) : 0;
+      return this.count ? toPercentage(this.count, this.totalCount) : 0;
     } else {
       return 0;
     }
@@ -60,6 +68,11 @@ export default class Position extends Vue {
   &.selected {
     background-color: #e57c5b;
     color: white;
+  }
+
+  &.disabled {
+    background-color: #5c4642;
+    cursor: not-allowed;
   }
 
   .position-name {
