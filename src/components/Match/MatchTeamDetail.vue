@@ -14,9 +14,7 @@
     <table class="participant-detail">
       <tbody class="body">
         <tr
-          :class="
-            requester.participantId === Number(key) ? 'orange lighten-2' : ''
-          "
+          :class="requester.participantId === Number(key) ? 'mine' : ''"
           class="row"
           v-bind:key="key"
           v-for="(participant, key) in team.participants"
@@ -125,9 +123,9 @@
                 color="pink"
                 height="15"
               >
-                <span class="progress-text">
+                <div class="progress-text">
                   {{ participant.stats.totalDamageDealtToChampions }}
-                </span>
+                </div>
               </v-progress-linear>
             </tooltip>
           </td>
@@ -158,6 +156,11 @@ import { ISummonerApiData } from '@/typings/summoner';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
+enum QUEUE_TYPE {
+  RANKED_SOLO_5x5 = 420,
+  RANKED_FLEX_SR = 440,
+}
+
 @Component({
   components: {
     RuneIcon,
@@ -174,6 +177,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
   },
 })
 export default class MatchTeamDetail extends Vue {
+  @Prop() private queue!: number;
   @Prop() private team!: IGameTeam;
   @Prop() private requester!: IGameRequester;
   @Prop() private teamName!: string;
@@ -192,10 +196,6 @@ export default class MatchTeamDetail extends Vue {
     return this.$store.state.lolstatic.spells;
   }
 
-  get perks() {
-    return this.$store.state.lolstatic.perks;
-  }
-
   public toMatch(accountId: string) {
     this.$router.push(`/match/${accountId}`);
   }
@@ -211,14 +211,21 @@ export default class MatchTeamDetail extends Vue {
             `${END_POINT}/summoner/byAccount/${participant.player.accountId}`
           )
           .then(({ data }) => {
-            const soloRank = data.seasons.find(
-              (season) => season.queueType === 'RANKED_SOLO_5x5'
+            let queueType = '';
+            if (this.queue === QUEUE_TYPE.RANKED_SOLO_5x5) {
+              queueType = 'RANKED_SOLO_5x5';
+            } else if (this.queue === QUEUE_TYPE.RANKED_FLEX_SR) {
+              queueType = 'RANKED_FLEX_SR';
+            }
+
+            const rank = data.seasons.find(
+              (season) => season.queueType === queueType
             );
-            if (soloRank) {
+            if (rank) {
               this.$set(
                 this.summonerTiers,
                 key,
-                `${soloRank.tier} ${this.romanToNumber(soloRank.rank)}`
+                `${rank.tier} ${this.romanToNumber(rank.rank)}`
               );
             } else {
               this.$set(this.summonerTiers, key, 'Unranked');
@@ -273,6 +280,10 @@ export default class MatchTeamDetail extends Vue {
 
   .body {
     .row {
+      &.mine {
+        background-image: linear-gradient(to right, #ff8a65, white);
+      }
+
       .cell {
         padding: 2px;
 
@@ -302,6 +313,7 @@ export default class MatchTeamDetail extends Vue {
 
 .progress-text {
   font-size: 9px;
+  line-height: 15px;
   font-weight: normal;
   color: white;
   vertical-align: middle;
