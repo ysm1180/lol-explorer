@@ -27,11 +27,19 @@
 
       <div class="info font-weight-bold mr-3" v-if="season !== null">
         <div>
-          <span class="mr-1 purple--text">
+          <span
+            :class="{
+              'purple--text': season.tier !== 'UNRANKED',
+              'grey--text': season.tier === 'UNRANKED',
+            }"
+            class="mr-1"
+          >
             {{ season.tier }}
           </span>
           <span class="mr-2 purple--text">{{ season.rank }}</span>
-          <span>{{ season.leaguePoints }} LP</span>
+          <span v-if="season.tier !== 'UNRANKED'">
+            {{ season.leaguePoints }} LP
+          </span>
         </div>
         <span class="font-weight-bold caption">
           {{ season.wins }}승 {{ season.losses }}패
