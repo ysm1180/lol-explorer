@@ -17,24 +17,26 @@
       </div>
 
       <div class="queue mr-3">
-        <div class="font-weight-bold" v-if="queueType === 'free'">
-          자유 5:5 랭크
-        </div>
-        <div class="font-weight-bold" v-if="queueType === 'solo'">
+        <div class="font-weight-bold" v-if="queueId === 420">
           솔로 랭크
+        </div>
+        <div class="font-weight-bold" v-if="queueId === 440">
+          자유 5:5 랭크
         </div>
       </div>
 
       <div class="info font-weight-bold mr-3" v-if="season !== null">
         <div>
-          <span class="mr-1 purple--text">{{ season.tier }}</span>
+          <span class="mr-1 purple--text">
+            {{ season.tier }}
+          </span>
           <span class="mr-2 purple--text">{{ season.rank }}</span>
-          <span>{{ season.leaguePoints }}LP</span>
+          <span>{{ season.leaguePoints }} LP</span>
         </div>
         <span class="font-weight-bold caption">
           {{ season.wins }}승 {{ season.losses }}패
         </span>
-        <span class=" catpion">
+        <span class="catpion">
           ({{
             ((season.wins * 100) / (season.wins + season.losses)).toFixed(2)
           }}%)
@@ -75,9 +77,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 })
 export default class TierCard extends Vue {
   @Prop() private season!: ISummonerSeason;
-  @Prop() private queueType!: 'solo' | 'free';
-
-  public mounted() {}
+  @Prop() private queueId!: number;
 }
 </script>
 <style lang="scss" scoped>
