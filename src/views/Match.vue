@@ -168,6 +168,7 @@ export default class Index extends Vue {
       }
       this.loadingSummoner = false;
 
+      this.loadingMatches = true;
       const matchListCache = window.sessionStorage.getItem(
         `matches_${this.accountId}`
       );
@@ -180,7 +181,9 @@ export default class Index extends Vue {
       } else {
         this.matches = JSON.parse(matchListCache);
       }
+      this.loadingMatches = false;
 
+      this.loadingChampion = true;
       const championListCache = window.sessionStorage.getItem(
         `champions_${this.accountId}`
       );
@@ -189,6 +192,7 @@ export default class Index extends Vue {
       } else {
         this.champions = JSON.parse(championListCache);
       }
+      this.loadingChampion = false;
     }
   }
 
@@ -198,7 +202,6 @@ export default class Index extends Vue {
 
   public async updateMatches(page: number) {
     const start = page * 20;
-    this.loadingMatches = true;
     const response = await axios.get(
       `${END_POINT}/summoner/matches/${this.accountId}/${start}/20`
     );
@@ -207,11 +210,9 @@ export default class Index extends Vue {
     } else {
       this.matches = this.matches.concat(response.data);
     }
-    this.loadingMatches = false;
   }
 
   public async updateSummonerChampions() {
-    this.loadingChampion = true;
     const response = await axios.get(
       `${END_POINT}/summoner/rift/champions/${this.accountId}`
     );
@@ -220,7 +221,6 @@ export default class Index extends Vue {
       `champions_${this.accountId}`,
       JSON.stringify(this.champions)
     );
-    this.loadingChampion = false;
   }
 
   public async renew() {
@@ -237,12 +237,17 @@ export default class Index extends Vue {
       );
 
       this.page = 0;
+      this.loadingMatches = true;
       await this.updateMatches(this.page);
       window.sessionStorage.setItem(
         `matches_${this.accountId}`,
         JSON.stringify(this.matches)
       );
+      this.loadingMatches = false;
+
+      this.loadingChampion = true;
       await this.updateSummonerChampions();
+      this.loadingChampion = false;
     } catch (err) {
       alert(`${err.response.data.seconds}초 후에 시도해주세요`);
     }
@@ -269,8 +274,14 @@ export default class Index extends Vue {
     ) {
       this.prevScrollEnd = false;
       this.page += 1;
+
+      this.loadingMatches = true;
       await this.updateMatches(this.page);
+      this.loadingMatches = false;
+
+      this.loadingChampion = true;
       await this.updateSummonerChampions();
+      this.loadingChampion = false;
     } else if (
       !this.prevScrollEnd &&
       !this.loadingMatches &&
