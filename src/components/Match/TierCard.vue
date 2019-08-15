@@ -3,7 +3,7 @@
     <v-layout align-center fill-height>
       <div class="mr-3">
         <v-img
-          :src="`/assets/emblems/${season.tier}.png`"
+          :src="`/assets/emblems/${season.tier.toLowerCase()}.png`"
           class="mt-1"
           style="width:60px; height:60px;"
           v-if="season !== null"
