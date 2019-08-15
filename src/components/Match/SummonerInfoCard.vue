@@ -36,8 +36,8 @@
         <span class="sub-text">최근 업데이트: {{ timeDeltaTextByNow }}</span>
       </v-flex>
     </v-layout>
-    <v-layout column class="my-2">
-      <v-flex class="mb-1">
+    <v-layout class="my-2" column>
+      <v-flex class="mb-1" >
         <tier-card :season="solo" queueType="solo"></tier-card>
       </v-flex>
       <v-flex>
@@ -60,17 +60,17 @@ import TierCard from './TierCard.vue';
 export default class SummonerInfoCard extends Vue {
   @Prop() private summoner!: ISummonerApiData;
   @Prop() private renewing: boolean = false;
-  private solo = null;
-  private free = null;
 
-  public mounted() {
-    this.summoner.seasons.forEach((season: any) => {
-      if (season.queueType === 'RANKED_SOLO_5x5') {
-        this.solo = season;
-      } else if (season.queueType === 'RANKED_FLEX_SR') {
-        this.free = season;
-      }
-    });
+  public get solo() {
+    return this.summoner.seasons.find((season: any) => {
+      return season.queueType === 'RANKED_SOLO_5x5';
+    }) || null;
+  }
+
+  public get free() {
+    return this.summoner.seasons.find((season: any) => {
+      return season.queueType === 'RANKED_FLEX_SR';
+    }) || null;
   }
 
   get timeDeltaTextByNow() {

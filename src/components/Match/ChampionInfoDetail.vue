@@ -61,11 +61,10 @@ import { IChampionDetail, IChampionInfoApiData } from '@/typings/match';
 @Component
 export default class ChampionInfoDetail extends Vue {
   @Prop() private data!: IChampionInfoApiData[];
-  private sortedData: IChampionDetail[] = [];
   private sortStatus: { key: string; asc: boolean } = { key: '', asc: false };
 
-  public mounted() {
-    this.sortedData = [];
+  public get sortedData() {
+    const result = [];
     for (let i = 0; i < this.data.length; i++) {
       const champion = this.data[i];
       const object: IChampionDetail = {} as any;
@@ -89,8 +88,10 @@ export default class ChampionInfoDetail extends Vue {
       object.quadraKills = champion.quadraKills;
       object.pentaKills = champion.pentaKills;
 
-      this.sortedData.push(object);
+      result.push(object);
     }
+
+    return result;
   }
 
   public sort() {}
