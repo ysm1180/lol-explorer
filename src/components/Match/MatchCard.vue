@@ -142,7 +142,7 @@
                     :class="{
                       mine: gameInfo.requester.participantId === Number(key),
                     }"
-                    :src="champions[participant.championId].iconUrl"
+                    :src="champions[participant.championId] && champions[participant.championId].iconUrl"
                     class="participant-icon"
                     v-bind:key="key"
                     v-for="(participant, key) in gameInfo.teams['100']
@@ -156,7 +156,7 @@
                     :class="{
                       mine: gameInfo.requester.participantId === Number(key),
                     }"
-                    :src="champions[participant.championId].iconUrl"
+                    :src="champions[participant.championId] && champions[participant.championId].iconUrl"
                     class="participant-icon"
                     v-bind:key="key"
                     v-for="(participant, key) in gameInfo.teams['200']
