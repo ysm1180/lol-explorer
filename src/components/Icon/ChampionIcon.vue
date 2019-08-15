@@ -1,8 +1,6 @@
 <template>
-  <v-layout
+  <div class="champion-icon-container"
     :class="{ small: !!small, large: !!large, extralarge: !!extralarge }"
-    class="champion-icon-container"
-    d-inline-block
     @click="click"
   >
     <tooltip :content="champion.name" v-if="champion">
@@ -24,7 +22,7 @@
       class="champion-icon grey darken-2"
       v-else
     ></v-img>
-  </v-layout>
+  </div>
 </template>
 
 <script lang="ts">
@@ -60,6 +58,7 @@ export default class ChampionIcon extends Vue {
 
 <style lang="scss" scoped>
 .champion-icon-container {
+  display: inline-block;
   position: relative;
   vertical-align: top;
   text-align: left;

@@ -1,15 +1,14 @@
 <template>
-  <v-layout
+  <div
     :class="{ small: !!small, large: !!large }"
     class="spell-icon-container"
-    d-inline-block
     ref="container"
   >
     <tooltip :content="spellContent" :title="spell.name" html v-if="spell">
       <v-img :src="spell ? spell.iconUrl : ''" class="spell-icon grey" />
     </tooltip>
     <v-img class="spell-icon grey" v-else />
-  </v-layout>
+  </div>
 </template>
 
 <script lang="ts">
@@ -41,6 +40,7 @@ export default class SpellIcon extends Vue {
 
 <style lang="scss" scoped>
 .spell-icon-container {
+  display: inline-block;
   position: relative;
   vertical-align: top;
   text-align: left;
