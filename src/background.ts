@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 import LCUConnector from 'lcu-connector';
 import { AppWindow } from './electron/window';
 
@@ -72,6 +72,13 @@ app.on('ready', async () => {
   });
 
   connector.start();
+
+  ipcMain.on('show-focus', () => {
+    if (mainWindow) {
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
 });
 
 function createWindow() {
