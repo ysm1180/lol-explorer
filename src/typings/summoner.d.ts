@@ -18,7 +18,6 @@ interface ISeasonMiniSeries {
 }
 
 export interface ISummonerSeason {
-  leagueId: string;
   queueType: string;
   tier: string;
   rank: string;
@@ -27,10 +26,11 @@ export interface ISummonerSeason {
   leaguePoints: number;
   wins: number;
   losses: number;
-  veteran: boolean;
-  inactive: boolean;
-  freshBlood: boolean;
-  hotStreak: boolean;
-  season: number;
+  leagueId?: string;
+  veteran?: boolean;
+  inactive?: boolean;
+  freshBlood?: boolean;
+  hotStreak?: boolean;
+  season?: number;
   miniSeries?: ISeasonMiniSeries[];
 }
