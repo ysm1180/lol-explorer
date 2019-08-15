@@ -1,3 +1,4 @@
+import { END_POINT } from '@/config';
 import axios from 'axios';
 import { ILcuData, ILcuSummonerData } from 'models';
 import {
@@ -6,8 +7,6 @@ import {
   MutationAction,
   VuexModule,
 } from 'vuex-module-decorators';
-
-const ENDPOINT = 'http://localhost:3000';
 
 @Module({ namespaced: true, name: 'connection' })
 export default class Connection extends VuexModule {
@@ -64,7 +63,7 @@ export default class Connection extends VuexModule {
 
   @MutationAction({ mutate: ['summoner'] })
   public async updateSummoner(name: string) {
-    const response = await axios.get(`${ENDPOINT}/summoner/${name}`);
+    const response = await axios.get(`${END_POINT}/summoner/${name}`);
     return { summoner: response.data };
   }
 }
