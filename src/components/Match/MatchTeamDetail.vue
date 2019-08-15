@@ -144,6 +144,7 @@
 </template>
 
 <script lang="ts">
+import { QUEUE_TYPE } from '@/common/constants';
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import ItemIcon from '@/components/Icon/ItemIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
@@ -155,11 +156,6 @@ import { IGameRequester, IGameTeam } from '@/typings/match';
 import { ISummonerApiData } from '@/typings/summoner';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
-enum QUEUE_TYPE {
-  RANKED_SOLO_5x5 = 420,
-  RANKED_FLEX_SR = 440,
-}
 
 @Component({
   components: {
@@ -211,7 +207,7 @@ export default class MatchTeamDetail extends Vue {
             `${END_POINT}/summoner/byAccount/${participant.player.accountId}`
           )
           .then(({ data }) => {
-            let queueType = '';
+            let queueType = 'RANKED_SOLO_5x5';
             if (this.queue === QUEUE_TYPE.RANKED_SOLO_5x5) {
               queueType = 'RANKED_SOLO_5x5';
             } else if (this.queue === QUEUE_TYPE.RANKED_FLEX_SR) {
