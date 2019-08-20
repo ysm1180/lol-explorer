@@ -206,7 +206,7 @@
                     <table
                       class="data-table pl-2 "
                       style="width: 368px;"
-                      v-if="summarizedCounters"
+                      v-if="summarizedCounters && summarizedCounters.length > 0"
                     >
                       <thead class="table-title">
                         <tr>
@@ -251,7 +251,7 @@
                     <table
                       class="data-table pl-2 "
                       style="width: 368px;"
-                      v-if="summarizedEasyChampions"
+                      v-if="summarizedEasyChampions && summarizedEasyChampions.length > 0"
                     >
                       <thead class="table-title">
                         <tr>
