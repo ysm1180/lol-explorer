@@ -7,7 +7,6 @@
     <tooltip :content="spellContent" :title="spell.name" html v-if="spell">
       <v-img :src="spell ? spell.iconUrl : ''" class="spell-icon grey" />
     </tooltip>
-    <v-img class="spell-icon grey" v-else />
   </div>
 </template>
 
