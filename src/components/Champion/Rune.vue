@@ -33,9 +33,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
   components: { RuneStyleIcon, RuneIcon, Tooltip },
 })
 export default class Rune extends Vue {
-  @Prop(Number) private mainRuneStyleId!: number;
-  @Prop(Number) private mainRuneId!: number;
-  @Prop(Number) private subRuneStyleId!: number;
+  @Prop(String) private mainRuneStyleId!: string;
+  @Prop(String) private mainRuneId!: string;
+  @Prop(String) private subRuneStyleId!: string;
   @Prop(Number) private win!: number;
   @Prop(Number) private pick!: number;
   @Prop(Number) private count!: number;
