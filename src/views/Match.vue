@@ -105,7 +105,7 @@ import SummonerInfoCard from '@/components/Match/SummonerInfoCard.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import { END_POINT } from '@/config';
-import { IMatchApiData } from '@/typings/match';
+import { MatchApiData } from '@/typings/match';
 import axios from 'axios';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
@@ -119,10 +119,10 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
     SummonerInfoCard,
   },
 })
-export default class Index extends Vue {
+export default class Match extends Vue {
   @Prop(String) private accountId!: string;
   private summoner: any = null;
-  private matches: IMatchApiData[] = [];
+  private matches: MatchApiData[] = [];
   private champions: any = null;
   private page: number = 0;
   private toggleArray: number[] = [];

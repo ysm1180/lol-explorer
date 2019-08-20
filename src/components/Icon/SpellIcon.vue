@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { IStaticSpell } from '@/typings/static-data';
+import { StaticSpellApiData } from '@/typings/static-data';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -31,7 +31,7 @@ export default class SpellIcon extends Vue {
 
   public get spell() {
     return (
-      (this.$store.state.lolstatic.spells[this.spellId] as IStaticSpell) || null
+      (this.$store.state.lolstatic.spells[this.spellId] as StaticSpellApiData) || null
     );
   }
 }

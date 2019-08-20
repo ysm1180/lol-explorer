@@ -1,27 +1,27 @@
 import { END_POINT } from '@/config';
 import {
-  IStaticChampion,
-  IStaticItem,
-  IStaticPerk,
-  IStaticSpell,
+  StaticChampionApiData,
+  StaticItemApiData,
+  StaticPerkApiData,
+  StaticSpellApiData,
 } from '@/typings/static-data';
 import axios from 'axios';
 import { Module, MutationAction, VuexModule } from 'vuex-module-decorators';
 
 export interface IStaticChampions {
-  [key: string]: IStaticChampion;
+  [key: string]: StaticChampionApiData;
 }
 
 export interface IStaticItems {
-  [key: string]: IStaticItem;
+  [key: string]: StaticItemApiData;
 }
 
 export interface IStaticSpells {
-  [key: string]: IStaticSpell;
+  [key: string]: StaticSpellApiData;
 }
 
 export interface IStaticPerks {
-  [key: string]: IStaticPerk;
+  [key: string]: StaticPerkApiData;
 }
 
 @Module({ namespaced: true, name: 'lolstatic' })

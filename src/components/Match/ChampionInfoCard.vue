@@ -19,7 +19,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import ChampionInfoDetail from '@/components/Match/ChampionInfoDetail.vue';
-import { IChampionInfoApiData } from '@/typings/match';
+import { ChampionInfoApiData } from '@/typings/match';
 
 @Component({
   components: { ChampionInfoDetail, Tab, Tabs },
@@ -33,7 +33,7 @@ export default class ChampionInfoCard extends Vue {
   get totalArray() {
     const champions = this.champions.champions;
     const championsArray = Object.values(champions);
-    const championsTotalArray: IChampionInfoApiData[] = [];
+    const championsTotalArray: ChampionInfoApiData[] = [];
     championsArray.forEach((element: any) => {
       if (Object.entries(element.total).length !== 0) {
         championsTotalArray.push(element.total);
@@ -54,7 +54,7 @@ export default class ChampionInfoCard extends Vue {
   get soloArray() {
     const champions = this.champions.champions;
     const championsArray = Object.values(champions);
-    const championsSoloArray: IChampionInfoApiData[] = [];
+    const championsSoloArray: ChampionInfoApiData[] = [];
     championsArray.forEach((element: any) => {
       if (element.solo) {
         championsSoloArray.push(element.solo);
@@ -75,7 +75,7 @@ export default class ChampionInfoCard extends Vue {
   get flexArray() {
     const champions = this.champions.champions;
     const championsArray = Object.values(champions);
-    const championsFlexArray: IChampionInfoApiData[] = [];
+    const championsFlexArray: ChampionInfoApiData[] = [];
     championsArray.forEach((element: any) => {
       if (element.flex) {
         championsFlexArray.push(element.flex);

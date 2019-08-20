@@ -50,8 +50,8 @@
 <script lang="ts">
 import { QUEUE_TYPE, QUEUE_TYPE_STRING } from '@/common/constants';
 import { END_POINT } from '@/config';
-import { IMatchApiData } from '@/typings/match';
-import { ISummonerApiData } from '@/typings/summoner';
+import { MatchApiData } from '@/typings/match';
+import { SummonerApiData } from '@/typings/summoner';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import TierCard from './TierCard.vue';
@@ -62,7 +62,7 @@ import TierCard from './TierCard.vue';
   },
 })
 export default class SummonerInfoCard extends Vue {
-  @Prop() private summoner!: ISummonerApiData;
+  @Prop() private summoner!: SummonerApiData;
   @Prop() private renewing: boolean = false;
 
   public async loadUnrankedMatchInfo(queueId: number) {
@@ -72,7 +72,7 @@ export default class SummonerInfoCard extends Vue {
           this.summoner.accountId
         }/${queueId}`
       );
-      const matches: IMatchApiData[] = response.data;
+      const matches: MatchApiData[] = response.data;
       const matchCount = matches.length;
       const winCount = matches.filter((match) => match.gameInfo.requester.isWin)
         .length;

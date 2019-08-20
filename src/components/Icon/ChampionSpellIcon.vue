@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import {IStaticChampion} from '@/typings/static-data';
+import {StaticChampionApiData} from '@/typings/static-data';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component({
@@ -43,7 +43,7 @@ export default class ChampionSpellIcon extends Vue {
     const champion =
       (this.$store.state.lolstatic.champions[
         this.championId
-        ] as IStaticChampion) || null;
+        ] as StaticChampionApiData) || null;
     if (champion) {
       if (this.spellName === 'Q') {
         return champion.spells[0];

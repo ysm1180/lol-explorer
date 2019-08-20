@@ -1,4 +1,4 @@
-export interface ICustomRune {
+export interface CustomRuneData {
   primary: {
     id: string;
     slots: string[];

@@ -188,7 +188,7 @@ import RuneIcon from '@/components/Icon/RuneIcon.vue';
 import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
 import SpellIcon from '@/components/Icon/SpellIcon.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { IMatchApiData } from '@/typings/match';
+import { MatchApiData } from '@/typings/match';
 import { format } from 'util';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -208,7 +208,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
   },
 })
 export default class MatchCard extends Vue {
-  @Prop() public match!: IMatchApiData;
+  @Prop() public match!: MatchApiData;
   private isToggle: boolean = false;
   private isCreatedDetail: boolean = false;
 

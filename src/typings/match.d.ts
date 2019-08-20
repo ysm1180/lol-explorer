@@ -1,4 +1,4 @@
-export interface IChampionInfoApiData {
+export interface ChampionInfoApiData {
   key: number;
   wins: number;
   losses: number;
@@ -14,26 +14,7 @@ export interface IChampionInfoApiData {
   pentaKills: number;
 }
 
-export interface IChampionDetail {
-  rank: number;
-  championKey: number;
-  championName: string;
-  wins: number;
-  losses: number;
-  winRate: number;
-  averageKills: number;
-  averageDeaths: number;
-  averageAssists: number;
-  kda: number;
-  averageCS: number;
-  averageEarnedGold: number;
-  doubleKills: number;
-  tripleKills: number;
-  quadraKills: number;
-  pentaKills: number;
-}
-
-interface IParticipantPlayer {
+interface ParticipantPlayer {
   accountId: string;
   summonerId: string;
   summonerName: string;
@@ -41,11 +22,11 @@ interface IParticipantPlayer {
   profileIcon: number;
 }
 
-interface IPerMinDeltas {
+interface PerMinDeltas {
   [id: string]: number;
 }
 
-interface IGameParticipantStats {
+interface GameParticipantStats {
   kills: number;
   deaths: number;
   assists: number;
@@ -76,30 +57,30 @@ interface IGameParticipantStats {
   statPerks: number[];
 }
 
-interface IGameParicipantTimeline {
+interface GameParicipantTimeline {
   participantId: number;
-  creepsPerMinDeltas: IPerMinDeltas;
-  xpPerMinDeltas: IPerMinDeltas;
-  goldPerMinDeltas: IPerMinDeltas;
-  csDiffPerMinDeltas: IPerMinDeltas;
-  xpDiffPerMinDeltas: IPerMinDeltas;
-  damageTakenPerMinDeltas: IPerMinDeltas;
-  damageTakenDiffPerMinDeltas: IPerMinDeltas;
+  creepsPerMinDeltas: PerMinDeltas;
+  xpPerMinDeltas: PerMinDeltas;
+  goldPerMinDeltas: PerMinDeltas;
+  csDiffPerMinDeltas: PerMinDeltas;
+  xpDiffPerMinDeltas: PerMinDeltas;
+  damageTakenPerMinDeltas: PerMinDeltas;
+  damageTakenDiffPerMinDeltas: PerMinDeltas;
   role: string;
   lane: string;
 }
 
-export interface IGameParticipant {
-  player: IParticipantPlayer;
+export interface GameParticipantData {
+  player: ParticipantPlayer;
   teamId: number;
   championId: number;
   items: number[];
   spells: number[];
-  stats: IGameParticipantStats;
-  timeline: IGameParicipantTimeline;
+  stats: GameParticipantStats;
+  timeline: GameParicipantTimeline;
 }
 
-export interface IGameTeam {
+export interface GameTeamApiData {
   isWin: boolean;
   teamId: number;
   towerKills: number;
@@ -109,23 +90,23 @@ export interface IGameTeam {
   totalKills: number;
   totalDeaths: number;
   totalAssists: number;
-  participants: { [id: string]: IGameParticipant };
+  participants: { [id: string]: GameParticipantData };
 }
 
-export interface IGameRequester {
+export interface GameRequesterData {
   isWin: boolean;
   teamId: number;
   participantId: number;
 }
 
-export interface IGameInfoData {
+export interface GameInfoApiData {
   gameDuration: number;
   mapId: number;
-  requester: IGameRequester;
-  teams: { [id: string]: IGameTeam };
+  requester: GameRequesterData;
+  teams: { [id: string]: GameTeamApiData };
 }
 
-export interface IMatchApiData {
+export interface MatchApiData {
   platformId: string;
   gameId: number;
   champion: number;
@@ -135,5 +116,5 @@ export interface IMatchApiData {
   role: string;
   lane: string;
   summonerAccountId: string;
-  gameInfo: IGameInfoData;
+  gameInfo: GameInfoApiData;
 }

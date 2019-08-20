@@ -77,14 +77,14 @@
 </template>
 
 <script lang="ts">
-import { ISummonerSeason } from '@/typings/summoner';
+import { SummonerSeasonApiData } from '@/typings/summoner';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {},
 })
 export default class TierCard extends Vue {
-  @Prop() private season!: ISummonerSeason;
+  @Prop() private season!: SummonerSeasonApiData;
   @Prop() private queueId!: number;
 }
 </script>

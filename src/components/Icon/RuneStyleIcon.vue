@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { IStaticPerk } from '@/typings/static-data';
+import { StaticPerkApiData } from '@/typings/static-data';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -58,7 +58,7 @@ export default class RuneStyleIcon extends Vue {
   public get rune() {
     return this.$store.state.lolstatic.perks[
       this.runeStyleId
-    ] as IStaticPerk | null;
+    ] as StaticPerkApiData | null;
   }
 
   public click() {

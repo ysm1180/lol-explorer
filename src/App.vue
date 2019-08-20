@@ -42,7 +42,7 @@
 </template>
 <script lang="ts">
 import { ipcRenderer } from 'electron';
-import { ILcuData } from 'models';
+import { LcuConnectionData } from 'models';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -67,7 +67,7 @@ export default class App extends Vue {
       }
     });
 
-    ipcRenderer.on('lcu-connect', async (event: any, lcuData: ILcuData) => {
+    ipcRenderer.on('lcu-connect', async (event: any, lcuData: LcuConnectionData) => {
       this.$store.commit('connection/setLcuData', lcuData);
       this.$store.commit('connection/setStatus', 'WAITING_LOGIN');
       await this.$store.dispatch('connection/loadLcuSummoner', lcuData);

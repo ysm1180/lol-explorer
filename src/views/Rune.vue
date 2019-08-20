@@ -45,7 +45,7 @@
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import RunePage from '@/components/Rune/RunePage.vue';
 import { IStaticChampions } from '@/store/modules/lolstatic';
-import {ICustomRune} from '@/typings/rune';
+import {CustomRuneData} from '@/typings/rune';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -83,7 +83,7 @@ export default class Rune extends Vue {
     });
   }
 
-  public getRuneByChampion(championKey: number): ICustomRune {
+  public getRuneByChampion(championKey: number): CustomRuneData {
     const fs = require('fs');
     try {
       const data = fs.readFileSync(`runes/${championKey}.json`, 'utf8');
@@ -113,7 +113,7 @@ export default class Rune extends Vue {
     this.modal = false;
   }
 
-  public save(rune: ICustomRune) {
+  public save(rune: CustomRuneData) {
     const fs = require('fs');
     try {
       if (!fs.existsSync('runes')) {

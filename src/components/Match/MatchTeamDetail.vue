@@ -159,8 +159,8 @@ import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
 import SpellIcon from '@/components/Icon/SpellIcon.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
 import { END_POINT } from '@/config';
-import { IGameRequester, IGameTeam } from '@/typings/match';
-import { ISummonerApiData } from '@/typings/summoner';
+import { GameRequesterData, GameTeamApiData } from '@/typings/match';
+import { SummonerApiData } from '@/typings/summoner';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -181,8 +181,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 })
 export default class MatchTeamDetail extends Vue {
   @Prop() private queue!: number;
-  @Prop() private team!: IGameTeam;
-  @Prop() private requester!: IGameRequester;
+  @Prop() private team!: GameTeamApiData;
+  @Prop() private requester!: GameRequesterData;
   @Prop() private teamName!: string;
   private summonerTiers: { [id: string]: string } = {};
   private maxDamage: number = 0;
@@ -210,7 +210,7 @@ export default class MatchTeamDetail extends Vue {
       if (this.team.participants.hasOwnProperty(key)) {
         const participant = this.team.participants[key];
         axios
-          .get<ISummonerApiData>(
+          .get<SummonerApiData>(
             `${END_POINT}/summoner/byAccount/${participant.player.accountId}`
           )
           .then(({ data }) => {

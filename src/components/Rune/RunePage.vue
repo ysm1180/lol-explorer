@@ -62,7 +62,7 @@ import RuneIcon from '@/components/Icon/RuneIcon.vue';
 import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
 import RuneBook from '@/components/Rune/RuneBook.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { ICustomRune } from '@/typings/rune';
+import { CustomRuneData } from '@/typings/rune';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
@@ -70,9 +70,9 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 })
 export default class RunePage extends Vue {
   @Prop() private championId!: number;
-  @Prop() private rune!: ICustomRune;
+  @Prop() private rune!: CustomRuneData;
   private saved: boolean = false;
-  private copyRune: ICustomRune = this.rune;
+  private copyRune: CustomRuneData = this.rune;
   private runeIdList: string[] = ['8000', '8100', '8200', '8300', '8400'];
   private runeBorderColor = {
     8000: 'yellow',
@@ -83,7 +83,7 @@ export default class RunePage extends Vue {
   };
 
   @Watch('rune')
-  private onRuneChanged(val: ICustomRune, oldVal: ICustomRune) {
+  private onRuneChanged(val: CustomRuneData, oldVal: CustomRuneData) {
     this.copyRune = val;
   }
 

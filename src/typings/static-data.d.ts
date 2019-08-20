@@ -1,4 +1,4 @@
-export interface IStaticItem {
+export interface StaticItemApiData {
   name: string;
   description: string;
   colloq: string;
@@ -14,40 +14,40 @@ export interface IStaticItem {
   iconUrl: string;
 }
 
-export interface IStaticChampion {
+export interface StaticChampionApiData {
   id: string;
   key: number;
   name: string;
   title: string;
-  skins: IChampionSkinsItem[];
+  skins: ChampionSkinsItem[];
   lore: string;
   blurb: string;
   allytips: string[];
   enemytips: string[];
   tags: string[];
   partype: string;
-  info: IChampionInfo;
-  stats: IChampionStats;
-  spells: IChampionSpellsItem[];
-  passive: IChampionPassive;
+  info: ChampionInfo;
+  stats: ChampionStats;
+  spells: ChampionSpellsItem[];
+  passive: ChampionPassive;
   iconUrl: string;
 }
 
-interface IChampionSkinsItem {
+interface ChampionSkinsItem {
   id: string;
   num: number;
   name: string;
   chromas: boolean;
 }
 
-interface IChampionInfo {
+interface ChampionInfo {
   attack: number;
   defense: number;
   magic: number;
   difficulty: number;
 }
 
-interface IChampionStats {
+interface ChampionStats {
   hp: number;
   hpperlevel: number;
   mp: number;
@@ -70,7 +70,7 @@ interface IChampionStats {
   attackspeed: number;
 }
 
-interface IChampionSpellsItem {
+interface ChampionSpellsItem {
   id: string;
   name: string;
   tooltip: string;
@@ -83,13 +83,13 @@ interface IChampionSpellsItem {
   secret?: boolean;
 }
 
-interface IChampionPassive {
+interface ChampionPassive {
   name: string;
   description: string;
   iconUrl: string;
 }
 
-export interface IStaticSpell {
+export interface StaticSpellApiData {
   id: string;
   name: string;
   description: string;
@@ -100,7 +100,7 @@ export interface IStaticSpell {
   cost: number[];
   costBurn: string;
   datavalues: {};
-  vars: ISpellVarsItem[];
+  vars: SpellVarsItem[];
   key: number;
   summonerLevel: number;
   costType: string;
@@ -111,22 +111,22 @@ export interface IStaticSpell {
   iconUrl: string;
 }
 
-interface ISpellVarsItem {
+interface SpellVarsItem {
   link: string;
   coeff: number;
   key: string;
 }
 
-export interface IStaticPerk {
+export interface StaticPerkApiData {
   id: number;
   name: string;
   iconUrl: string;
   slots: Array<{
-    runes: { [id: string]: IStaticRune };
+    runes: { [id: string]: StaticRuneApiData };
   }>;
 }
 
-export interface IStaticRune {
+export interface StaticRuneApiData {
   name: string;
   iconUrl: string;
   shortDesc: string;
