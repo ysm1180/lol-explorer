@@ -1,25 +1,54 @@
 <template>
-  <div class="champion-icon-container"
+  <div
     :class="{ small: !!small, large: !!large, extralarge: !!extralarge }"
     @click="click"
+    class="champion-icon-container"
   >
     <tooltip :content="champion.name" v-if="champion">
       <v-img
         :class="{ circle: !!circle }"
         :src="champion ? champion.iconUrl : ''"
-        class="champion-icon grey darken-2"
+        :style="{ border: `1px solid ${borderColor} !important` }"
+        class="champion-icon"
       >
         <span class="white--text font-size-tiny champion-level" v-if="!!level">
           {{ level }}
         </span>
       </v-img>
+      <v-layout
+        :class="{ circle: !!circle }"
+        align-center
+        class="position-icon-container"
+        justify-center
+        v-if="position"
+      >
+        <v-img
+          :src="`/assets/positions/${positionName}.svg`"
+          class="position-icon"
+        ></v-img>
+      </v-layout>
       <div class="sub-text" v-if="subText !== undefined">
         {{ subText }}
       </div>
     </tooltip>
+    <v-layout
+      :class="{ circle: !!circle }"
+      :style="{ border: `1px solid ${borderColor}` }"
+      align-center
+      class="champion-icon"
+      justify-center
+      v-else-if="position"
+    >
+      <v-img
+        :src="`/assets/positions/${positionName}.svg`"
+        class="position-icon"
+      ></v-img>
+    </v-layout>
+
     <v-img
       :class="{ circle: !!circle }"
-      class="champion-icon grey darken-2"
+      :style="{ border: `1px solid ${borderColor} !important` }"
+      class="champion-icon"
       v-else
     ></v-img>
   </div>
@@ -41,6 +70,8 @@ export default class ChampionIcon extends Vue {
   @Prop(Boolean) private large?: boolean;
   @Prop(Boolean) private extralarge?: boolean;
   @Prop(String) private subText?: string;
+  @Prop(String) private position?: string;
+  @Prop(String) private borderColor?: string;
 
   public get champion() {
     return (
@@ -48,6 +79,22 @@ export default class ChampionIcon extends Vue {
         this.championId
       ] as StaticChampionApiData) || null
     );
+  }
+
+  public get positionName() {
+    if (this.position) {
+      if (this.position === 'TOP') {
+        return 'top';
+      } else if (this.position === 'JUNGLE') {
+        return 'jungle';
+      } else if (this.position === 'MIDDLE') {
+        return 'mid';
+      } else if (this.position === 'BOTTOM') {
+        return 'adc';
+      } else if (this.position === 'UTILITY') {
+        return 'support';
+      }
+    }
   }
 
   public click() {
@@ -84,6 +131,23 @@ export default class ChampionIcon extends Vue {
     max-height: 96px;
   }
 
+  .position-icon-container {
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: rgba(#000, 0.5);
+    padding: 3px;
+
+    & > .position-icon {
+      min-width: 15px;
+      min-height: 15px;
+      max-width: 15px;
+      max-height: 15px;
+    }
+  }
+
   .champion-icon {
     vertical-align: top;
 
@@ -91,6 +155,15 @@ export default class ChampionIcon extends Vue {
     min-height: 48px;
     max-width: 48px;
     max-height: 48px;
+
+    background-color: #bdbdbd;
+
+    .position-icon {
+      min-width: 28px;
+      min-height: 28px;
+      max-width: 28px;
+      max-height: 28px;
+    }
 
     &.circle {
       border-radius: 50%;
@@ -107,6 +180,7 @@ export default class ChampionIcon extends Vue {
       font-size: 10px;
     }
   }
+
   .sub-text {
     padding: 2px 0;
     font-size: 12px;
