@@ -1,6 +1,6 @@
 <template>
   <v-layout fill-height justify-center>
-    <v-layout align-center column mt-3 id="champion-info">
+    <v-layout align-center column id="champion-info" mt-3>
       <div class="champion-info-container">
         <div class="d-inline-block">
           <champion-icon :championId="Number(championId)" extralarge />
@@ -206,30 +206,22 @@
                     <table
                       class="data-table pl-2 "
                       style="width: 368px;"
-                      v-if="
-                        selectedPositionData.counters &&
-                          selectedPositionData.counters.length > 0
-                      "
+                      v-if="summarizedCounters"
                     >
                       <thead class="table-title">
                         <tr>
-                          <th :colspan="selectedPositionData.counters.length">
+                          <th :colspan="summarizedCounters.length">
                             카운터 챔피언
                           </th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
                         <tr>
-                          <td
-                            v-for="(n, i) in selectedPositionData.counters
-                              .length"
-                          >
+                          <td v-for="(n, i) in summarizedCounters.length">
                             <champion-icon
-                              :championId="selectedPositionData.counters[i].id"
+                              :championId="summarizedCounters[i].id"
                               :subText="
-                                `${Math.floor(
-                                  selectedPositionData.counters[i].winRate
-                                )}%`
+                                `${Math.floor(summarizedCounters[i].winRate)}%`
                               "
                               circle
                               class="mr-1"
@@ -259,28 +251,23 @@
                     <table
                       class="data-table pl-2 "
                       style="width: 368px;"
-                      v-if="
-                        selectedPositionData.easys &&
-                          selectedPositionData.easys.length > 0
-                      "
+                      v-if="summarizedEasyChampions"
                     >
                       <thead class="table-title">
                         <tr>
-                          <th :colspan="selectedPositionData.easys.length">
+                          <th :colspan="summarizedEasyChampions.length">
                             상대하기 쉬운 챔피언
                           </th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
                         <tr>
-                          <td
-                            v-for="(n, i) in selectedPositionData.easys.length"
-                          >
+                          <td v-for="(n, i) in summarizedEasyChampions.length">
                             <champion-icon
-                              :championId="selectedPositionData.easys[i].id"
+                              :championId="summarizedEasyChampions[i].id"
                               :subText="
                                 `${Math.floor(
-                                  selectedPositionData.easys[i].winRate
+                                  summarizedEasyChampions[i].winRate
                                 )}%`
                               "
                               circle
@@ -331,10 +318,13 @@
 
                   <div class="mt-4">
                     <div
-                      class="rune-container pa-2 mr-5 d-inline-block"
+                      class="rune-container pa-2 mr-3 d-inline-block"
                       v-for="(n, i) in selectedRuneData.details.length"
                     >
-                      <tooltip center :content="`${selectedRuneData.details[i].count} 게임`">
+                      <tooltip
+                        :content="`${selectedRuneData.details[i].count} 게임`"
+                        center
+                      >
                         <div class="rune-description text-xs-center mb-2">
                           픽률 : {{ selectedRuneData.details[i].pickRate }}%
                           <br />
@@ -527,6 +517,7 @@ import ItemIcon from '@/components/Icon/ItemIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
 import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
 import SpellIcon from '@/components/Icon/SpellIcon.vue';
+import RuneBook from '@/components/Rune/RuneBook.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
@@ -587,6 +578,7 @@ interface IPositionData {
 
 @Component({
   components: {
+    RuneBook,
     RuneIcon,
     RuneStyleIcon,
     Rune,
@@ -630,6 +622,20 @@ export default class ChampionInfo extends Vue {
     ];
   }
 
+  public get summarizedEasyChampions() {
+    return (
+      this.selectedPositionData.easys &&
+      this.selectedPositionData.easys.slice(0, 6)
+    );
+  }
+
+  public get summarizedCounters() {
+    return (
+      this.selectedPositionData.counters &&
+      this.selectedPositionData.counters.slice(0, 6)
+    );
+  }
+
   public get champions() {
     return this.$store.state.lolstatic.champions;
   }
@@ -650,13 +656,15 @@ export default class ChampionInfo extends Vue {
       win: number;
     }> = response.data;
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
-    const spells = data.map((spell) => ({
-      id1: spell._id[0],
-      id2: spell._id[1],
-      count: spell.count,
-      pickRate: toPercentage(spell.count, totalCount),
-      winRate: toPercentage(spell.win, spell.count),
-    })).slice(0, 2);
+    const spells = data
+      .map((spell) => ({
+        id1: spell._id[0],
+        id2: spell._id[1],
+        count: spell.count,
+        pickRate: toPercentage(spell.count, totalCount),
+        winRate: toPercentage(spell.win, spell.count),
+      }))
+      .slice(0, 2);
 
     this.$set(
       this.positionData,
@@ -686,7 +694,8 @@ export default class ChampionInfo extends Vue {
         pickRate: toPercentage(item.count, totalCount),
         winRate: toPercentage(item.win, item.count),
       }))
-      .filter((item) => item.pickRate > 0).slice(0, 2);
+      .filter((item) => item.pickRate > 0)
+      .slice(0, 2);
 
     this.$set(
       this.positionData,
@@ -921,9 +930,9 @@ export default class ChampionInfo extends Vue {
 .rune-container {
   border: 1px solid #ccc;
   border-radius: 10px;
+
   .rune-description {
     font-size: 12px;
   }
 }
-
 </style>
