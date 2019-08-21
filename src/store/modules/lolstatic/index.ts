@@ -8,28 +8,28 @@ import {
 import axios from 'axios';
 import { Module, MutationAction, VuexModule } from 'vuex-module-decorators';
 
-export interface IStaticChampions {
+export interface StaticChampions {
   [key: string]: StaticChampionApiData;
 }
 
-export interface IStaticItems {
+export interface StaticItems {
   [key: string]: StaticItemApiData;
 }
 
-export interface IStaticSpells {
+export interface StaticSpells {
   [key: string]: StaticSpellApiData;
 }
 
-export interface IStaticPerks {
+export interface StaticPerks {
   [key: string]: StaticPerkApiData;
 }
 
 @Module({ namespaced: true, name: 'lolstatic' })
 export default class Lolstatic extends VuexModule {
-  public champions: IStaticChampions = {};
-  public spells: IStaticSpells = {};
-  public items: IStaticItems = {};
-  public perks: IStaticPerks = {};
+  public champions: StaticChampions = {};
+  public spells: StaticSpells = {};
+  public items: StaticItems = {};
+  public perks: StaticPerks = {};
 
   @MutationAction({ mutate: ['champions', 'spells', 'items', 'perks'] })
   public async initializeState() {
@@ -39,19 +39,19 @@ export default class Lolstatic extends VuexModule {
   @MutationAction({ mutate: ['champions'] })
   public async fetchChampions() {
     const response = await axios.get(`${END_POINT}/static/champion/all`);
-    return { champions: response.data as IStaticChampions };
+    return { champions: response.data as StaticChampions };
   }
 
   @MutationAction({ mutate: ['spells'] })
   public async fetchSpells() {
     const response = await axios.get(`${END_POINT}/static/spell/all`);
-    return { spells: response.data as IStaticSpells };
+    return { spells: response.data as StaticSpells };
   }
 
   @MutationAction({ mutate: ['items'] })
   public async fetchItems() {
     const response = await axios.get(`${END_POINT}/static/item/all`);
-    return { items: response.data as IStaticItems };
+    return { items: response.data as StaticItems };
   }
 
   @MutationAction({ mutate: ['perks'] })

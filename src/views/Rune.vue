@@ -44,7 +44,7 @@
 <script lang="ts">
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import RunePage from '@/components/Rune/RunePage.vue';
-import { IStaticChampions } from '@/store/modules/lolstatic';
+import { StaticChampions } from '@/store/modules/lolstatic';
 import {CustomRuneData} from '@/typings/rune';
 import { Component, Vue } from 'vue-property-decorator';
 
@@ -59,7 +59,7 @@ export default class Rune extends Vue {
   public mounted(): void {}
 
   get champions() {
-    return this.$store.state.lolstatic.champions as IStaticChampions;
+    return this.$store.state.lolstatic.champions as StaticChampions;
   }
 
   get sortedChampions() {
