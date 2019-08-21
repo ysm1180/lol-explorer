@@ -1,7 +1,7 @@
 <template>
   <div class="rune-book">
     <div
-      :class="{ 'mr-5': !!large, 'mr-3': !large }"
+      :class="{ 'mr-4': !!large, 'mr-3': !large }"
       :style="{ width: `${containerWidth}px` }"
       class="d-inline-block vertical__top"
     >
@@ -14,7 +14,7 @@
           <rune-style-icon
             :class="{
               cursor__pointer: !!pointer,
-              'mb-5': !!large,
+              'mb-4': !!large,
               'mb-2': !large,
             }"
             :grayscale="grayscale && runeId !== primaryRuneStyle"
@@ -67,7 +67,7 @@
             <rune-style-icon
               :class="{
                 cursor__pointer: !!pointer,
-                'mb-5': !!large,
+                'mb-4': !!large,
                 'mb-2': !large,
               }"
               :hover="runeId !== secondaryRuneStyle"
@@ -220,7 +220,6 @@ export default class RuneBook extends Vue {
   }
 
   private selectSecondaryRune(runeId: string, line: number) {
-    console.log(runeId, line);
     this.$emit('clickSecondaryRune', runeId, line);
   }
 
@@ -233,5 +232,6 @@ export default class RuneBook extends Vue {
 <style scoped>
 .rune-book {
   display: inline-block;
+  vertical-align: top;
 }
 </style>

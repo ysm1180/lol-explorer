@@ -3,7 +3,10 @@
     <div class="modal-wrapper">
       <div @click.stop.prevent.self="" class="modal-container">
         <div class="rune-page mb-2">
-          <v-img :src="`/assets/runes/${copyRune.primary.id}_back.jpg`" />
+          <v-img
+            class="back-image"
+            :src="`/assets/runes/${copyRune.primary.id}_back.jpg`"
+          />
           <div class="pa-5 rune-content">
             <v-layout class="mr-5" d-inline>
               <champion-icon :championId="championId" circle large />
@@ -44,12 +47,14 @@
             flat
             v-else
           >
-            SAVE
+            <span v-if="saved">
+              저장 완료
+            </span>
+            <span v-else>
+              SAVE
+            </span>
           </v-btn>
           <v-btn @click="click" class="grey white--text" flat>CLOSE</v-btn>
-          <div class="save-info" v-if="saved">
-            저장 완료
-          </div>
         </v-layout>
       </div>
     </div>
@@ -174,8 +179,8 @@ export default class RunePage extends Vue {
 }
 
 .modal-container {
-  width: 990px;
-  height: 700px;
+  width: 780px;
+  height: 545px;
   margin: 0px auto;
   padding: 10px;
   background-color: #fff;
@@ -187,6 +192,10 @@ export default class RunePage extends Vue {
 
 .rune-page {
   position: relative;
+
+  .back-image {
+    max-width: 760px;
+  }
 
   .rune-content {
     position: absolute;
