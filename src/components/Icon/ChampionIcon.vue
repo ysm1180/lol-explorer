@@ -8,7 +8,7 @@
       <v-img
         :class="{ circle: !!circle }"
         :src="champion ? champion.iconUrl : ''"
-        :style="{ border: `1px solid ${borderColor} !important` }"
+        :style="{ border: `2px solid ${borderColor} !important` }"
         class="champion-icon"
       >
         <span class="white--text font-size-tiny champion-level" v-if="!!level">
@@ -33,7 +33,7 @@
     </tooltip>
     <v-layout
       :class="{ circle: !!circle }"
-      :style="{ border: `1px solid ${borderColor}` }"
+      :style="{ border: `2px solid ${borderColor}` }"
       align-center
       class="champion-icon"
       justify-center
@@ -47,7 +47,7 @@
 
     <v-img
       :class="{ circle: !!circle }"
-      :style="{ border: `1px solid ${borderColor} !important` }"
+      :style="{ border: `2px solid ${borderColor} !important` }"
       class="champion-icon"
       v-else
     ></v-img>
