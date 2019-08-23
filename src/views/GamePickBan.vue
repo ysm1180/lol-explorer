@@ -6,7 +6,7 @@
       </span>
     </v-layout>
     <v-layout fill-height id="game-start" justify-center v-else>
-      <div class="mt-2">
+      <div class="mt-3">
         <div class="summoner-info-container">
           <div class="d-inline-block vertical__top">
             <table class="ally-summoner-table mr-2">
@@ -135,7 +135,8 @@
                     <div
                       v-if="
                         myTeamSummonerInfos[info.summonerId] &&
-                          myTeamSummonerInfos[info.summonerId].summoner
+                          myTeamSummonerInfos[info.summonerId].summoner &&
+                          myTeamSummonerInfos[info.summonerId].summoner.season
                       "
                     >
                       <div class="game-win">
@@ -159,6 +160,11 @@
                               .losses
                         }}
                         게임
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="game-win">
+                        -
                       </div>
                     </div>
                   </td>
@@ -322,7 +328,7 @@
 
 <script lang="ts">
 import { toPercentage } from '@/base/math';
-import { QUEUE_TYPE_STRING } from '@/common/constants';
+import { QUEUE_TYPE, QUEUE_TYPE_STRING } from '@/common/constants';
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import PositionIcon from '@/components/Icon/PositionIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
@@ -383,6 +389,7 @@ const LCU_POSITION: { [position: string]: number } = {
   },
 })
 export default class GamePickBan extends Vue {
+  private lcuListener?: (event: any, data: any) => void;
   private champSelecting: boolean = false;
   private searchData?: {
     queueType: string;
@@ -518,7 +525,7 @@ export default class GamePickBan extends Vue {
         });
         return result;
       } catch (err) {
-        console.error(err);
+        console.error('[getPickedChampionPositionData]', err);
         return {};
       }
     } else {
@@ -534,13 +541,22 @@ export default class GamePickBan extends Vue {
       if (requester && requester.assignedPosition !== '') {
         return LCU_POSITION[requester.assignedPosition];
       } else {
-        const response = await axios.get(
-          `${END_POINT}/statistics/champion/positions/${
-            this.pickedChampion.key
-          }`
-        );
-        const data: Array<{ _id: number }> = response.data;
-        return data[0]._id;
+        try {
+          const response = await axios.get(
+            `${END_POINT}/statistics/champion/positions/${
+              this.pickedChampion.key
+            }`
+          );
+          const data: Array<{ _id: number }> = response.data;
+          return data[0]._id;
+        } catch (err) {
+          console.error(
+            '[getPickedChampionMostPosition]',
+            err,
+            this.pickedChampion
+          );
+          return 0;
+        }
       }
     }
 
@@ -552,7 +568,7 @@ export default class GamePickBan extends Vue {
     this.myTeamSummonerInfos = {};
     this.gameQueueId = 420;
 
-    const listener = async (event: any, data: any) => {
+    this.lcuListener = async (event: any, data: any) => {
       if (
         data.uri === '/lol-champ-select/v1/session' &&
         data.eventType === 'Update'
@@ -596,7 +612,7 @@ export default class GamePickBan extends Vue {
       }
     };
 
-    ipcRenderer.on('lcu-api-message', listener);
+    ipcRenderer.on('lcu-api-message', this.lcuListener);
   }
 
   public async mounted() {
@@ -619,6 +635,12 @@ export default class GamePickBan extends Vue {
         this.myTeamData = champData.myTeam;
         this.enemyTeamData = champData.theirTeam;
       }
+    }
+  }
+
+  public beforeDestroy() {
+    if (this.lcuListener) {
+      ipcRenderer.removeListener('lcu-api-message', this.lcuListener);
     }
   }
 
@@ -652,6 +674,7 @@ export default class GamePickBan extends Vue {
 
       return response.data as LcuGameSessionData;
     } catch (err) {
+      console.error('getGameSession', err, this.lcuData);
       return null;
     }
   }
@@ -673,6 +696,7 @@ export default class GamePickBan extends Vue {
 
       return response.data;
     } catch (err) {
+      console.error('[getLcuChampSelectSession]', err, this.lcuData);
       return [];
     }
   }
@@ -706,7 +730,7 @@ export default class GamePickBan extends Vue {
         this.$set(this.myTeamSummonerInfos[summonerId], 'error', false);
       })
       .catch((err) => {
-        console.error(err);
+        console.error('[loadSummonerInfo]', err);
 
         this.$set(this.myTeamSummonerInfos[summonerId], 'summoner', undefined);
         this.$set(this.myTeamSummonerInfos[summonerId], 'loading', false);
@@ -734,9 +758,16 @@ export default class GamePickBan extends Vue {
   public async loadSummonerInfoByName(id: number, name: string) {
     return axios.get(`${END_POINT}/summoner/${name}`).then(async (response) => {
       const data = response.data;
+      let gameQueueId = this.gameQueueId;
+      if (
+        this.gameQueueId !== QUEUE_TYPE.RANKED_SOLO_5x5 &&
+        this.gameQueueId !== QUEUE_TYPE.RANKED_FLEX_SR
+      ) {
+        gameQueueId = QUEUE_TYPE.RANKED_SOLO_5x5;
+      }
       let season = data.seasons.find(
         (season: SummonerSeasonApiData) =>
-          season.queueType === QUEUE_TYPE_STRING[this.gameQueueId]
+          season.queueType === QUEUE_TYPE_STRING[gameQueueId]
       );
       if (!season) {
         season = await this.getUnrankedMatchInfo(data.accountId);
@@ -784,16 +815,21 @@ export default class GamePickBan extends Vue {
         return 'UNRANKED';
       }
     } else {
-      return 'UNKNOWN';
+      return 'UNRANKED';
     }
   }
 
   public async getUnrankedMatchInfo(accountId: number) {
     try {
+      let gameQueueId = this.gameQueueId;
+      if (
+        this.gameQueueId !== QUEUE_TYPE.RANKED_SOLO_5x5 &&
+        this.gameQueueId !== QUEUE_TYPE.RANKED_FLEX_SR
+      ) {
+        gameQueueId = QUEUE_TYPE.RANKED_SOLO_5x5;
+      }
       const response = await axios.get(
-        `${END_POINT}/summoner/matches/unranked/${accountId}/${
-          this.gameQueueId
-        }`
+        `${END_POINT}/summoner/matches/unranked/${accountId}/${gameQueueId}`
       );
       const matches: MatchApiData[] = response.data;
       const matchCount = matches.length;
@@ -810,7 +846,7 @@ export default class GamePickBan extends Vue {
       };
       return result;
     } catch (err) {
-      console.log(err);
+      console.error('[getUnrankedMatchInfo]', err);
       return null;
     }
   }
@@ -855,7 +891,7 @@ export default class GamePickBan extends Vue {
 
         return { frequencies, wins };
       } catch (err) {
-        console.log(err);
+        console.error('[getRecommedRunes]', err);
         return null;
       }
     } else {
