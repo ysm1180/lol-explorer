@@ -194,6 +194,7 @@ export default class RunePage extends Vue {
   position: relative;
 
   .back-image {
+    background-color: #333;
     max-width: 760px;
   }
 

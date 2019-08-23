@@ -124,8 +124,8 @@ export default class Rune extends Vue {
         JSON.stringify(rune),
         'utf-8'
       );
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.error(err);
     }
   }
 }

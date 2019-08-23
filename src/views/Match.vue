@@ -10,7 +10,7 @@
         class="display-1 font-weight-bold"
         v-if="status === 'WAITING_CLIENT'"
       >
-        롤 클라이언트를 실행해주세요
+        롤 클라이언트를 실행해주세요.
       </span>
       <span
         class="display-1 font-weight-bold"

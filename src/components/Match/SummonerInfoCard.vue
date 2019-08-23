@@ -89,7 +89,7 @@ export default class SummonerInfoCard extends Vue {
       };
       this.summoner.seasons.push(result);
     } catch (err) {
-      console.log(err);
+      console.error('[loadUnrankedMatchInfo]', err);
     }
   }
 

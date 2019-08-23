@@ -28,8 +28,6 @@ export default class ChampionInfoCard extends Vue {
   @Prop() public champions: any;
   public tab: number = 0;
 
-  public mounted() {}
-
   get totalArray() {
     const champions = this.champions.champions;
     const championsArray = Object.values(champions);

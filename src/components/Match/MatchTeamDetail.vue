@@ -235,7 +235,7 @@ export default class MatchTeamDetail extends Vue {
             }
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
           });
 
         if (this.maxDamage < participant.stats.totalDamageDealtToChampions) {
