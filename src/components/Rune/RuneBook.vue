@@ -35,9 +35,7 @@
           <v-flex
             class="text-xs-center"
             v-bind:key="`${runeId}`"
-            v-for="runeId in Object.keys(
-              perks[primaryRuneStyle].slots[line].runes
-            )"
+            v-for="runeId in getRuneIds(primaryRuneStyle, line)"
           >
             <rune-icon
               :borderColor="runeBorderColor[primaryRuneStyle]"
@@ -87,9 +85,7 @@
           <v-flex
             class="text-xs-center"
             v-bind:key="`${runeId}`"
-            v-for="runeId in Object.keys(
-              perks[secondaryRuneStyle].slots[line].runes
-            )"
+            v-for="runeId in getRuneIds(secondaryRuneStyle, line)"
           >
             <rune-icon
               :borderColor="runeBorderColor[secondaryRuneStyle]"
@@ -194,7 +190,7 @@ export default class RuneBook extends Vue {
   @Prop(Boolean) private grayscale?: boolean;
   @Prop() private containerWidth?: number;
 
-  private runeIdList: string[] = ['8000', '8100', '8200', '8300', '8400'];
+  private runeIdList: string[] = ['8000', '8100', '8200', '8400', '8300'];
   private runeBorderColor = {
     8000: 'yellow',
     8100: 'red',
@@ -203,7 +199,15 @@ export default class RuneBook extends Vue {
     8400: 'green',
   };
 
-  get perks() {
+  public getRuneIds(runeStyle: number, line: number) {
+    const values = Object.values(
+      this.perks[runeStyle].slots[line].runes
+    ) as Array<{ id: number; sort: number }>;
+    values.sort((a, b) => a.sort - b.sort);
+    return values.map((value) => value.id.toString());
+  }
+
+  public get perks() {
     return this.$store.state.lolstatic.perks;
   }
 
