@@ -68,7 +68,8 @@
                 'mb-4': !!large,
                 'mb-2': !large,
               }"
-              :hover="runeId !== secondaryRuneStyle"
+              :grayscale="grayscale && runeId !== secondaryRuneStyle"
+              :hover="hover && runeId !== secondaryRuneStyle"
               :large="!!large"
               :runeStyleId="runeId"
               @click="selectSecondaryRuneStyle(runeId)"
