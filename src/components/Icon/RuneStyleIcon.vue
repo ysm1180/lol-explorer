@@ -82,10 +82,10 @@ export default class RuneStyleIcon extends Vue {
   }
 
   &.large .rune-style-icon {
-    min-width: 32px;
-    min-height: 32px;
-    max-width: 32px;
-    max-height: 32px;
+    min-width: 28px;
+    min-height: 28px;
+    max-width: 28px;
+    max-height: 28px;
   }
 
   .rune-style-icon {
