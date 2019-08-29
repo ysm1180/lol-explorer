@@ -1,12 +1,15 @@
 <template>
   <div>
-    <div class="tabs">
+    <div
+      :class="{ 'align-center': !!alignCenter, 'align-right': !!alignRight }"
+      class="tabs"
+    >
       <nav>
         <button
           :class="{ active: tab.isActive }"
           @click="selectTab(tab)"
-          v-for="(tab,index) in tabs"
           v-bind:key="index"
+          v-for="(tab, index) in tabs"
         >
           {{ tab.name }}
         </button>
@@ -25,6 +28,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component
 export default class Tabs extends Vue {
   @Prop() private onSelected?: (index: number) => void;
+  @Prop(Boolean) private alignCenter?: boolean;
+  @Prop(Boolean) private alignRight?: boolean;
+
   private tabs: any[] = [];
 
   public mounted() {
@@ -44,33 +50,41 @@ export default class Tabs extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .tabs {
   margin-bottom: 5px;
-}
 
-.tabs button {
-  display: inline-block;
-  margin: 0;
-  padding: 10px 15px;
-  font-size: 14px;
-  font-weight: bold;
-  color: gray;
-  text-decoration: none;
-  border: none;
-  background-color: transparent;
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.25s;
-  outline: none;
-}
+  &.align-center {
+    text-align: center;
+  }
 
-.tabs button:hover {
-  color: black;
-}
+  &.align-right {
+    text-align: right;
+  }
 
-.tabs button.active {
-  border-bottom: 3px solid darkorange;
-  color: black;
+  button {
+    display: inline-block;
+    margin: 0;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: gray;
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s;
+    outline: none;
+
+    &:hover {
+      color: black;
+    }
+
+    &.active {
+      border-bottom: 3px solid darkorange;
+      color: black;
+    }
+  }
 }
 </style>
