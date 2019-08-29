@@ -2,7 +2,7 @@
   <tooltip inlineBlock :content="tooltip" v-if="tooltip && tooltip !== ''">
     <div
       :class="{ selected: !!selected, disabled: !!disabled }"
-      @click="click()"
+      @click="!disabled && click()"
       class="position-icon-container"
     >
       <v-img
@@ -17,7 +17,7 @@
   </tooltip>
   <div
     :class="{ selected: !!selected, disabled: !!disabled }"
-    @click="click()"
+    @click="!disabled && click()"
     class="position-icon-container"
     v-else
   >
