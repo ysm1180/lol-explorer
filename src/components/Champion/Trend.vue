@@ -2,11 +2,9 @@
   <div>
     <div class="chart-title">
       <div class="subject">{{ title }}</div>
-      <br />
       <div class="value">
         <span>{{ trends[trends.length - 1] }}%</span>
         <span
-          class="changes"
           :class="
             changes > 0
               ? 'blue--text'
@@ -14,17 +12,13 @@
               ? 'gray--text'
               : 'red--text'
           "
+          class="changes"
         >
-          ({{ changes }}%
-          <span v-if="changes > 0">
-            ▲
-          </span>
-          <span v-else-if="changes < 0">
-            ▼
-          </span>
-          <span v-else>
-            -
-          </span>
+          (
+          <span v-show="changes !== 0">{{ changes }}%</span>
+          <span v-if="changes > 0">▲</span>
+          <span v-else-if="changes < 0">▼</span>
+          <span v-else> - </span>
           )
         </span>
       </div>
@@ -72,7 +66,7 @@ export default class Trend extends Vue {
       return cuttingPoint(
         this.trends[this.trends.length - 1] -
           this.trends[this.trends.length - 2],
-        2
+        1
       );
     } else {
       return 0;
@@ -147,22 +141,27 @@ export default class Trend extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .chart-title {
   display: inline-block;
+  width: 110px;
   vertical-align: top;
-  margin: 10px;
+  margin-left: 5px;
+  margin-top: 10px;
+  margin-right: 20px;
+  line-height: 1.5;
 
   .subject {
     font-size: 13px;
+    margin-bottom: 5px;
   }
 
   .value {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
 
     .changes {
-      font-size: 13px;
+      font-size: 12px;
     }
   }
 }
