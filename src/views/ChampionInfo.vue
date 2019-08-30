@@ -316,35 +316,177 @@
                     v-for="(n, i) in selectedPositionData.runes.length"
                   />
 
-                  <div class="mt-4">
-                    <div
-                      class="rune-container pa-2 mr-3 d-inline-block"
-                      v-for="(n, i) in selectedRuneData.details.length"
-                    >
-                      <tooltip
-                        :content="`${selectedRuneData.details[i].count} 게임`"
-                        center
+                    <div class="mt-4">
+                      <div
+                        class="rune-container pa-2 my-3"
+                        v-for="(n, i) in selectedRuneData.details.length"
                       >
-                        <div class="rune-description text-xs-center mb-2">
-                          픽률 : {{ selectedRuneData.details[i].pickRate }}%
-                          <br />
-                          승률 : {{ selectedRuneData.details[i].winRate }}%
-                        </div>
-                      </tooltip>
-                      <rune-book
-                        :primaryRuneStyle="
-                          selectedRuneData.mainRuneStyle.toString()
-                        "
-                        :primaryRunes="selectedRuneData.details[i].mainRunes"
-                        :secondaryRuneStyle="selectedRuneData.subRuneStyle"
-                        :secondaryRunes="selectedRuneData.details[i].subRunes"
-                        :statRunes="selectedRuneData.details[i].statRunes"
-                        grayscale
-                      />
+                        <tooltip
+                          :content="`${selectedRuneData.details[i].count} 게임`"
+                          center
+                          inlineBlock
+                        >
+                          <div class="rune-description">
+                            픽률 : {{ selectedRuneData.details[i].pickRate }}%
+                            <br />
+                            승률 : {{ selectedRuneData.details[i].winRate }}%
+                          </div>
+                        </tooltip>
+                        <div class="divider mx-3" style="height: 270px;"></div>
+                        <rune-book
+                          :primaryRuneStyle="
+                            selectedRuneData.mainRuneStyle.toString()
+                          "
+                          :primaryRunes="selectedRuneData.details[i].mainRunes"
+                          :secondaryRuneStyle="selectedRuneData.subRuneStyle"
+                          :secondaryRunes="selectedRuneData.details[i].subRunes"
+                          :statRunes="selectedRuneData.details[i].statRunes"
+                          containerWidth="180"
+                          grayscale
+                        />
+                      </div>
                     </div>
+                  </div>
+                  <div class="mt-3 data-none" v-else>
+                    데이터가 부족하여 룬 데이터 분석이 어렵습니다.
+                  </div>
+                </div>
+
+                <div class="float__right d-inline-block vertical__top">
+                  <Tabs alignCenter class="mb-3">
+                    <Tab name="카운터 챔피언" selected>
+                      <v-layout
+                        align-center
+                        class="py-3"
+                        justify-center
+                        v-if="
+                          summarizedCounters && summarizedCounters.length > 0
+                        "
+                      >
+                        <v-flex
+                          class="text-center"
+                          v-for="(n, i) in summarizedCounters.length"
+                        >
+                          <champion-icon
+                            :championId="summarizedCounters[i].id"
+                            :subText="
+                              `${Math.floor(summarizedCounters[i].winRate)}%`
+                            "
+                            circle
+                            class="mr-1"
+                            small
+                          />
+                        </v-flex>
+                      </v-layout>
+                      <v-layout
+                        align-center
+                        class="data-none wide"
+                        justify-center
+                        v-else
+                      >
+                        데이터가 부족합니다.
+                      </v-layout>
+                    </Tab>
+                    <Tab name="상대하기 쉬운 챔피언">
+                      <v-layout
+                        align-center
+                        class="py-3"
+                        justify-center
+                        v-if="
+                          summarizedEasyChampions &&
+                            summarizedEasyChampions.length > 0
+                        "
+                      >
+                        <v-flex
+                          class="text-center"
+                          v-for="(n, i) in summarizedEasyChampions.length"
+                        >
+                          <champion-icon
+                            :championId="summarizedEasyChampions[i].id"
+                            :subText="
+                              `${Math.floor(
+                                summarizedEasyChampions[i].winRate
+                              )}%`
+                            "
+                            circle
+                            class="mr-1"
+                            small
+                          />
+                        </v-flex>
+                      </v-layout>
+                      <v-layout
+                        align-center
+                        class="data-none wide"
+                        justify-center
+                        v-else
+                      >
+                        데이터가 부족합니다.
+                      </v-layout>
+                    </Tab>
+                  </Tabs>
+
+                  <div class="item-container mb-2" v-if="winRateData">
+                    <Trend
+                      :chartData="{
+                        labels: winRateLabels,
+                        datasets: [
+                          {
+                            lineTension: 0,
+                            borderColor:
+                              winRateData[2] - winRateData[1] > 0
+                                ? '#62b7e5'
+                                : winRateData[2] - winRateData[1] === 0
+                                ? '#666'
+                                : '#e53d60',
+                            backgroundColor: 'transparent',
+                            data: winRateData,
+                          },
+                        ],
+                      }"
+                      height="130"
+                      hideYTick
+                      title="승률"
+                      tooltipLabel="승률"
+                      width="150"
+                    />
+                  </div>
+
+                  <div class="item-container mb-2" v-if="pickRateData">
+                    <Trend
+                      :chartData="{
+                        labels: pickRateLabels,
+                        datasets: [
+                          {
+                            lineTension: 0,
+                            borderColor:
+                              pickRateData[2] - pickRateData[1] > 0
+                                ? '#62b7e5'
+                                : pickRateData[2] - pickRateData[1] === 0
+                                ? '#666'
+                                : '#e53d60',
+                            backgroundColor: 'transparent',
+                            data: pickRateData,
+                          },
+                        ],
+                      }"
+                      height="130"
+                      hideYTick
+                      title="픽률"
+                      tooltipLabel="픽률"
+                      width="150"
+                    />
                   </div>
                 </div>
               </div>
+              <v-layout fill-height align-center justify-center v-else>
+                <v-flex class="text-center">
+                  <v-progress-circular
+                    color="deep-orange lighten-2"
+                    indeterminate
+                    size="32"
+                  />
+                </v-flex>
+              </v-layout>
             </tab>
           </tabs>
         </div>

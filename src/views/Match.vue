@@ -67,7 +67,7 @@
                 arrow_drop_down_circle
               </v-icon>
             </v-layout>
-            <v-flex text-xs-center>
+            <v-flex text-center>
               <v-progress-circular
                 color="deep-orange lighten-2"
                 indeterminate

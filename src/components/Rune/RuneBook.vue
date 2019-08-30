@@ -7,7 +7,7 @@
     >
       <v-layout>
         <v-flex
-          class="text-xs-center"
+          class="text-center"
           v-bind:key="`${runeId}`"
           v-for="runeId in runeIdList"
         >
@@ -33,7 +33,7 @@
       >
         <v-layout>
           <v-flex
-            class="text-xs-center"
+            class="text-center"
             v-bind:key="`${runeId}`"
             v-for="runeId in getRuneIds(primaryRuneStyle, line)"
           >
@@ -52,12 +52,12 @@
     </div>
     <div
       :style="{ width: `${containerWidth}px` }"
-      class="d-inline-block vertical__top text-xs-center"
+      class="d-inline-block vertical__top text-center"
     >
       <v-layout justify-between-space>
         <v-layout>
           <v-flex
-            class="text-xs-center"
+            class="text-center"
             v-bind:key="`${runeId}`"
             v-for="runeId in runeIdList"
             v-show="runeId !== primaryRuneStyle"
@@ -84,7 +84,7 @@
       >
         <v-layout>
           <v-flex
-            class="text-xs-center"
+            class="text-center"
             v-bind:key="`${runeId}`"
             v-for="runeId in getRuneIds(secondaryRuneStyle, line)"
           >
@@ -112,7 +112,7 @@
         <v-layout justify-between-space>
           <v-layout>
             <v-flex
-              class="text-xs-center"
+              class="text-center"
               v-bind:key="`${runeId}`"
               v-for="runeId in ['5008', '5005', '5007']"
             >
@@ -131,7 +131,7 @@
         <v-layout justify-between-space>
           <v-layout>
             <v-flex
-              class="text-xs-center"
+              class="text-center"
               v-bind:key="`${runeId}`"
               v-for="runeId in ['5008', '5002', '5003']"
             >
@@ -150,7 +150,7 @@
         <v-layout justify-between-space>
           <v-layout>
             <v-flex
-              class="text-xs-center"
+              class="text-center"
               v-bind:key="`${runeId}`"
               v-for="runeId in ['5001', '5002', '5003']"
             >

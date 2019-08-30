@@ -4,7 +4,7 @@
       <div>
         <v-img :src="summoner.iconUrl" class="summoner-icon">
           <span
-            class="summoner-level font-weight-bold text-xs-center white--text"
+            class="summoner-level font-weight-bold text-center white--text"
           >
             {{ summoner.summonerLevel }}
           </span>
@@ -19,9 +19,9 @@
           <v-btn
             :disabled="renewing"
             @click="$emit('renew')"
-            block
-            class="button__large deep-orange lighten-2"
-            flat
+            color="deep-orange lighten-2"
+            class="button__large"
+            elevation="0"
           >
             <span class="white--text font-weight-bold">전적 갱신</span>
             <v-progress-circular
@@ -38,10 +38,10 @@
     </v-layout>
     <v-layout class="my-2" column>
       <v-flex class="mb-1">
-        <tier-card :season="soloRank" queueId="420" />
+        <tier-card :season="soloRank" :queueId="420" />
       </v-flex>
       <v-flex>
-        <tier-card :season="flexRank" queueId="440" />
+        <tier-card :season="flexRank" :queueId="440" />
       </v-flex>
     </v-layout>
   </v-card>

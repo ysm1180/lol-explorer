@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app>
     <!-- topbar -->
     <div class="toolbar" id="top-bar">
       <div class="buttons">
