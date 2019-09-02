@@ -12,14 +12,14 @@
       <span class="font-size__small mr-4">용: {{ team.dragonKills }}</span>
     </v-flex>
     <table class="participant-detail">
-      <tbody class="body">
+      <tbody class="table__body">
         <tr
           :class="requester.participantId === Number(key) ? 'mine' : ''"
-          class="row"
+          class="table__row"
           v-bind:key="key"
           v-for="(participant, key) in team.participants"
         >
-          <td class="cell">
+          <td class="table__cell">
             <champion-icon
               :championId="participant.championId"
               :level="participant.stats.champLevel"
@@ -33,7 +33,7 @@
               small
             />
           </td>
-          <td class="cell">
+          <td class="table__cell">
             <div>
               <spell-icon :spellId="participant.spells[0]" small />
               <spell-icon :spellId="participant.spells[1]" small />
@@ -50,7 +50,7 @@
               />
             </div>
           </td>
-          <td class="cell summoner-tier">
+          <td class="table__cell summoner-tier">
             <div
               class="font-weight-bold"
               v-if="summonerTiers[key] !== undefined"
@@ -65,7 +65,7 @@
               />
             </div>
           </td>
-          <td class="cell summoner-name">
+          <td class="table__cell summoner-name">
             <div
               @click="toMatch(participant.player.accountId)"
               class="font-size__small cursor__pointer"
@@ -73,7 +73,7 @@
               {{ participant.player.summonerName }}
             </div>
           </td>
-          <td class="cell">
+          <td class="table__cell">
             <div class="font-size__small font-weight-bold">
               평점
               {{
@@ -104,7 +104,7 @@
               </tooltip>
             </span>
           </td>
-          <td class="cell">
+          <td class="table__cell">
             <div class="font-size__small font-weight-bold">
               골드 {{ participant.stats.goldEarned | gold }}
             </div>
@@ -116,7 +116,7 @@
               }}
             </div>
           </td>
-          <td class="cell damage">
+          <td class="table__cell damage">
             <tooltip content="챔피언에게 가한 데미지" fullWidth>
               <v-progress-linear
                 :value="
@@ -137,7 +137,7 @@
             </tooltip>
           </td>
 
-          <td class="cell">
+          <td class="table__cell">
             <item-icon
               :itemId="item"
               v-bind:key="index"
@@ -281,13 +281,13 @@ export default class MatchTeamDetail extends Vue {
 .participant-detail {
   border-spacing: 0;
 
-  .body {
-    .row {
+  .table__body {
+    .table__row {
       &.mine {
         background-image: linear-gradient(to right, #ff8a65, white);
       }
 
-      .cell {
+      .table__cell {
         padding: 2px;
 
         &.summoner-name {

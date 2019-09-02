@@ -11,7 +11,7 @@
         :src="spell ? spell.iconUrl : ''"
         class="champion-spell-icon grey darken-2"
       >
-        <span class="white--text font-size-tiny spell-name" v-if="!!spellName">
+        <span class="white--text spell-name" v-if="!!spellName">
           {{ spellName }}
         </span>
       </v-img>

@@ -11,7 +11,7 @@
         :style="{ border: `3px solid ${borderColor} !important` }"
         class="champion-icon"
       >
-        <span class="white--text font-size-tiny champion-level" v-if="!!level">
+        <span class="white--text champion-level" v-if="!!level">
           {{ level }}
         </span>
       </v-img>
@@ -177,7 +177,8 @@ export default class ChampionIcon extends Vue {
       padding: 0 5px;
       transform: translateX(-50%);
       border-radius: 50%;
-      font-size: 10px;
+      font-size: 9px;
+      white-space: nowrap;
     }
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app>
     <!-- topbar -->
     <div class="toolbar" id="top-bar">
       <div class="buttons">
@@ -36,9 +36,16 @@
           <v-icon dark>wifi</v-icon>
         </button>
       </div>
+      <div class="ml-3">
+        <input
+          class="search-text"
+          placeholder="소환사, 챔피언 검색"
+          type="text"
+        />
+      </div>
     </div>
-    <router-view style="padding-top:48px;" />
-  </div>
+    <router-view style="padding-top:59px;" />
+  </v-app>
 </template>
 <script lang="ts">
 import { ipcRenderer } from 'electron';
@@ -67,18 +74,21 @@ export default class App extends Vue {
       }
     });
 
-    ipcRenderer.on('lcu-connect', async (event: any, lcuData: LcuConnectionData) => {
-      this.$store.commit('connection/setLcuData', lcuData);
-      this.$store.commit('connection/setStatus', 'WAITING_LOGIN');
-      await this.$store.dispatch('connection/loadLcuSummoner', lcuData);
-      if (this.status === 'LOGIN_COMPLETE') {
-        await this.$store.dispatch(
-          'connection/updateSummoner',
-          this.lcuSummoner.displayName
-        );
-        this.$router.push(`/match/${this.summoner.accountId}`);
+    ipcRenderer.on(
+      'lcu-connect',
+      async (event: any, lcuData: LcuConnectionData) => {
+        this.$store.commit('connection/setLcuData', lcuData);
+        this.$store.commit('connection/setStatus', 'WAITING_LOGIN');
+        await this.$store.dispatch('connection/loadLcuSummoner', lcuData);
+        if (this.status === 'LOGIN_COMPLETE') {
+          await this.$store.dispatch(
+            'connection/updateSummoner',
+            this.lcuSummoner.displayName
+          );
+          this.$router.push(`/match/${this.summoner.accountId}`);
+        }
       }
-    });
+    );
 
     ipcRenderer.on('lcu-disconnect', () => {
       this.$store.dispatch('connection/initializeState');
@@ -196,7 +206,7 @@ export default class App extends Vue {
     margin-top: 0;
     text-align: left;
 
-    background-color: #212121;
+    background-color: #2a2e38;
     color: white;
 
     z-index: 2;
@@ -261,5 +271,14 @@ export default class App extends Vue {
 
 .float__right {
   float: right;
+}
+
+.search-text {
+  position: relative;
+  padding: 10px;
+  background-color: #dddddd;
+  width: 550px;
+  color: black;
+  border-radius: 2px;
 }
 </style>

@@ -6,13 +6,13 @@
     height="100%"
   >
     <table class="match">
-      <tbody class="body">
-        <tr class="row">
+      <tbody class="table__body">
+        <tr class="table__row">
           <td
             :class="
               isAgain ? 'grey' : gameInfo.requester.isWin ? 'blue' : 'red'
             "
-            class="cell match-summary lighten-4"
+            class="table__cell match-summary lighten-4"
           >
             <v-layout column fill-height justify-center>
               <span
@@ -42,7 +42,7 @@
               </tooltip>
             </v-layout>
           </td>
-          <td class="cell">
+          <td class="table__cell">
             <champion-icon
               :championId="requester.championId"
               :level="requester.stats.champLevel"
@@ -55,7 +55,7 @@
               class="cursor__pointer"
             />
           </td>
-          <td class="cell">
+          <td class="table__cell">
             <v-layout column fill-height justify-center>
               <div>
                 <spell-icon :spellId="requester.spells[0]"></spell-icon>
@@ -71,7 +71,7 @@
               </div>
             </v-layout>
           </td>
-          <td class="cell kda">
+          <td class="table__cell kda">
             <v-layout column fill-height justify-center>
               <span class="font-weight-bold">
                 평점
@@ -106,7 +106,7 @@
               </span>
             </v-layout>
           </td>
-          <td class="cell stats">
+          <td class="table__cell stats">
             <v-layout column fill-height justify-center>
               <span class="font-size__small font-weight-bold">
                 골드 {{ requester.stats.goldEarned | gold }}
@@ -116,7 +116,7 @@
               </span>
             </v-layout>
           </td>
-          <td class="cell">
+          <td class="table__cell">
             <v-layout align-baseline column fill-height justify-center>
               <div>
                 <item-icon
@@ -134,7 +134,7 @@
               </div>
             </v-layout>
           </td>
-          <td class="cell">
+          <td class="table__cell">
             <v-layout column fill-height justify-center>
               <div>
                 <v-layout align-center justify-space-around mb-1>
@@ -142,7 +142,10 @@
                     :class="{
                       mine: gameInfo.requester.participantId === Number(key),
                     }"
-                    :src="champions[participant.championId] && champions[participant.championId].iconUrl"
+                    :src="
+                      champions[participant.championId] &&
+                        champions[participant.championId].iconUrl
+                    "
                     class="participant-icon"
                     v-bind:key="key"
                     v-for="(participant, key) in gameInfo.teams['100']
@@ -156,7 +159,10 @@
                     :class="{
                       mine: gameInfo.requester.participantId === Number(key),
                     }"
-                    :src="champions[participant.championId] && champions[participant.championId].iconUrl"
+                    :src="
+                      champions[participant.championId] &&
+                        champions[participant.championId].iconUrl
+                    "
                     class="participant-icon"
                     v-bind:key="key"
                     v-for="(participant, key) in gameInfo.teams['200']
@@ -166,7 +172,7 @@
               </div>
             </v-layout>
           </td>
-          <td @click="toggle()" class="cell cursor__pointer">
+          <td @click="toggle()" class="table__cell cursor__pointer">
             <v-layout align-center fill-height>
               <v-icon v-if="!isToggle">expand_more</v-icon>
               <v-icon v-if="isToggle">expand_less</v-icon>
@@ -329,9 +335,9 @@ export default class MatchCard extends Vue {
   width: 100%;
   border-spacing: 0;
 
-  .body {
-    .row {
-      .cell {
+  .table__body {
+    .table__row {
+      .table__cell {
         padding: 5px;
         font-size: 12px;
 
@@ -350,7 +356,7 @@ export default class MatchCard extends Vue {
         }
 
         &.stats {
-          width: 80px;
+          width: 100px;
         }
       }
     }

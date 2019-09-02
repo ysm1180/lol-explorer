@@ -5,24 +5,29 @@
         게임 시작 상태가 아닙니다.
       </span>
     </v-layout>
-    <v-layout fill-height id="game-start" justify-center v-else>
+    <v-layout
+      fill-height
+      id="game-start"
+      justify-center
+      v-else-if="myTeamData.length > 0"
+    >
       <div class="mt-3">
         <div class="summoner-info-container">
           <div class="d-inline-block vertical__top">
             <table class="ally-summoner-table mr-2">
-              <thead class="head">
-                <tr class="row">
-                  <th class="cell ally" colspan="3">아군 팀</th>
-                  <th class="cell" colspan="2">랭크 통계</th>
+              <thead class="table__head">
+                <tr class="table__row">
+                  <th class="table__cell ally" colspan="3">아군 팀</th>
+                  <th class="table__cell" colspan="2">랭크 통계</th>
                 </tr>
               </thead>
-              <tbody class="content">
+              <tbody class="table__body">
                 <tr
-                  class="row"
+                  class="table__row"
                   v-bind:key="index"
                   v-for="(info, index) in myTeamData"
                 >
-                  <td class="cell">
+                  <td class="table__cell">
                     <champion-icon
                       :borderColor="
                         lcuSummoner.summonerId === info.summonerId
@@ -45,19 +50,19 @@
                       v-else
                     />
                   </td>
-                  <td class="cell summoner-spell">
+                  <td class="table__cell summoner-spell">
                     <spell-icon :spellId="info.spell1Id" />
                     <spell-icon :spellId="info.spell2Id" />
                   </td>
                   <td
-                    class="cell"
+                    class="table__cell"
                     colspan="3"
-                    v-show="!myTeamSummonerInfos[info.summonerId]"
+                    v-if="!myTeamSummonerInfos[info.summonerId]"
                   ></td>
                   <td
-                    class="cell"
+                    class="table__cell"
                     colspan="3"
-                    v-show="
+                    v-if="
                       myTeamSummonerInfos[info.summonerId] &&
                         myTeamSummonerInfos[info.summonerId].loading &&
                         !myTeamSummonerInfos[info.summonerId].error
@@ -70,9 +75,9 @@
                     />
                   </td>
                   <td
-                    class="cell error"
+                    class="table__cell error"
                     colspan="3"
-                    v-show="
+                    v-if="
                       myTeamSummonerInfos[info.summonerId] &&
                         !!myTeamSummonerInfos[info.summonerId].error
                     "
@@ -88,8 +93,8 @@
                     </v-btn>
                   </td>
                   <td
-                    class="cell summoner-name"
-                    v-show="
+                    class="table__cell summoner-name"
+                    v-if="
                       myTeamSummonerInfos[info.summonerId] &&
                         !myTeamSummonerInfos[info.summonerId].loading &&
                         !myTeamSummonerInfos[info.summonerId].error
@@ -102,8 +107,8 @@
                     }}
                   </td>
                   <td
-                    class="cell"
-                    v-show="
+                    class="table__cell"
+                    v-if="
                       myTeamSummonerInfos[info.summonerId] &&
                         !myTeamSummonerInfos[info.summonerId].loading &&
                         !myTeamSummonerInfos[info.summonerId].error
@@ -125,8 +130,8 @@
                     </div>
                   </td>
                   <td
-                    class="cell"
-                    v-show="
+                    class="table__cell"
+                    v-if="
                       myTeamSummonerInfos[info.summonerId] &&
                         !myTeamSummonerInfos[info.summonerId].loading &&
                         !myTeamSummonerInfos[info.summonerId].error
@@ -174,27 +179,30 @@
           </div>
           <div class="d-inline-block vertical__top">
             <table class="enemy-summoner-table mr-2">
-              <thead class="head">
-                <tr class="row">
-                  <th class="cell enemy" colspan="2">적군 팀</th>
+              <thead class="table__head">
+                <tr class="table__row">
+                  <th class="table__cell enemy" colspan="2">적군 팀</th>
                 </tr>
               </thead>
-              <tbody class="content">
+              <tbody class="table__body">
                 <tr
-                  class="row"
+                  class="table__row"
                   v-bind:key="index"
                   v-for="(info, index) in enemyTeamData"
                 >
-                  <td class="cell summoner-name" v-if="info.championId === 0">
+                  <td
+                    class="table__cell summoner-name"
+                    v-if="info.championId === 0"
+                  >
                     소환사 {{ index + 1 }}
                   </td>
-                  <td class="cell summoner-name" v-else>
+                  <td class="table__cell summoner-name" v-else>
                     {{
                       champions[info.championId] &&
                         champions[info.championId].name
                     }}
                   </td>
-                  <td class="cell">
+                  <td class="table__cell">
                     <champion-icon
                       :championId="info.championId"
                       borderColor="#F75556"
@@ -210,113 +218,135 @@
         <v-layout
           align-center
           class="my-3 picked-champion-container"
+          column
           justify-center
-          row
           v-if="pickedChampion"
         >
-          <v-flex style="width: 250px;">
-            <v-layout align-center class="mb-3" justify-center>
-              <div class="d-inline-block">
-                <champion-icon :championId="pickedChampion.key" circle />
-              </div>
+          <v-flex class="mb-3">
+            <v-layout>
+              <div class="d-inline-block mr-3">
+                <v-layout align-center class="mb-3" justify-center>
+                  <div class="d-inline-block">
+                    <champion-icon :championId="pickedChampion.key" circle />
+                  </div>
 
-              <div class="d-inline-block picked-champion-name">
-                {{ pickedChampion.name }}
+                  <div class="d-inline-block picked-champion-name">
+                    {{ pickedChampion.name }}
+                  </div>
+                </v-layout>
+                <div>
+                  <position-icon
+                    :disabled="isDisablePosition(name)"
+                    :position="name"
+                    :selected="selectedPosition === POSITION_ID[name]"
+                    :tooltip="
+                      !isDisablePosition(name)
+                        ? `승률 : ${toPercentage(
+                            pickedChampionPositionData[name].win,
+                            pickedChampionPositionData[name].count
+                          )}%`
+                        : '데이터 부족'
+                    "
+                    @click="selectPosition(POSITION_ID[name])"
+                    class="mx-1"
+                    v-for="name in POSITION_NAME.slice(1)"
+                  />
+                </div>
               </div>
+              <div class="d-inline-block" v-if="selectedPosition !== 0">
+                <table class="recommend-table">
+                  <thead class="table__head">
+                    <tr class="table__row">
+                      <th></th>
+                      <th class="table__cell">
+                        사용 빈도
+                      </th>
+                      <th class="table__cell">승률</th>
+                      <th class="table__cell">사용자 설정</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table__body">
+                    <tr class="table__row">
+                      <td class="table__cell">아이템</td>
+                    </tr>
+                    <tr class="table__row">
+                      <td class="table__cell">스펠</td>
+                      <td class="table__cell">
+                        <hover-button
+                          :data="
+                            recommendSetting[POSITION_NAME[selectedPosition]] &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .spells &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .spells.frequency
+                          "
+                        />
+                      </td>
+                      <td class="table__cell seletable">
+                        <hover-button
+                          :data="
+                            recommendSetting[POSITION_NAME[selectedPosition]] &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .spells &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .spells.win
+                          "
+                        />
+                      </td>
+                    </tr>
+                    <tr class="table__row">
+                      <td class="table__cell">룬</td>
+                      <td class="table__cell seletable">
+                        <hover-button
+                          :data="
+                            recommendSetting[POSITION_NAME[selectedPosition]] &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .runes &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .runes.frequency
+                          "
+                        />
+                      </td>
+                      <td class="table__cell seletable">
+                        <hover-button
+                          :data="
+                            recommendSetting[POSITION_NAME[selectedPosition]] &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .runes &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .runes.win
+                          "
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--            <div class="mt-5" v-else>-->
+              <!--              <v-progress-circular-->
+              <!--                color="deep-orange lighten-2"-->
+              <!--                indeterminate-->
+              <!--                size="24"-->
+              <!--              />-->
+              <!--            </div>-->
             </v-layout>
-            <div>
-              <position-icon
-                :position="name"
-                :selected="selectedPosition === POSITION_ID[name]"
-                :tooltip="
-                  pickedChampionPositionData[name] &&
-                    `승률 : ${toPercentage(
-                      pickedChampionPositionData[name].win,
-                      pickedChampionPositionData[name].count
-                    )}%`
-                "
-                @click="selectPosition(POSITION_ID[name])"
-                class="mx-1"
-                v-for="name in POSITION_NAME.slice(1)"
-              />
-            </div>
-            <div
-              class="rune-list"
-              v-if="recommendRunes[POSITION_NAME[selectedPosition]]"
-            >
-              <div
-                v-if="
-                  recommendRunes[POSITION_NAME[selectedPosition]] &&
-                    recommendRunes[POSITION_NAME[selectedPosition]].frequencies
-                      .length > 0
-                "
-              >
-                <div class="rune-title">사용 빈도 순</div>
-                <div
-                  :class="{
-                    selected:
-                      selectedRecommendRuneType.type === 'frequencies' &&
-                      selectedRecommendRuneType.index === index,
-                  }"
-                  class="rune-item"
-                  v-for="(item, index) in recommendRunes[
-                    POSITION_NAME[selectedPosition]
-                  ].frequencies"
-                >
-                  <span>Rune {{ index + 1 }}</span>
-                  <div class="sub-text">
-                    {{ item.count }} 게임 / 승률 :
-                    {{ toPercentage(item.win, item.count) }}%
-                  </div>
-                </div>
-              </div>
-
-              <div
-                v-if="
-                  recommendRunes[POSITION_NAME[selectedPosition]] &&
-                    recommendRunes[POSITION_NAME[selectedPosition]].wins
-                      .length > 0
-                "
-              >
-                <div class="rune-title">승률 순</div>
-                <div
-                  :class="{
-                    selected:
-                      selectedRecommendRuneType.type === 'win' &&
-                      selectedRecommendRuneType.index === index,
-                  }"
-                  class="rune-item"
-                  v-for="(item, index) in recommendRunes[
-                    POSITION_NAME[selectedPosition]
-                  ].wins"
-                >
-                  <span>Rune {{ index + 1 }}</span>
-                  <div class="sub-text">
-                    {{ item.count }} 게임 / 승률 :
-                    {{ toPercentage(item.win, item.count) }}%
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mt-5" v-else>
-              <v-progress-circular
-                color="deep-orange lighten-2"
-                indeterminate
-                size="24"
-              />
-            </div>
           </v-flex>
 
-          <v-flex class="pl-2">
+          <v-flex v-if="selectedRecommendRune">
+            <div class="d-inline-block">
+              <spell-icon :spellId="selectedRecommendSpell.spells[0]" large />
+              <spell-icon :spellId="selectedRecommendSpell.spells[1]" large />
+            </div>
             <rune-book
               :primaryRuneStyle="selectedRecommendRune.mainRuneStyle"
               :primaryRunes="selectedRecommendRune.mainRunes"
               :secondaryRuneStyle="selectedRecommendRune.subRuneStyle"
               :secondaryRunes="selectedRecommendRune.subRunes"
               :statRunes="selectedRecommendRune.statRunes"
-              containerWidth="250"
+              containerWidth="200"
               hover
               large
+              pointer
               v-if="selectedRecommendRune"
             />
           </v-flex>
@@ -329,6 +359,7 @@
 <script lang="ts">
 import { toPercentage } from '@/base/math';
 import { QUEUE_TYPE, QUEUE_TYPE_STRING } from '@/common/constants';
+import HoverButton from '@/components/Game/HoverButton.vue';
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import PositionIcon from '@/components/Icon/PositionIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
@@ -355,6 +386,12 @@ interface RecommendRuneApiData {
   statRunes: string[];
 }
 
+interface RecommendSpellApiData {
+  count: number;
+  win: number;
+  spells: number[];
+}
+
 interface TeamLcuData {
   assignedPosition: string;
   cellId: number;
@@ -370,6 +407,22 @@ interface TeamLcuData {
   wardSkinId: number;
 }
 
+interface RunePageLcuData {
+  id: number;
+  isEditable: boolean;
+}
+
+interface PositionSetting {
+  runes: {
+    frequency: RecommendRuneApiData;
+    win: RecommendRuneApiData;
+  };
+  spells: {
+    frequency: RecommendSpellApiData;
+    win: RecommendSpellApiData;
+  };
+}
+
 const LCU_POSITION: { [position: string]: number } = {
   TOP: 1,
   JUNGLE: 2,
@@ -380,6 +433,7 @@ const LCU_POSITION: { [position: string]: number } = {
 
 @Component({
   components: {
+    HoverButton,
     RuneBook,
     RuneStyleIcon,
     RuneIcon,
@@ -415,16 +469,13 @@ export default class GamePickBan extends Vue {
     [position: string]: { count: number; win: number };
   } = {};
   private selectedPosition: number = 0;
-  private recommendRunes: {
-    [position: string]: {
-      frequencies: RecommendRuneApiData[];
-      wins: RecommendRuneApiData[];
-    };
+  private recommendSetting: {
+    [position: string]: PositionSetting;
   } = {};
-  private selectedRecommendRuneType: {
-    type: 'frequencies' | 'wins';
-    index: number;
-  } = { type: 'frequencies', index: 0 };
+  private selectedRecommendRuneType: 'frequency' | 'win' = 'frequency';
+  private selectedRecommendSpellType: 'frequency' | 'win' = 'frequency';
+  private editableRunePageIds: number[] = [];
+  private hover = false;
 
   private readonly POSITION_NAME = [
     'unknown',
@@ -459,29 +510,52 @@ export default class GamePickBan extends Vue {
             pickedChampion &&
             this.pickedChampion.key !== pickedChampion.key)
         ) {
+          await this.selectPosition(0);
           this.pickedChampion = pickedChampion;
           this.pickedChampionPositionData = await this.getPickedChampionPositionData();
-          await this.selectPosition(await this.getPickedChampionMostPosition());
+          this.recommendSetting = {};
+          const mostPosition = await this.getPickedChampionMostPosition();
+          console.log(mostPosition, this.pickedChampionPositionData);
+          if (!this.isDisablePosition(this.POSITION_NAME[mostPosition])) {
+            await this.selectPosition(mostPosition, true);
+          }
         } else if (this.pickedChampion && !pickedChampion) {
           this.pickedChampion = pickedChampion;
           this.pickedChampionPositionData = {};
+          this.recommendSetting = {};
           await this.selectPosition(0);
         }
       }
+    } else if (prev.length === 0) {
+      this.myTeamSummonerInfos = {};
+    }
+  }
+
+  public get selectedRecommendSpell() {
+    if (
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]] &&
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]].spells &&
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]].spells[
+        this.selectedRecommendSpellType
+      ]
+    ) {
+      return this.recommendSetting[this.POSITION_NAME[this.selectedPosition]]
+        .spells[this.selectedRecommendSpellType];
+    } else {
+      return null;
     }
   }
 
   public get selectedRecommendRune() {
     if (
-      this.recommendRunes[this.POSITION_NAME[this.selectedPosition]] &&
-      this.recommendRunes[this.POSITION_NAME[this.selectedPosition]][
-        this.selectedRecommendRuneType.type
-      ].length > 0 &&
-      this.selectedRecommendRuneType.index >= 0
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]] &&
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]].runes &&
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]].runes[
+        this.selectedRecommendRuneType
+      ]
     ) {
-      return this.recommendRunes[this.POSITION_NAME[this.selectedPosition]][
-        this.selectedRecommendRuneType.type
-      ][this.selectedRecommendRuneType.index];
+      return this.recommendSetting[this.POSITION_NAME[this.selectedPosition]]
+        .runes[this.selectedRecommendRuneType];
     } else {
       return null;
     }
@@ -489,6 +563,78 @@ export default class GamePickBan extends Vue {
 
   public get lcuSummoner(): LcuSummonerData {
     return this.$store.state.connection.lcuSummoner;
+  }
+
+  public created() {
+    this.myTeamData = [];
+    this.myTeamSummonerInfos = {};
+    this.gameQueueId = 420;
+
+    this.lcuListener = async (event: any, data: any) => {
+      if (
+        data.uri === '/lol-champ-select/v1/session' &&
+        data.eventType === 'Update'
+      ) {
+        this.myTeamData = data.data.myTeam;
+        this.enemyTeamData = data.data.theirTeam;
+      } else if (
+        data.uri === '/lol-gameflow/v1/gameflow-phase' &&
+        data.eventType === 'Update'
+      ) {
+        this.champSelecting = data.data === 'ChampSelect';
+        if (!this.champSelecting) {
+          this.myTeamData = [];
+          this.enemyTeamData = [];
+        }
+
+        const sessionData = await this.getGameSession();
+        if (sessionData && sessionData.gameData.queue.id !== -1) {
+          this.gameQueueId = sessionData.gameData.queue.id;
+        }
+      } else if (
+        data.uri === '/lol-matchmaking/v1/search' &&
+        data.eventType === 'Update'
+      ) {
+        const searchLcuData = data.data;
+        let queueType = '';
+        if (searchLcuData.queueId === 420) {
+          queueType = '솔로 랭크';
+        } else if (searchLcuData.queueId === 430) {
+          queueType = '일반 게임';
+        } else if (searchLcuData.queueId === 440) {
+          queueType = '자유 랭크';
+        }
+
+        this.searchData = {
+          queueType,
+          state: searchLcuData.searchState,
+          seconds: searchLcuData.timeInQueue,
+          estimatedQueueTime: searchLcuData.estimatedQueueTime,
+        };
+      } else if (
+        data.uri === '/lol-matchmaking/v1/search' &&
+        data.eventType === 'Delete'
+      ) {
+        this.searchData = undefined;
+      } else if (
+        data.uri === '/lol-perks/v1/pages' &&
+        data.eventType === 'Update'
+      ) {
+        const runePages: RunePageLcuData[] = data.data;
+        this.editableRunePageIds = runePages
+          .filter((page) => page.isEditable)
+          .map((page) => page.id);
+      }
+    };
+
+    ipcRenderer.on('lcu-api-message', this.lcuListener);
+  }
+
+  public async mounted() {
+    this.myTeamData = [];
+    this.myTeamSummonerInfos = {};
+
+    this.init();
   }
 
   public async getPickedChampion() {
@@ -502,6 +648,13 @@ export default class GamePickBan extends Vue {
     }
 
     return null;
+  }
+
+  public isDisablePosition(position: string) {
+    return (
+      !this.pickedChampionPositionData[position] ||
+      this.pickedChampionPositionData[position].count < 10
+    );
   }
 
   public async getPickedChampionPositionData() {
@@ -538,88 +691,33 @@ export default class GamePickBan extends Vue {
       const requester = this.myTeamData.find(
         (data) => data.summonerId === this.lcuSummoner.summonerId
       );
+
       if (requester && requester.assignedPosition !== '') {
-        return LCU_POSITION[requester.assignedPosition];
-      } else {
-        try {
-          const response = await axios.get(
-            `${END_POINT}/statistics/champion/positions/${
-              this.pickedChampion.key
-            }`
-          );
-          const data: Array<{ _id: number }> = response.data;
-          return data[0]._id;
-        } catch (err) {
-          console.error(
-            '[getPickedChampionMostPosition]',
-            err,
-            this.pickedChampion
-          );
-          return 0;
+        const requesterPosition = LCU_POSITION[requester.assignedPosition];
+        if (!this.isDisablePosition(this.POSITION_NAME[requesterPosition])) {
+          return LCU_POSITION[requester.assignedPosition];
         }
+      }
+
+      try {
+        const response = await axios.get(
+          `${END_POINT}/statistics/champion/positions/${
+            this.pickedChampion.key
+          }`
+        );
+        const data: Array<{ _id: number }> = response.data;
+        return data[0]._id;
+      } catch (err) {
+        console.error(
+          '[getPickedChampionMostPosition]',
+          err,
+          this.pickedChampion
+        );
+        return 0;
       }
     }
 
     return 0;
-  }
-
-  public created() {
-    this.myTeamData = [];
-    this.myTeamSummonerInfos = {};
-    this.gameQueueId = 420;
-
-    this.lcuListener = async (event: any, data: any) => {
-      if (
-        data.uri === '/lol-champ-select/v1/session' &&
-        data.eventType === 'Update'
-      ) {
-        this.myTeamData = data.data.myTeam;
-        this.enemyTeamData = data.data.theirTeam;
-      } else if (
-        data.uri === '/lol-gameflow/v1/gameflow-phase' &&
-        data.eventType === 'Update'
-      ) {
-        this.champSelecting = data.data === 'ChampSelect';
-        const sessionData = await this.getGameSession();
-        if (sessionData && sessionData.gameData.queue.id !== -1) {
-          this.gameQueueId = sessionData.gameData.queue.id;
-        }
-      } else if (
-        data.uri === '/lol-matchmaking/v1/search' &&
-        data.eventType === 'Update'
-      ) {
-        const searchLcuData = data.data;
-        let queueType = '';
-        if (searchLcuData.queueId === 420) {
-          queueType = '솔로 랭크';
-        } else if (searchLcuData.queueId === 430) {
-          queueType = '일반 게임';
-        } else if (searchLcuData.queueId === 440) {
-          queueType = '자유 랭크';
-        }
-
-        this.searchData = {
-          queueType,
-          state: searchLcuData.searchState,
-          seconds: searchLcuData.timeInQueue,
-          estimatedQueueTime: searchLcuData.estimatedQueueTime,
-        };
-      } else if (
-        data.uri === '/lol-matchmaking/v1/search' &&
-        data.eventType === 'Delete'
-      ) {
-        this.searchData = undefined;
-      }
-    };
-
-    ipcRenderer.on('lcu-api-message', this.lcuListener);
-  }
-
-  public async mounted() {
-    this.myTeamData = [];
-    this.myTeamSummonerInfos = {};
-
-    this.init();
   }
 
   public async init() {
@@ -635,6 +733,11 @@ export default class GamePickBan extends Vue {
         this.myTeamData = champData.myTeam;
         this.enemyTeamData = champData.theirTeam;
       }
+
+      const runePages = await this.getRunePages();
+      this.editableRunePageIds = runePages
+        .filter((page) => page.isEditable)
+        .map((page) => page.id);
     }
   }
 
@@ -851,45 +954,41 @@ export default class GamePickBan extends Vue {
     }
   }
 
-  public async getRecommedRunes() {
+  public async getRecommedSetting(): Promise<PositionSetting | null> {
     if (this.pickedChampion) {
       try {
         const response = await axios.get(
-          `${END_POINT}/statistics/champion/rune/most/${
+          `${END_POINT}/statistics/champion/recommend/${
             this.pickedChampion.key
           }/${this.selectedPosition}`
         );
-        const data = response.data as {
-          frequencies: RecommendRuneApiData[];
-          wins: RecommendRuneApiData[];
+        const data = response.data as PositionSetting;
+        let rune = data.runes.frequency;
+        const runeFrequency: RecommendRuneApiData = {
+          mainRuneStyle: rune.mainRuneStyle.toString(),
+          subRuneStyle: rune.subRuneStyle.toString(),
+          mainRunes: rune.mainRunes.map((slot) => slot.toString()),
+          subRunes: rune.subRunes.map((slot) => slot.toString()),
+          statRunes: rune.statRunes.map((slot) => slot.toString()),
+          count: rune.count,
+          win: rune.win,
         };
-        const frequencies: RecommendRuneApiData[] = data.frequencies.map(
-          (runes) => {
-            return {
-              mainRuneStyle: runes.mainRuneStyle.toString(),
-              subRuneStyle: runes.subRuneStyle.toString(),
-              mainRunes: runes.mainRunes.map((rune) => rune.toString()),
-              subRunes: runes.subRunes.map((rune) => rune.toString()),
-              statRunes: runes.statRunes.map((rune) => rune.toString()),
-              count: runes.count,
-              win: runes.win,
-            };
-          }
-        );
 
-        const wins: RecommendRuneApiData[] = data.wins.map((runes) => {
-          return {
-            mainRuneStyle: runes.mainRuneStyle.toString(),
-            subRuneStyle: runes.subRuneStyle.toString(),
-            mainRunes: runes.mainRunes.map((rune) => rune.toString()),
-            subRunes: runes.subRunes.map((rune) => rune.toString()),
-            statRunes: runes.statRunes.map((rune) => rune.toString()),
-            count: runes.count,
-            win: runes.win,
-          };
-        });
+        rune = data.runes.win;
+        const runeWin: RecommendRuneApiData = {
+          mainRuneStyle: rune.mainRuneStyle.toString(),
+          subRuneStyle: rune.subRuneStyle.toString(),
+          mainRunes: rune.mainRunes.map((slot) => slot.toString()),
+          subRunes: rune.subRunes.map((slot) => slot.toString()),
+          statRunes: rune.statRunes.map((slot) => slot.toString()),
+          count: rune.count,
+          win: rune.win,
+        };
 
-        return { frequencies, wins };
+        return {
+          runes: { frequency: runeFrequency, win: runeWin },
+          spells: { frequency: data.spells.frequency, win: data.spells.win },
+        };
       } catch (err) {
         console.error('[getRecommedRunes]', err);
         return null;
@@ -899,29 +998,48 @@ export default class GamePickBan extends Vue {
     }
   }
 
-  public async selectPosition(position: number) {
-    if (this.selectedPosition !== position) {
+  public async getRunePages() {
+    try {
+      const url = `${this.lcuData.protocol}://${this.lcuData.address}:${
+        this.lcuData.port
+      }/lol-perks/v1/pages`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Basic ${btoa(
+            `${this.lcuData.username}:${this.lcuData.password}`
+          )}`,
+        },
+      });
+
+      return response.data as RunePageLcuData[];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  public async selectPosition(position: number, isForce: boolean = false) {
+    if (isForce || this.selectedPosition !== position) {
       this.selectedPosition = position;
 
       if (this.selectedPosition !== 0) {
-        if (!this.recommendRunes[this.POSITION_NAME[this.selectedPosition]]) {
-          const result = await this.getRecommedRunes();
+        if (!this.recommendSetting[this.POSITION_NAME[this.selectedPosition]]) {
+          const result = await this.getRecommedSetting();
           if (!result) {
             this.$set(
-              this.recommendRunes,
+              this.recommendSetting,
               this.POSITION_NAME[this.selectedPosition],
               {
-                frequencies: [],
-                wins: [],
+                runes: null,
+                spells: null,
               }
             );
           } else {
             this.$set(
-              this.recommendRunes,
+              this.recommendSetting,
               this.POSITION_NAME[this.selectedPosition],
               result
             );
-            this.selectedRecommendRuneType = { type: 'frequencies', index: 0 };
+            this.selectedRecommendRuneType = 'frequency';
           }
         }
       }
@@ -949,16 +1067,17 @@ export default class GamePickBan extends Vue {
 
 .summoner-info-container {
   border-left: 5px solid #ff8a65;
-  background-color: #2a2e38;
+  background-color: #343f57;
   padding: 20px;
+  font-size: 13px;
 
   .ally-summoner-table {
     border-spacing: 0 10px;
     border-radius: 5px;
 
-    .head {
-      .row {
-        .cell {
+    .table__head {
+      .table__row {
+        .table__cell {
           padding: 5px 10px;
           color: white;
 
@@ -970,11 +1089,11 @@ export default class GamePickBan extends Vue {
       }
     }
 
-    .content {
+    .table__body {
       background-color: white;
 
-      .row {
-        .cell {
+      .table__row {
+        .table__cell {
           padding: 10px;
           background-color: #e3f2fd;
 
@@ -1027,9 +1146,9 @@ export default class GamePickBan extends Vue {
   .enemy-summoner-table {
     border-spacing: 0 10px;
 
-    .head {
-      .row {
-        .cell {
+    .table__head {
+      .table__row {
+        .table__cell {
           padding: 5px 10px;
 
           &.enemy {
@@ -1040,11 +1159,11 @@ export default class GamePickBan extends Vue {
       }
     }
 
-    .content {
+    .table__body {
       background-color: white;
 
-      .row {
-        .cell {
+      .table__row {
+        .table__cell {
           padding: 10px;
           background-color: #ffebee;
 
@@ -1069,9 +1188,33 @@ export default class GamePickBan extends Vue {
   }
 }
 
+.recommend-table {
+  border-spacing: 0;
+  color: white;
+
+  .table__head {
+    .table__row {
+      .table__cell {
+        border-bottom: 2px solid #e57c5b;
+        font-size: 13px;
+        padding: 10px 5px;
+      }
+    }
+  }
+
+  .table__body {
+    .table__row {
+      .table__cell {
+        font-size: 12px;
+        width: 150px;
+      }
+    }
+  }
+}
+
 .picked-champion-container {
   border-left: 5px solid #ff8a65;
-  background-color: #2a2e38;
+  background-color: #343f57;
   padding: 20px;
 
   .picked-champion-name {

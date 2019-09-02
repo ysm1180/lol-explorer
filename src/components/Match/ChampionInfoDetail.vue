@@ -1,26 +1,26 @@
 <template>
   <table class="champion-info-table">
-    <thead class="header">
-      <tr class="row">
-        <th class="cell number">#</th>
-        <th class="cell champion">챔피언</th>
-        <th class="cell win-rate">승률</th>
-        <th class="cell kda">평점 (KDA)</th>
-        <th class="cell cs">CS</th>
-        <th class="cell gold">골드</th>
-        <th class="cell triple-kills">트리플킬</th>
-        <th class="cell quadra-kills">쿼드라킬</th>
-        <th class="cell penta-kills">펜타킬</th>
+    <thead class="table__header">
+      <tr class="table__row">
+        <th class="table__cell number">#</th>
+        <th class="table__cell champion">챔피언</th>
+        <th class="table__cell win-rate">승률</th>
+        <th class="table__cell kda">평점 (KDA)</th>
+        <th class="table__cell cs">CS</th>
+        <th class="table__cell gold">골드</th>
+        <th class="table__cell triple-kills">트리플킬</th>
+        <th class="table__cell quadra-kills">쿼드라킬</th>
+        <th class="table__cell penta-kills">펜타킬</th>
       </tr>
     </thead>
-    <tbody class="body">
+    <tbody class="table__body">
       <tr
-        class="row"
+        class="table__row"
         v-bind:key="championData.rank"
         v-for="championData in sortedData"
       >
-        <td class="cell rank">{{ championData.rank }}</td>
-        <td class="cell champion">
+        <td class="table__cell rank">{{ championData.rank }}</td>
+        <td class="table__cell champion">
           <v-layout align-center>
             <v-img
               :src="staticChampions[championData.championKey].iconUrl"
@@ -29,12 +29,12 @@
             <span>{{ championData.championName }}</span>
           </v-layout>
         </td>
-        <td class="cell win-rate">
+        <td class="table__cell win-rate">
           {{ championData.wins }}승 {{ championData.losses }}패 ({{
             championData.winRate.toFixed(1)
           }}%)
         </td>
-        <td class="cell kda">
+        <td class="table__cell kda">
           <div class="sub">
             {{ championData.averageKills.toFixed(1) }} /
             {{ championData.averageDeaths.toFixed(1) }} /
@@ -42,13 +42,13 @@
           </div>
           <div class="main">{{ championData.kda.toFixed(2) }}</div>
         </td>
-        <td class="cell cs">{{ championData.averageCS.toFixed(1) }}</td>
-        <td class="cell gold">
+        <td class="table__cell cs">{{ championData.averageCS.toFixed(1) }}</td>
+        <td class="table__cell gold">
           {{ championData.averageEarnedGold.toFixed(0) }}
         </td>
-        <td class="cell triple-kills">{{ championData.tripleKills }}</td>
-        <td class="cell quadra-kills">{{ championData.quadraKills }}</td>
-        <td class="cell penta-kills">{{ championData.pentaKills }}</td>
+        <td class="table__cell triple-kills">{{ championData.tripleKills }}</td>
+        <td class="table__cell quadra-kills">{{ championData.quadraKills }}</td>
+        <td class="table__cell penta-kills">{{ championData.pentaKills }}</td>
       </tr>
     </tbody>
   </table>
@@ -126,7 +126,7 @@ export default class ChampionInfoDetail extends Vue {
   width: 100%;
   border-spacing: 0;
 
-  .header > .row > .cell {
+  .table__header > .table__row > .table__cell {
     height: 54px;
     color: #333;
     font-size: 12px;
@@ -138,7 +138,7 @@ export default class ChampionInfoDetail extends Vue {
     cursor: pointer;
   }
 
-  .body > .row > .cell {
+  .table__body > .table__row > .table__cell {
     height: 48px;
     color: #333;
     font-size: 12px;

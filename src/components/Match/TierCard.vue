@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div class="info font-weight-bold mr-3" v-if="season !== null">
+      <div class="season-info font-weight-bold mr-3" v-if="season !== null">
         <div>
           <span
             :class="{
@@ -50,7 +50,7 @@
           }}%)
         </span>
       </div>
-      <div class="info" v-else>
+      <div class="season-info" v-else>
         <div class="grey--text font-weight-bold">
           Unranked
         </div>
@@ -96,11 +96,13 @@ export default class TierCard extends Vue {
   .queue {
     width: 90px;
     text-align: left;
+    font-size: 13px;
   }
 
-  .info {
+  .season-info {
     text-align: left;
     margin-right: 10px;
+    font-size: 14px;
   }
 
   .promotion {

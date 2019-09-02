@@ -4,8 +4,8 @@
       <div @click.stop.prevent.self="" class="modal-container">
         <div class="rune-page mb-2">
           <v-img
-            class="back-image"
             :src="`/assets/runes/${copyRune.primary.id}_back.jpg`"
+            class="back-image"
           />
           <div class="pa-5 rune-content">
             <v-layout class="mr-5" d-inline>
@@ -37,14 +37,22 @@
             inline
             v-if="!isAvailableSave()"
           >
-            <v-btn class="lighten-2 deep-orange white--text" disabled flat>
+            <v-btn
+              class="white--text"
+              color="deep-orange lighten-2"
+              depressed
+              disabled
+              tile
+            >
               SAVE
             </v-btn>
           </tooltip>
           <v-btn
             @click="save()"
-            class="lighten-2 deep-orange white--text"
-            flat
+            class="white--text"
+            color="deep-orange lighten-2"
+            depressed
+            tile
             v-else
           >
             <span v-if="saved">
@@ -54,7 +62,9 @@
               SAVE
             </span>
           </v-btn>
-          <v-btn @click="click" class="grey white--text" flat>CLOSE</v-btn>
+          <v-btn @click="click" class="grey white--text" depressed tile>
+            CLOSE
+          </v-btn>
         </v-layout>
       </div>
     </div>
