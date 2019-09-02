@@ -1,6 +1,10 @@
 <template>
   <v-layout
-    :class="{ 'd-inline-block': !!inlineBlock, 'd-inline': !!inline, 'justify-center': !!center }"
+    :class="{
+      'd-inline-block': !!inlineBlock,
+      'd-inline': !!inline,
+      'justify-center': !!center,
+    }"
     class="tooltip-layout"
     ref="container"
   >
@@ -77,10 +81,12 @@ export default class Tooltip extends Vue {
       this.isIndent = true;
     }
     document.body.removeChild(computing);
+    this.$emit('mouseenter');
   }
 
   public leave() {
     this.isHover = false;
+    this.$emit('mouseleave');
   }
 }
 </script>

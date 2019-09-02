@@ -94,10 +94,11 @@ export default class Trend extends Vue {
       },
       tooltips: {
         displayColors: false,
-        titleFontSize: 11,
-        bodyFontSize: 14,
-        xPadding: 10,
-        yPadding: 10,
+        titleFontColor: '#CCC',
+        titleFontSize: 10,
+        bodyFontSize: 13,
+        xPadding: 7,
+        yPadding: 7,
         callbacks: {
           label: (tooltipItem: any) => {
             if (this.tooltipLabel) {
