@@ -5,7 +5,12 @@
         게임 시작 상태가 아닙니다.
       </span>
     </v-layout>
-    <v-layout fill-height id="game-start" justify-center v-else>
+    <v-layout
+      fill-height
+      id="game-start"
+      justify-center
+      v-else-if="myTeamData.length > 0"
+    >
       <div class="mt-3">
         <div class="summoner-info-container">
           <div class="d-inline-block vertical__top">
