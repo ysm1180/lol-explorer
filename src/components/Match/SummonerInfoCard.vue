@@ -36,19 +36,23 @@
         <span class="sub-text">최근 업데이트: {{ timeDeltaTextByNow }}</span>
       </v-flex>
     </v-layout>
-    <v-layout column class="my-2">
+    <v-layout class="my-2" column>
       <v-flex class="mb-1">
-        <tier-card :season="solo" queueType="solo"></tier-card>
+        <tier-card :season="soloRank" queueId="420" />
       </v-flex>
       <v-flex>
-        <tier-card :season="free" queueType="free"></tier-card>
+        <tier-card :season="flexRank" queueId="440" />
       </v-flex>
     </v-layout>
   </v-card>
 </template>
 
 <script lang="ts">
-import { ISummonerApiData } from '@/typings/summoner';
+import { QUEUE_TYPE, QUEUE_TYPE_STRING } from '@/common/constants';
+import { END_POINT } from '@/config';
+import { MatchApiData } from '@/typings/match';
+import { SummonerApiData } from '@/typings/summoner';
+import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import TierCard from './TierCard.vue';
 
@@ -58,19 +62,61 @@ import TierCard from './TierCard.vue';
   },
 })
 export default class SummonerInfoCard extends Vue {
-  @Prop() private summoner!: ISummonerApiData;
+  @Prop() private summoner!: SummonerApiData;
   @Prop() private renewing: boolean = false;
-  private solo = null;
-  private free = null;
 
-  public mounted() {
-    this.summoner.seasons.forEach((season: any) => {
-      if (season.queueType === 'RANKED_SOLO_5x5') {
-        this.solo = season;
-      } else if (season.queueType === 'RANKED_FLEX_SR') {
-        this.free = season;
-      }
+  public async loadUnrankedMatchInfo(queueId: number) {
+    try {
+      const response = await axios.get(
+        `${END_POINT}/summoner/matches/unranked/${
+          this.summoner.accountId
+        }/${queueId}`
+      );
+      const matches: MatchApiData[] = response.data;
+      const matchCount = matches.length;
+      const winCount = matches.filter((match) => match.gameInfo.requester.isWin)
+        .length;
+
+      const result = {
+        tier: 'UNRANKED',
+        rank: '',
+        queueType: QUEUE_TYPE_STRING[queueId],
+        leaguePoints: 0,
+        summonerId: this.summoner.id,
+        summonerName: this.summoner.name,
+        wins: winCount,
+        losses: matchCount - winCount,
+      };
+      this.summoner.seasons.push(result);
+    } catch (err) {
+      console.error('[loadUnrankedMatchInfo]', err);
+    }
+  }
+
+  public get soloRank() {
+    const season = this.summoner.seasons.find((season: any) => {
+      return season.queueType === 'RANKED_SOLO_5x5';
     });
+
+    if (season) {
+      return season;
+    } else {
+      this.loadUnrankedMatchInfo(QUEUE_TYPE.RANKED_SOLO_5x5);
+      return null;
+    }
+  }
+
+  public get flexRank() {
+    const season = this.summoner.seasons.find((season: any) => {
+      return season.queueType === 'RANKED_FLEX_SR';
+    });
+
+    if (season) {
+      return season;
+    } else {
+      this.loadUnrankedMatchInfo(QUEUE_TYPE.RANKED_FLEX_SR);
+      return null;
+    }
   }
 
   get timeDeltaTextByNow() {

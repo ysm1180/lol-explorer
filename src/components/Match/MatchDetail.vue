@@ -21,7 +21,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import MatchTeamDetail from '@/components/Match/MatchTeamDetail.vue';
-import { IMatchApiData } from '@/typings/match';
+import { MatchApiData } from '@/typings/match';
 
 @Component({
   components: {
@@ -34,7 +34,7 @@ import { IMatchApiData } from '@/typings/match';
   },
 })
 export default class MatchDetail extends Vue {
-  @Prop() public match!: IMatchApiData;
+  @Prop() public match!: MatchApiData;
 
   get gameInfo() {
     return this.match.gameInfo;

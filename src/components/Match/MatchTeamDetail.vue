@@ -23,6 +23,13 @@
             <champion-icon
               :championId="participant.championId"
               :level="participant.stats.champLevel"
+              @click="
+                () => {
+                  $router.push(`/champion/${participant.championId}`);
+                }
+              "
+              circle
+              class="cursor__pointer"
               small
             />
           </td>
@@ -144,6 +151,7 @@
 </template>
 
 <script lang="ts">
+import { QUEUE_TYPE } from '@/common/constants';
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import ItemIcon from '@/components/Icon/ItemIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
@@ -151,15 +159,10 @@ import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
 import SpellIcon from '@/components/Icon/SpellIcon.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
 import { END_POINT } from '@/config';
-import { IGameRequester, IGameTeam } from '@/typings/match';
-import { ISummonerApiData } from '@/typings/summoner';
+import { GameRequesterData, GameTeamApiData } from '@/typings/match';
+import { SummonerApiData } from '@/typings/summoner';
 import axios from 'axios';
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
-enum QUEUE_TYPE {
-  RANKED_SOLO_5x5 = 420,
-  RANKED_FLEX_SR = 440,
-}
 
 @Component({
   components: {
@@ -178,8 +181,8 @@ enum QUEUE_TYPE {
 })
 export default class MatchTeamDetail extends Vue {
   @Prop() private queue!: number;
-  @Prop() private team!: IGameTeam;
-  @Prop() private requester!: IGameRequester;
+  @Prop() private team!: GameTeamApiData;
+  @Prop() private requester!: GameRequesterData;
   @Prop() private teamName!: string;
   private summonerTiers: { [id: string]: string } = {};
   private maxDamage: number = 0;
@@ -207,11 +210,11 @@ export default class MatchTeamDetail extends Vue {
       if (this.team.participants.hasOwnProperty(key)) {
         const participant = this.team.participants[key];
         axios
-          .get<ISummonerApiData>(
+          .get<SummonerApiData>(
             `${END_POINT}/summoner/byAccount/${participant.player.accountId}`
           )
           .then(({ data }) => {
-            let queueType = '';
+            let queueType = 'RANKED_SOLO_5x5';
             if (this.queue === QUEUE_TYPE.RANKED_SOLO_5x5) {
               queueType = 'RANKED_SOLO_5x5';
             } else if (this.queue === QUEUE_TYPE.RANKED_FLEX_SR) {
@@ -232,7 +235,7 @@ export default class MatchTeamDetail extends Vue {
             }
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
           });
 
         if (this.maxDamage < participant.stats.totalDamageDealtToChampions) {

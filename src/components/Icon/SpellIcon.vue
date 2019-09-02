@@ -1,20 +1,18 @@
 <template>
-  <v-layout
+  <div
     :class="{ small: !!small, large: !!large }"
     class="spell-icon-container"
-    d-inline-block
     ref="container"
   >
     <tooltip :content="spellContent" :title="spell.name" html v-if="spell">
       <v-img :src="spell ? spell.iconUrl : ''" class="spell-icon grey" />
     </tooltip>
-    <v-img class="spell-icon grey" v-else />
-  </v-layout>
+  </div>
 </template>
 
 <script lang="ts">
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { IStaticSpell } from '@/typings/static-data';
+import { StaticSpellApiData } from '@/typings/static-data';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -33,7 +31,7 @@ export default class SpellIcon extends Vue {
 
   public get spell() {
     return (
-      (this.$store.state.lolstatic.spells[this.spellId] as IStaticSpell) || null
+      (this.$store.state.lolstatic.spells[this.spellId] as StaticSpellApiData) || null
     );
   }
 }
@@ -41,6 +39,7 @@ export default class SpellIcon extends Vue {
 
 <style lang="scss" scoped>
 .spell-icon-container {
+  display: inline-block;
   position: relative;
   vertical-align: top;
   text-align: left;

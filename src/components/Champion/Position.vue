@@ -1,15 +1,15 @@
 <template>
   <tooltip
     :content="
-      count > 0
+      (percent >= 1)
         ? `승률: ${Math.floor((win / count) * 1000) / 10}%`
-        : '승률: 데이터 없음'
+        : '데이터 부족'
     "
     inlineBlock
   >
     <div
-      :class="{ selected: !!selected, disabled: !(count > 0) }"
-      @click="count && click()"
+      :class="{ selected: !!selected, disabled: !(percent >= 1) }"
+      @click="(percent >= 1) && click()"
       class="position"
     >
       <v-img
@@ -21,7 +21,8 @@
         class="position-image"
       />
       <div class="position-name">{{ name }}</div>
-      <div class="position-percent">{{ percent }}%</div>
+      <div class="position-percent" v-if="percent >= 1">{{ percent }}%</div>
+      <div class="position-percent" v-else></div>
     </div>
   </tooltip>
 </template>

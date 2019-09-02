@@ -10,7 +10,7 @@
         class="display-1 font-weight-bold"
         v-if="status === 'WAITING_CLIENT'"
       >
-        롤 클라이언트를 실행해주세요
+        롤 클라이언트를 실행해주세요.
       </span>
       <span
         class="display-1 font-weight-bold"
@@ -28,7 +28,12 @@
       id="match-page"
       v-if="status === 'LOGIN_COMPLETE'"
     >
-      <v-flex id="summoner-info" mt-4 mb-3 style="min-width:800px;width:800px;max-height:284px;">
+      <v-flex
+        id="summoner-info"
+        mb-3
+        mt-4
+        style="min-width:800px;width:800px;max-height:284px;"
+      >
         <summoner-info-card
           :renewing="renewing"
           :summoner="summoner"
@@ -100,6 +105,7 @@ import SummonerInfoCard from '@/components/Match/SummonerInfoCard.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import { END_POINT } from '@/config';
+import { MatchApiData } from '@/typings/match';
 import axios from 'axios';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
@@ -113,9 +119,11 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
     SummonerInfoCard,
   },
 })
-export default class Index extends Vue {
+export default class Match extends Vue {
   @Prop(String) private accountId!: string;
   private summoner: any = null;
+  private matches: MatchApiData[] = [];
+  private champions: any = null;
   private page: number = 0;
   private toggleArray: number[] = [];
   private renewing: boolean = false;
@@ -127,9 +135,10 @@ export default class Index extends Vue {
 
   @Watch('$route')
   public onRouteChanged(to: any, from: any) {
+    this.page = 0;
+    this.matches = [];
     this.summoner = null;
     this.toggleArray = [];
-    this.$store.commit('match/initialize');
     this.loadingSummoner = true;
     this.loadingMatches = true;
     this.loadingChampion = true;
@@ -142,20 +151,47 @@ export default class Index extends Vue {
 
   public async init() {
     if (this.accountId) {
-      const response = await axios.get(
-        `${END_POINT}/summoner/byAccount/${this.accountId}`
+      const summonerCache = window.sessionStorage.getItem(
+        `summoner_${this.accountId}`
       );
-      this.summoner = response.data;
+      if (!summonerCache) {
+        const response = await axios.get(
+          `${END_POINT}/summoner/byAccount/${this.accountId}`
+        );
+        this.summoner = response.data;
+        window.sessionStorage.setItem(
+          `summoner_${this.accountId}`,
+          JSON.stringify(this.summoner)
+        );
+      } else {
+        this.summoner = { ...JSON.parse(summonerCache) };
+      }
       this.loadingSummoner = false;
-      await this.$store.dispatch('match/updateMatches', {
-        accountId: this.accountId,
-        page: this.page,
-      });
+
+      this.loadingMatches = true;
+      const matchListCache = window.sessionStorage.getItem(
+        `matches_${this.accountId}`
+      );
+      if (!matchListCache) {
+        await this.updateMatches(this.page);
+        window.sessionStorage.setItem(
+          `matches_${this.accountId}`,
+          JSON.stringify(this.matches)
+        );
+      } else {
+        this.matches = JSON.parse(matchListCache);
+      }
       this.loadingMatches = false;
-      await this.$store.dispatch('match/fetchChampions', {
-        seasonId: 13,
-        accountId: this.accountId,
-      });
+
+      this.loadingChampion = true;
+      const championListCache = window.sessionStorage.getItem(
+        `champions_${this.accountId}`
+      );
+      if (!championListCache) {
+        await this.updateSummonerChampions();
+      } else {
+        this.champions = JSON.parse(championListCache);
+      }
       this.loadingChampion = false;
     }
   }
@@ -164,31 +200,54 @@ export default class Index extends Vue {
     return this.$store.state.connection.status;
   }
 
-  get matches() {
-    return this.$store.state.match.matches;
+  public async updateMatches(page: number) {
+    const start = page * 20;
+    const response = await axios.get(
+      `${END_POINT}/summoner/matches/${this.accountId}/${start}/20`
+    );
+    if (page === 0) {
+      this.matches = response.data;
+    } else {
+      this.matches = this.matches.concat(response.data);
+    }
   }
 
-  get champions() {
-    return this.$store.state.match.champions;
+  public async updateSummonerChampions() {
+    const response = await axios.get(
+      `${END_POINT}/summoner/rift/champions/${this.accountId}`
+    );
+    this.champions = response.data;
+    window.sessionStorage.setItem(
+      `champions_${this.accountId}`,
+      JSON.stringify(this.champions)
+    );
   }
 
   public async renew() {
     this.renewing = true;
     try {
       await axios.post(`${END_POINT}/summoner/${this.summoner.name}`);
-      this.page = 0;
       const response = await axios.get(
         `${END_POINT}/summoner/byAccount/${this.accountId}`
       );
       this.summoner = response.data;
-      await this.$store.dispatch('match/updateMatches', {
-        accountId: this.accountId,
-        page: this.page,
-      });
-      await this.$store.dispatch('match/fetchChampions', {
-        accountId: this.accountId,
-        seasonId: 13,
-      });
+      window.sessionStorage.setItem(
+        `summoner_${this.accountId}`,
+        JSON.stringify(this.summoner)
+      );
+
+      this.page = 0;
+      this.loadingMatches = true;
+      await this.updateMatches(this.page);
+      window.sessionStorage.setItem(
+        `matches_${this.accountId}`,
+        JSON.stringify(this.matches)
+      );
+      this.loadingMatches = false;
+
+      this.loadingChampion = true;
+      await this.updateSummonerChampions();
+      this.loadingChampion = false;
     } catch (err) {
       alert(`${err.response.data.seconds}초 후에 시도해주세요`);
     }
@@ -213,19 +272,15 @@ export default class Index extends Vue {
       this.prevScrollEnd &&
       scrollTop + clientHeight >= scrollHeight
     ) {
-      this.loadingMatches = true;
-      this.loadingChampion = true;
       this.prevScrollEnd = false;
       this.page += 1;
-      await this.$store.dispatch('match/updateMatches', {
-        accountId: this.accountId,
-        page: this.page,
-      });
+
+      this.loadingMatches = true;
+      await this.updateMatches(this.page);
       this.loadingMatches = false;
-      await this.$store.dispatch('match/fetchChampions', {
-        seasonId: 13,
-        accountId: this.accountId,
-      });
+
+      this.loadingChampion = true;
+      await this.updateSummonerChampions();
       this.loadingChampion = false;
     } else if (
       !this.prevScrollEnd &&

@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { IStaticItem } from '@/typings/static-data';
+import { StaticItemApiData } from '@/typings/static-data';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -34,7 +34,7 @@ export default class ItemIcon extends Vue {
 
   public get item() {
     return (
-      (this.$store.state.lolstatic.items[this.itemId] as IStaticItem) || null
+      (this.$store.state.lolstatic.items[this.itemId] as StaticItemApiData) || null
     );
   }
 }

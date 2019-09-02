@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { IStaticPerk, IStaticRune } from '@/typings/static-data';
+import { StaticPerkApiData, StaticRuneApiData } from '@/typings/static-data';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
@@ -78,9 +78,9 @@ export default class RuneIcon extends Vue {
   public get rune() {
     const slots = (this.$store.state.lolstatic.perks[
       this.runeStyleId
-    ] as IStaticPerk).slots;
+    ] as StaticPerkApiData).slots;
 
-    let rune: IStaticRune | null = null;
+    let rune: StaticRuneApiData | null = null;
     for (const slot of slots) {
       if (slot.runes[this.runeId]) {
         rune = slot.runes[this.runeId];
@@ -120,10 +120,10 @@ export default class RuneIcon extends Vue {
   }
 
   &.large .rune-icon {
-    min-width: 48px;
-    min-height: 48px;
-    max-width: 48px;
-    max-height: 48px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
   }
 
   .rune-icon {

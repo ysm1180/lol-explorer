@@ -1,4 +1,4 @@
-export interface ISummonerApiData {
+export interface SummonerApiData {
   id: string;
   accountId: string;
   puuid: string;
@@ -7,18 +7,17 @@ export interface ISummonerApiData {
   revisionDate: number;
   summonerLevel: number;
   updatedTs: string;
-  seasons: ISummonerSeason[];
+  seasons: SummonerSeasonApiData[];
   iconUrl: string;
 }
 
-interface ISeasonMiniSeries {
+interface SeasonMiniSeries {
   wins: number;
   losses: number;
   progress: string;
 }
 
-export interface ISummonerSeason {
-  leagueId: string;
+export interface SummonerSeasonApiData {
   queueType: string;
   tier: string;
   rank: string;
@@ -27,10 +26,11 @@ export interface ISummonerSeason {
   leaguePoints: number;
   wins: number;
   losses: number;
-  veteran: boolean;
-  inactive: boolean;
-  freshBlood: boolean;
-  hotStreak: boolean;
-  season: number;
-  miniSeries?: ISeasonMiniSeries[];
+  leagueId?: string;
+  veteran?: boolean;
+  inactive?: boolean;
+  freshBlood?: boolean;
+  hotStreak?: boolean;
+  season?: number;
+  miniSeries?: SeasonMiniSeries[];
 }

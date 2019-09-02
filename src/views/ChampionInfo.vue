@@ -1,6 +1,6 @@
 <template>
   <v-layout fill-height justify-center>
-    <v-layout align-center column mt-3 id="champion-info">
+    <v-layout align-center column id="champion-info" mt-3>
       <div class="champion-info-container">
         <div class="d-inline-block">
           <champion-icon :championId="Number(championId)" extralarge />
@@ -206,30 +206,22 @@
                     <table
                       class="data-table pl-2 "
                       style="width: 368px;"
-                      v-if="
-                        selectedPositionData.counters &&
-                          selectedPositionData.counters.length > 0
-                      "
+                      v-if="summarizedCounters && summarizedCounters.length > 0"
                     >
                       <thead class="table-title">
                         <tr>
-                          <th :colspan="selectedPositionData.counters.length">
+                          <th :colspan="summarizedCounters.length">
                             카운터 챔피언
                           </th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
                         <tr>
-                          <td
-                            v-for="(n, i) in selectedPositionData.counters
-                              .length"
-                          >
+                          <td v-for="(n, i) in summarizedCounters.length">
                             <champion-icon
-                              :championId="selectedPositionData.counters[i].id"
+                              :championId="summarizedCounters[i].id"
                               :subText="
-                                `${Math.floor(
-                                  selectedPositionData.counters[i].winRate
-                                )}%`
+                                `${Math.floor(summarizedCounters[i].winRate)}%`
                               "
                               circle
                               class="mr-1"
@@ -259,28 +251,23 @@
                     <table
                       class="data-table pl-2 "
                       style="width: 368px;"
-                      v-if="
-                        selectedPositionData.easys &&
-                          selectedPositionData.easys.length > 0
-                      "
+                      v-if="summarizedEasyChampions && summarizedEasyChampions.length > 0"
                     >
                       <thead class="table-title">
                         <tr>
-                          <th :colspan="selectedPositionData.easys.length">
+                          <th :colspan="summarizedEasyChampions.length">
                             상대하기 쉬운 챔피언
                           </th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
                         <tr>
-                          <td
-                            v-for="(n, i) in selectedPositionData.easys.length"
-                          >
+                          <td v-for="(n, i) in summarizedEasyChampions.length">
                             <champion-icon
-                              :championId="selectedPositionData.easys[i].id"
+                              :championId="summarizedEasyChampions[i].id"
                               :subText="
                                 `${Math.floor(
-                                  selectedPositionData.easys[i].winRate
+                                  summarizedEasyChampions[i].winRate
                                 )}%`
                               "
                               circle
@@ -331,179 +318,29 @@
 
                   <div class="mt-4">
                     <div
-                      class="rune-container pa-2 mr-5 d-inline-block"
+                      class="rune-container pa-2 mr-3 d-inline-block"
                       v-for="(n, i) in selectedRuneData.details.length"
                     >
-                      <tooltip center :content="`${selectedRuneData.details[i].count} 게임`">
+                      <tooltip
+                        :content="`${selectedRuneData.details[i].count} 게임`"
+                        center
+                      >
                         <div class="rune-description text-xs-center mb-2">
                           픽률 : {{ selectedRuneData.details[i].pickRate }}%
                           <br />
                           승률 : {{ selectedRuneData.details[i].winRate }}%
                         </div>
                       </tooltip>
-                      <div class="mr-3 d-inline-block vertical__top">
-                        <v-layout>
-                          <v-flex
-                            class="text-xs-center"
-                            v-bind:key="`${runeId}`"
-                            v-for="runeId in runeIdList"
-                          >
-                            <rune-style-icon
-                              :grayscale="
-                                Number(runeId) !==
-                                  selectedRuneData.mainRuneStyle
-                              "
-                              :runeStyleId="runeId"
-                              class="mb-2"
-                            />
-                          </v-flex>
-                        </v-layout>
-                        <v-layout
-                          class="mb-2"
-                          justify-between-space
-                          v-bind:key="`${line}`"
-                          v-for="line in [0, 1, 2, 3]"
-                        >
-                          <v-layout>
-                            <v-flex
-                              class="text-xs-center"
-                              v-bind:key="`${runeId}`"
-                              v-for="runeId in Object.keys(
-                                perks[selectedRuneData.mainRuneStyle].slots[
-                                  line
-                                ].runes
-                              )"
-                            >
-                              <rune-icon
-                                :borderColor="
-                                  runeBorderColor[
-                                    selectedRuneData.mainRuneStyle
-                                  ]
-                                "
-                                :grayscale="
-                                  Number(runeId) !==
-                                    selectedRuneData.details[i].mainRunes[line]
-                                "
-                                :runeId="runeId"
-                                :runeStyleId="selectedRuneData.mainRuneStyle"
-                              />
-                            </v-flex>
-                          </v-layout>
-                        </v-layout>
-                      </div>
-
-                      <div class="d-inline-block">
-                        <v-layout justify-between-space>
-                          <v-layout>
-                            <v-flex
-                              v-bind:key="`${runeId}`"
-                              v-for="runeId in runeIdList"
-                              v-show="
-                                Number(runeId) !==
-                                  selectedRuneData.mainRuneStyle
-                              "
-                            >
-                              <rune-style-icon
-                                :grayscale="
-                                  Number(runeId) !==
-                                    selectedRuneData.subRuneStyle
-                                "
-                                :runeStyleId="runeId"
-                                class="mb-2"
-                              />
-                            </v-flex>
-                          </v-layout>
-                        </v-layout>
-                        <v-layout
-                          justify-between-space
-                          v-bind:key="`${line}`"
-                          v-for="line in [1, 2, 3]"
-                        >
-                          <v-layout>
-                            <v-flex
-                              v-bind:key="`${runeId}`"
-                              v-for="runeId in Object.keys(
-                                perks[selectedRuneData.subRuneStyle].slots[line]
-                                  .runes
-                              )"
-                            >
-                              <rune-icon
-                                :borderColor="
-                                  runeBorderColor[selectedRuneData.subRuneStyle]
-                                "
-                                :grayscale="
-                                  !selectedRuneData.details[i].subRunes.find(
-                                    (subRuneId) => subRuneId === Number(runeId)
-                                  )
-                                "
-                                :runeId="runeId"
-                                :runeStyleId="selectedRuneData.subRuneStyle"
-                                class="mb-2"
-                              />
-                            </v-flex>
-                          </v-layout>
-                        </v-layout>
-
-                        <div class="d-inline-block">
-                          <v-layout justify-between-space>
-                            <v-layout>
-                              <v-flex
-                                v-bind:key="`${runeId}`"
-                                v-for="runeId in ['5008', '5005', '5007']"
-                              >
-                                <rune-icon
-                                  :grayscale="
-                                    selectedRuneData.details[i].statRunes[0] !==
-                                      Number(runeId)
-                                  "
-                                  :runeId="runeId"
-                                  borderColor="yellow"
-                                  class="mb-2"
-                                  runeStyleId="5000"
-                                />
-                              </v-flex>
-                            </v-layout>
-                          </v-layout>
-                          <v-layout justify-between-space>
-                            <v-layout>
-                              <v-flex
-                                v-bind:key="`${runeId}`"
-                                v-for="runeId in ['5008', '5002', '5003']"
-                              >
-                                <rune-icon
-                                  :grayscale="
-                                    selectedRuneData.details[i].statRunes[1] !==
-                                      Number(runeId)
-                                  "
-                                  :runeId="runeId"
-                                  borderColor="yellow"
-                                  class="mb-2"
-                                  runeStyleId="5000"
-                                />
-                              </v-flex>
-                            </v-layout>
-                          </v-layout>
-                          <v-layout justify-between-space>
-                            <v-layout>
-                              <v-flex
-                                v-bind:key="`${runeId}`"
-                                v-for="runeId in ['5001', '5002', '5003']"
-                              >
-                                <rune-icon
-                                  :grayscale="
-                                    selectedRuneData.details[i].statRunes[2] !==
-                                      Number(runeId)
-                                  "
-                                  :runeId="runeId"
-                                  borderColor="yellow"
-                                  class="mb-2"
-                                  runeStyleId="5000"
-                                />
-                              </v-flex>
-                            </v-layout>
-                          </v-layout>
-                        </div>
-                      </div>
+                      <rune-book
+                        :primaryRuneStyle="
+                          selectedRuneData.mainRuneStyle.toString()
+                        "
+                        :primaryRunes="selectedRuneData.details[i].mainRunes"
+                        :secondaryRuneStyle="selectedRuneData.subRuneStyle"
+                        :secondaryRunes="selectedRuneData.details[i].subRunes"
+                        :statRunes="selectedRuneData.details[i].statRunes"
+                        grayscale
+                      />
                     </div>
                   </div>
                 </div>
@@ -527,6 +364,7 @@ import ItemIcon from '@/components/Icon/ItemIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
 import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
 import SpellIcon from '@/components/Icon/SpellIcon.vue';
+import RuneBook from '@/components/Rune/RuneBook.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
@@ -568,16 +406,16 @@ interface IPositionData {
     winRate: number;
   }>;
   runes: Array<{
-    mainRuneStyle: number;
-    mainRune: number;
-    subRuneStyle: number;
+    mainRuneStyle: string;
+    mainRune: string;
+    subRuneStyle: string;
     pickRate: number;
     winRate: number;
     count: number;
     details: Array<{
-      mainRunes: number[];
-      subRunes: number[];
-      statRunes: number[];
+      mainRunes: string[];
+      subRunes: string[];
+      statRunes: string[];
       pickRate: number;
       winRate: number;
       count: number;
@@ -587,6 +425,7 @@ interface IPositionData {
 
 @Component({
   components: {
+    RuneBook,
     RuneIcon,
     RuneStyleIcon,
     Rune,
@@ -630,6 +469,20 @@ export default class ChampionInfo extends Vue {
     ];
   }
 
+  public get summarizedEasyChampions() {
+    return (
+      this.selectedPositionData.easys &&
+      this.selectedPositionData.easys.slice(0, 6)
+    );
+  }
+
+  public get summarizedCounters() {
+    return (
+      this.selectedPositionData.counters &&
+      this.selectedPositionData.counters.slice(0, 6)
+    );
+  }
+
   public get champions() {
     return this.$store.state.lolstatic.champions;
   }
@@ -650,13 +503,15 @@ export default class ChampionInfo extends Vue {
       win: number;
     }> = response.data;
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
-    const spells = data.map((spell) => ({
-      id1: spell._id[0],
-      id2: spell._id[1],
-      count: spell.count,
-      pickRate: toPercentage(spell.count, totalCount),
-      winRate: toPercentage(spell.win, spell.count),
-    })).slice(0, 2);
+    const spells = data
+      .map((spell) => ({
+        id1: spell._id[0],
+        id2: spell._id[1],
+        count: spell.count,
+        pickRate: toPercentage(spell.count, totalCount),
+        winRate: toPercentage(spell.win, spell.count),
+      }))
+      .slice(0, 2);
 
     this.$set(
       this.positionData,
@@ -686,7 +541,8 @@ export default class ChampionInfo extends Vue {
         pickRate: toPercentage(item.count, totalCount),
         winRate: toPercentage(item.win, item.count),
       }))
-      .filter((item) => item.pickRate > 0).slice(0, 2);
+      .filter((item) => item.pickRate > 0)
+      .slice(0, 2);
 
     this.$set(
       this.positionData,
@@ -759,23 +615,25 @@ export default class ChampionInfo extends Vue {
     );
     const data: Array<{
       _id: {
-        mainRuneStyle: number;
-        mainRune: number;
-        subRuneStyle: number;
+        mainRuneStyle: string;
+        mainRune: string;
+        subRuneStyle: string;
       };
       count: number;
       win: number;
     }> = response.data;
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
-    const runes = data.map((rune) => ({
-      mainRuneStyle: rune._id.mainRuneStyle,
-      mainRune: rune._id.mainRune,
-      subRuneStyle: rune._id.subRuneStyle,
-      pickRate: toPercentage(rune.count, totalCount, 2),
-      winRate: toPercentage(rune.win, rune.count, 2),
-      count: rune.count,
-      details: [] as any[],
-    })).slice(0, 3);
+    const runes = data
+      .map((rune) => ({
+        mainRuneStyle: rune._id.mainRuneStyle.toString(),
+        mainRune: rune._id.mainRune.toString(),
+        subRuneStyle: rune._id.subRuneStyle.toString(),
+        pickRate: toPercentage(rune.count, totalCount, 2),
+        winRate: toPercentage(rune.win, rune.count, 2),
+        count: rune.count,
+        details: [] as any[],
+      }))
+      .slice(0, 3);
 
     for (const rune of runes) {
       rune.details = await this.getRuneDetailData(
@@ -796,8 +654,8 @@ export default class ChampionInfo extends Vue {
 
   public async getRuneDetailData(
     position: string,
-    mainRuneId: number,
-    subRuneStyleId: number,
+    mainRuneId: string,
+    subRuneStyleId: string,
     totalCount: number
   ) {
     const response = await axios.get(
@@ -807,21 +665,23 @@ export default class ChampionInfo extends Vue {
     );
     const data: Array<{
       _id: {
-        mainRunes: number[];
-        subRunes: number[];
-        statRunes: number[];
+        mainRunes: string[];
+        subRunes: string[];
+        statRunes: string[];
       };
       count: number;
       win: number;
     }> = response.data;
-    return data.map((rune) => ({
-      mainRunes: rune._id.mainRunes,
-      subRunes: rune._id.subRunes,
-      statRunes: rune._id.statRunes,
-      pickRate: toPercentage(rune.count, totalCount, 2),
-      winRate: toPercentage(rune.win, rune.count, 2),
-      count: rune.count,
-    })).slice(0, 3);
+    return data
+      .map((rune) => ({
+        mainRunes: rune._id.mainRunes.map((runeId) => runeId.toString()),
+        subRunes: rune._id.subRunes.map((runeId) => runeId.toString()),
+        statRunes: rune._id.statRunes.map((runeId) => runeId.toString()),
+        pickRate: toPercentage(rune.count, totalCount, 2),
+        winRate: toPercentage(rune.win, rune.count, 2),
+        count: rune.count,
+      }))
+      .slice(0, 3);
   }
 
   public async clickPosition(position: string) {
@@ -921,9 +781,9 @@ export default class ChampionInfo extends Vue {
 .rune-container {
   border: 1px solid #ccc;
   border-radius: 10px;
+
   .rune-description {
     font-size: 12px;
   }
 }
-
 </style>

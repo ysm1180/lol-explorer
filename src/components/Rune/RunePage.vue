@@ -3,150 +3,32 @@
     <div class="modal-wrapper">
       <div @click.stop.prevent.self="" class="modal-container">
         <div class="rune-page mb-2">
-          <v-img :src="`/assets/runes/${copyRune.primary.id}_back.jpg`" />
+          <v-img
+            class="back-image"
+            :src="`/assets/runes/${copyRune.primary.id}_back.jpg`"
+          />
           <div class="pa-5 rune-content">
             <v-layout class="mr-5" d-inline>
               <champion-icon :championId="championId" circle large />
             </v-layout>
-            <v-layout class="rune-type mr-5" d-inline-block>
-              <v-layout>
-                <v-flex v-bind:key="`${runeId}`" v-for="runeId in runeIdList">
-                  <rune-style-icon
-                    :hover="runeId !== copyRune.primary.id"
-                    :runeStyleId="runeId"
-                    @click="selectPrimaryRuneStyle(runeId)"
-                    class="mb-5 cursor__pointer"
-                    large
-                  />
-                </v-flex>
-              </v-layout>
-              <v-layout
-                class="mb-4"
-                justify-between-space
-                v-bind:key="`${line}`"
-                v-for="line in [0, 1, 2, 3]"
-              >
-                <v-layout>
-                  <v-flex
-                    v-bind:key="`${runeId}`"
-                    v-for="runeId in Object.keys(
-                      perks[copyRune.primary.id].slots[line].runes
-                    )"
-                  >
-                    <rune-icon
-                      :borderColor="runeBorderColor[copyRune.primary.id]"
-                      :grayscale="runeId !== copyRune.primary.slots[line]"
-                      :runeId="runeId"
-                      :runeStyleId="copyRune.primary.id"
-                      @click="selectPrimaryRune(runeId, line)"
-                      class="cursor__pointer"
-                      large
-                    />
-                  </v-flex>
-                </v-layout>
-              </v-layout>
-            </v-layout>
-            <v-layout class="rune-type" d-inline-block>
-              <v-layout justify-between-space>
-                <v-layout>
-                  <v-flex
-                    v-bind:key="`${runeId}`"
-                    v-for="runeId in runeIdList"
-                    v-show="runeId !== copyRune.primary.id"
-                  >
-                    <rune-style-icon
-                      :hover="runeId !== copyRune.secondary.id"
-                      :runeStyleId="runeId"
-                      @click="selectSecondaryRuneStyle(runeId)"
-                      class="mb-5 cursor__pointer"
-                      large
-                    />
-                  </v-flex>
-                </v-layout>
-              </v-layout>
-              <v-layout
-                justify-between-space
-                v-bind:key="`${line}`"
-                v-for="line in [1, 2, 3]"
-              >
-                <v-layout>
-                  <v-flex
-                    v-bind:key="`${runeId}`"
-                    v-for="runeId in Object.keys(
-                      perks[copyRune.secondary.id].slots[line].runes
-                    )"
-                  >
-                    <rune-icon
-                      :borderColor="runeBorderColor[copyRune.secondary.id]"
-                      :grayscale="
-                        !copyRune.secondary.slots.find(
-                          (slot) => slot.slot === runeId
-                        )
-                      "
-                      :runeId="runeId"
-                      :runeStyleId="copyRune.secondary.id"
-                      @click="selectSecondaryRune(runeId, line)"
-                      class="mb-4 cursor__pointer"
-                      large
-                    />
-                  </v-flex>
-                </v-layout>
-              </v-layout>
-
-              <v-layout class="rune-type" d-inline-block>
-                <v-layout justify-between-space>
-                  <v-layout>
-                    <v-flex
-                      v-bind:key="`${runeId}`"
-                      v-for="runeId in ['5008', '5005', '5007']"
-                    >
-                      <rune-icon
-                        :grayscale="copyRune.stat[0] !== runeId"
-                        :runeId="runeId"
-                        @click="selectStatRune(runeId, 0)"
-                        borderColor="yellow"
-                        class="mb-2 cursor__pointer"
-                        runeStyleId="5000"
-                      />
-                    </v-flex>
-                  </v-layout>
-                </v-layout>
-                <v-layout justify-between-space>
-                  <v-layout>
-                    <v-flex
-                      v-bind:key="`${runeId}`"
-                      v-for="runeId in ['5008', '5002', '5003']"
-                    >
-                      <rune-icon
-                        :grayscale="copyRune.stat[1] !== runeId"
-                        :runeId="runeId"
-                        @click="selectStatRune(runeId, 1)"
-                        borderColor="yellow"
-                        class="mb-2 cursor__pointer"
-                        runeStyleId="5000"
-                      />
-                    </v-flex>
-                  </v-layout>
-                </v-layout>
-                <v-layout justify-between-space>
-                  <v-layout>
-                    <v-flex
-                      v-bind:key="`${runeId}`"
-                      v-for="runeId in ['5001', '5002', '5003']"
-                    >
-                      <rune-icon
-                        :grayscale="copyRune.stat[2] !== runeId"
-                        :runeId="runeId"
-                        @click="selectStatRune(runeId, 2)"
-                        borderColor="yellow"
-                        class="mb-2 cursor__pointer"
-                        runeStyleId="5000"
-                      />
-                    </v-flex>
-                  </v-layout>
-                </v-layout>
-              </v-layout>
-            </v-layout>
+            <rune-book
+              :primaryRuneStyle="copyRune.primary.id"
+              :primaryRunes="copyRune.primary.slots"
+              :secondaryRuneStyle="copyRune.secondary.id"
+              :secondaryRunes="
+                copyRune.secondary.slots.map((slot) => slot.slot)
+              "
+              :statRunes="copyRune.stat"
+              @clickPrimaryRune="selectPrimaryRune"
+              @clickPrimaryRuneStyle="selectPrimaryRuneStyle"
+              @clickSecondaryRune="selectSecondaryRune"
+              @clickSecondaryRuneStyle="selectSecondaryRuneStyle"
+              @clickStatRune="selectStatRune"
+              containerWidth="250"
+              hover
+              large
+              pointer
+            />
           </div>
         </div>
         <v-layout d-block>
@@ -165,9 +47,14 @@
             flat
             v-else
           >
-            SAVE
+            <span v-if="saved">
+              저장 완료
+            </span>
+            <span v-else>
+              SAVE
+            </span>
           </v-btn>
-          <v-btn @click="click" class="grey white--text" flat>CANCEL</v-btn>
+          <v-btn @click="click" class="grey white--text" flat>CLOSE</v-btn>
         </v-layout>
       </div>
     </div>
@@ -178,17 +65,19 @@
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
 import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
+import RuneBook from '@/components/Rune/RuneBook.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
-import { ICustomRune } from '@/typings/rune';
+import { CustomRuneData } from '@/typings/rune';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
-  components: { Tooltip, ChampionIcon, RuneStyleIcon, RuneIcon },
+  components: { RuneBook, Tooltip, ChampionIcon, RuneStyleIcon, RuneIcon },
 })
 export default class RunePage extends Vue {
   @Prop() private championId!: number;
-  @Prop() private rune!: ICustomRune;
-  private copyRune: ICustomRune = this.rune;
+  @Prop() private rune!: CustomRuneData;
+  private saved: boolean = false;
+  private copyRune: CustomRuneData = this.rune;
   private runeIdList: string[] = ['8000', '8100', '8200', '8300', '8400'];
   private runeBorderColor = {
     8000: 'yellow',
@@ -199,7 +88,7 @@ export default class RunePage extends Vue {
   };
 
   @Watch('rune')
-  private onRuneChanged(val: ICustomRune, oldVal: ICustomRune) {
+  private onRuneChanged(val: CustomRuneData, oldVal: CustomRuneData) {
     this.copyRune = val;
   }
 
@@ -209,6 +98,10 @@ export default class RunePage extends Vue {
 
   public save() {
     this.$emit('save', this.copyRune);
+    this.saved = true;
+    setTimeout(() => {
+      this.saved = false;
+    }, 3000);
   }
 
   public click() {
@@ -286,8 +179,8 @@ export default class RunePage extends Vue {
 }
 
 .modal-container {
-  width: 990px;
-  height: 700px;
+  width: 780px;
+  height: 545px;
   margin: 0px auto;
   padding: 10px;
   background-color: #fff;
@@ -300,6 +193,11 @@ export default class RunePage extends Vue {
 .rune-page {
   position: relative;
 
+  .back-image {
+    background-color: #333;
+    max-width: 760px;
+  }
+
   .rune-content {
     position: absolute;
     top: 0;
@@ -309,5 +207,11 @@ export default class RunePage extends Vue {
       vertical-align: top;
     }
   }
+}
+
+.save-info {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ff5859;
 }
 </style>

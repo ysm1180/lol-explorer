@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, ipcMain, protocol } from 'electron';
 import LCUConnector from 'lcu-connector';
 import { AppWindow } from './electron/window';
 
@@ -14,6 +14,9 @@ const gotSingleInstanceLock = app.requestSingleInstanceLock();
 isDuplicateInstance = !gotSingleInstanceLock;
 
 app.commandLine.appendSwitch('--ignore-certificate-errors');
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { secure: true, standard: true } },
+]);
 
 app.on('second-instance', (event, args, workingDirectory) => {
   // Someone tried to run a second instance, we should focus our window.
@@ -72,6 +75,13 @@ app.on('ready', async () => {
   });
 
   connector.start();
+
+  ipcMain.on('show-focus', () => {
+    if (mainWindow) {
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
 });
 
 function createWindow() {

@@ -40,41 +40,34 @@
     <router-view style="padding-top:48px;" />
   </div>
 </template>
-<script>
+<script lang="ts">
 import { ipcRenderer } from 'electron';
+import { LcuConnectionData } from 'models';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
-export default {
-  name: 'App',
-  components: {},
-  data() {
-    return {
-      viewNav: true,
-    };
-  },
-  computed: {
-    lcuSummoner() {
-      return this.$store.state.connection.lcuSummoner;
-    },
-    summoner() {
-      return this.$store.state.connection.summoner;
-    },
-    status() {
-      return this.$store.state.connection.status;
-    },
-  },
-  mounted() {
-    // f5
+@Component
+export default class App extends Vue {
+  public get lcuSummoner() {
+    return this.$store.state.connection.lcuSummoner;
+  }
+
+  public get summoner() {
+    return this.$store.state.connection.summoner;
+  }
+
+  public get status() {
+    return this.$store.state.connection.status;
+  }
+
+  public created() {
     document.addEventListener('keydown', (e) => {
       if (e.code === 'F5') {
         location.href = '/match';
       }
     });
-    // fetch statics
-    this.$store.dispatch('lolstatic/fetchChampions');
-    this.$store.dispatch('lolstatic/fetchSpells');
-    this.$store.dispatch('lolstatic/fetchItems');
-    this.$store.dispatch('lolstatic/fetchPerks');
-    ipcRenderer.on('lcu-connect', async (event, lcuData) => {
+
+    ipcRenderer.on('lcu-connect', async (event: any, lcuData: LcuConnectionData) => {
       this.$store.commit('connection/setLcuData', lcuData);
       this.$store.commit('connection/setStatus', 'WAITING_LOGIN');
       await this.$store.dispatch('connection/loadLcuSummoner', lcuData);
@@ -86,11 +79,12 @@ export default {
         this.$router.push(`/match/${this.summoner.accountId}`);
       }
     });
+
     ipcRenderer.on('lcu-disconnect', () => {
       this.$store.dispatch('connection/initializeState');
-      this.$store.dispatch('match/initializeState');
     });
-    ipcRenderer.on('lcu-api-message', async (event, data) => {
+
+    ipcRenderer.on('lcu-api-message', async (event: any, data: any) => {
       console.log(data);
       if (
         this.status !== 'LOGIN_COMPLETE' &&
@@ -105,72 +99,79 @@ export default {
         );
         this.$router.push(`/match/${this.summoner.accountId}`);
       } else if (
-        data.uri === '/lol-champ-select/v1/session' &&
-        data.data.actions[0][0].championId !== 0
+        this.status === 'LOGIN_COMPLETE' &&
+        data.uri === '/lol-gameflow/v1/gameflow-phase' &&
+        data.data === 'ChampSelect'
       ) {
-        this.$router.push(`/rune/${data.data.actions[0][0].championId}`);
+        this.enterChampionSelectPage();
+        ipcRenderer.send('show-focus');
       }
     });
-  },
-  methods: {
-    isHome() {
-      if (this.status === 'LOGIN_COMPLETE' && this.summoner) {
-        const homeUrl = `/match/${this.summoner.accountId}`;
-        return this.$router.currentRoute.path === homeUrl;
-      } else {
-        return this.routerStartWith('/match');
-      }
-    },
 
-    isRunePage() {
-      return this.routerStartWith('/rune');
-    },
+    // fetch statics
+    this.$store.dispatch('lolstatic/fetchChampions');
+    this.$store.dispatch('lolstatic/fetchSpells');
+    this.$store.dispatch('lolstatic/fetchItems');
+    this.$store.dispatch('lolstatic/fetchPerks');
+  }
 
-    isGamePickBan() {
-      return this.routerStartWith('/gamepickban');
-    },
+  public isHome() {
+    if (this.status === 'LOGIN_COMPLETE' && this.summoner) {
+      const homeUrl = `/match/${this.summoner.accountId}`;
+      return this.$router.currentRoute.path === homeUrl;
+    } else {
+      return this.routerStartWith('/match');
+    }
+  }
 
-    enterHome() {
-      let homeUrl;
-      if (this.status === 'LOGIN_COMPLETE') {
-        homeUrl = `/match/${this.summoner.accountId}`;
-        if (this.$router.currentRoute.path !== homeUrl) {
-          this.$router.push(homeUrl);
-        }
-      } else {
-        homeUrl = `/match`;
-      }
+  public isRunePage() {
+    return this.routerStartWith('/rune');
+  }
 
+  public isGamePickBan() {
+    return this.routerStartWith('/gamepickban');
+  }
+
+  public enterHome() {
+    let homeUrl;
+    if (this.status === 'LOGIN_COMPLETE') {
+      homeUrl = `/match/${this.summoner.accountId}`;
       if (this.$router.currentRoute.path !== homeUrl) {
         this.$router.push(homeUrl);
       }
-    },
+    } else {
+      homeUrl = `/match`;
+    }
 
-    enterRunePage() {
-      const url = `/rune`;
-      if (this.$router.currentRoute.path !== url) {
-        this.$router.push(url);
+    if (this.$router.currentRoute.path !== homeUrl) {
+      this.$router.push(homeUrl);
+    }
+  }
+
+  public enterRunePage() {
+    const url = `/rune`;
+    if (this.$router.currentRoute.path !== url) {
+      this.$router.push(url);
+    }
+  }
+
+  public enterChampionSelectPage() {
+    const url = `/gamepickban`;
+    if (this.$router.currentRoute.path !== url) {
+      this.$router.push(url);
+    }
+  }
+
+  public routerStartWith(...urls: string[]) {
+    for (const url of urls) {
+      if (this.$router.currentRoute.path.indexOf(url) === 0) {
+        return true;
       }
-    },
+    }
 
-    enterChampionSelectPage() {
-      const url = `/gamepickban`;
-      if (this.$router.currentRoute.path !== url) {
-        this.$router.push(url);
-      }
-    },
-
-    routerStartWith(...urls) {
-      for (const url of urls) {
-        if (this.$router.currentRoute.path.indexOf(url) === 0) {
-          return true;
-        }
-      }
-
-      return false;
-    },
-  },
-};
+    return false;
+  }
+}
 </script>
 
 <style lang="scss">

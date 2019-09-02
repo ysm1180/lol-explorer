@@ -1,0 +1,9 @@
+export enum QUEUE_TYPE {
+  RANKED_SOLO_5x5 = 420,
+  RANKED_FLEX_SR = 440,
+}
+
+export const QUEUE_TYPE_STRING: {[id: string]: string} = {
+  [QUEUE_TYPE.RANKED_SOLO_5x5]: 'RANKED_SOLO_5x5',
+  [QUEUE_TYPE.RANKED_FLEX_SR]: 'RANKED_FLEX_SR',
+};

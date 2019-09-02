@@ -56,19 +56,37 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IChampionDetail, IChampionInfoApiData } from '@/typings/match';
+import { ChampionInfoApiData } from '@/typings/match';
+
+interface ChampionDetailData {
+  rank: number;
+  championKey: number;
+  championName: string;
+  wins: number;
+  losses: number;
+  winRate: number;
+  averageKills: number;
+  averageDeaths: number;
+  averageAssists: number;
+  kda: number;
+  averageCS: number;
+  averageEarnedGold: number;
+  doubleKills: number;
+  tripleKills: number;
+  quadraKills: number;
+  pentaKills: number;
+}
 
 @Component
 export default class ChampionInfoDetail extends Vue {
-  @Prop() private data!: IChampionInfoApiData[];
-  private sortedData: IChampionDetail[] = [];
+  @Prop() private data!: ChampionInfoApiData[];
   private sortStatus: { key: string; asc: boolean } = { key: '', asc: false };
 
-  public mounted() {
-    this.sortedData = [];
+  public get sortedData() {
+    const result = [];
     for (let i = 0; i < this.data.length; i++) {
       const champion = this.data[i];
-      const object: IChampionDetail = {} as any;
+      const object: ChampionDetailData = {} as any;
       object.rank = i + 1;
       object.championKey = champion.key;
       object.championName = this.staticChampions[champion.key].name;
@@ -89,8 +107,10 @@ export default class ChampionInfoDetail extends Vue {
       object.quadraKills = champion.quadraKills;
       object.pentaKills = champion.pentaKills;
 
-      this.sortedData.push(object);
+      result.push(object);
     }
+
+    return result;
   }
 
   public sort() {}

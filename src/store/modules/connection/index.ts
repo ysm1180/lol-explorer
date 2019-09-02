@@ -1,5 +1,6 @@
+import { END_POINT } from '@/config';
 import axios from 'axios';
-import { ILcuData, ILcuSummonerData } from 'models';
+import { LcuConnectionData, LcuSummonerData } from 'models';
 import {
   Module,
   Mutation,
@@ -7,27 +8,28 @@ import {
   VuexModule,
 } from 'vuex-module-decorators';
 
-const ENDPOINT = 'http://localhost:3000';
-
 @Module({ namespaced: true, name: 'connection' })
 export default class Connection extends VuexModule {
   public status: string = 'WAITING_CLIENT';
-  public lcuData: ILcuData | undefined = undefined;
-  public lcuSummoner: ILcuSummonerData | undefined = undefined;
+  public lcuData: LcuConnectionData | undefined = undefined;
+  public lcuSummoner: LcuSummonerData | undefined = undefined;
   public summoner = undefined;
 
   @Mutation
   public setStatus(status: string) {
     this.status = status;
   }
+
   @Mutation
-  public setLcuData(lcuData: ILcuData) {
+  public setLcuData(lcuData: LcuConnectionData) {
     this.lcuData = lcuData;
   }
+
   @Mutation
-  public setLcuSummoner(data: ILcuSummonerData) {
+  public setLcuSummoner(data: LcuSummonerData) {
     this.lcuSummoner = data;
   }
+
   @Mutation
   public setSummoner(data: any) {
     this.summoner = data;
@@ -42,8 +44,9 @@ export default class Connection extends VuexModule {
       summoner: undefined,
     };
   }
+
   @MutationAction({ mutate: ['status', 'lcuSummoner'] })
-  public async loadLcuSummoner(lcuData: ILcuData) {
+  public async loadLcuSummoner(lcuData: LcuConnectionData) {
     const response = await axios.get(
       `${lcuData.protocol}://${lcuData.address}:${
         lcuData.port
@@ -64,7 +67,7 @@ export default class Connection extends VuexModule {
 
   @MutationAction({ mutate: ['summoner'] })
   public async updateSummoner(name: string) {
-    const response = await axios.get(`${ENDPOINT}/summoner/${name}`);
+    const response = await axios.get(`${END_POINT}/summoner/${name}`);
     return { summoner: response.data };
   }
 }
