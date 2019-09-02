@@ -1,32 +1,60 @@
 <template>
   <v-layout fill-height justify-center>
-    <v-layout align-center column id="champion-info" mt-3>
+    <v-layout align-center column id="champion-info" mt-4>
       <div class="champion-info-container">
-        <div class="d-inline-block">
-          <champion-icon :championId="Number(championId)" extralarge />
-        </div>
-        <div class="px-4 mb-4 d-inline-block">
-          <div class="mb-3 champion-name">
-            {{ champions[championId].name }}
+        <div class="mb-5">
+          <div class="d-inline-block">
+            <champion-icon :championId="Number(championId)" extralarge />
           </div>
-          <div>
-            <champion-passive-icon :championId="championId" class="mr-1" />
-            <champion-spell-icon
-              :championId="championId"
-              class="mr-1"
-              spellName="Q"
+          <div class="px-4 mb-4 d-inline-block">
+            <div class="mb-3 champion-name">
+              {{ champions[championId].name }}
+            </div>
+            <div>
+              <champion-passive-icon :championId="championId" class="mr-1" />
+              <champion-spell-icon
+                :championId="championId"
+                class="mr-1"
+                spellName="Q"
+              />
+              <champion-spell-icon
+                :championId="championId"
+                class="mr-1"
+                spellName="W"
+              />
+              <champion-spell-icon
+                :championId="championId"
+                class="mr-1"
+                spellName="E"
+              />
+              <champion-spell-icon :championId="championId" spellName="R" />
+            </div>
+          </div>
+
+          <div class="float__right d-inline-block item-container">
+            <Trend
+              :chartData="{
+                labels: banRateLabels,
+                datasets: [
+                  {
+                    lineTension: 0,
+                    borderColor:
+                      banRateData[2] - banRateData[1] > 0
+                        ? '#62b7e5'
+                        : banRateData[2] - banRateData[1] === 0
+                        ? '#666'
+                        : '#e53d60',
+                    backgroundColor: 'transparent',
+                    data: banRateData,
+                  },
+                ],
+              }"
+              height="90"
+              hideYTick
+              title="밴률"
+              tooltipLabel="밴률"
+              width="150"
             />
-            <champion-spell-icon
-              :championId="championId"
-              class="mr-1"
-              spellName="W"
-            />
-            <champion-spell-icon
-              :championId="championId"
-              class="mr-1"
-              spellName="E"
-            />
-            <champion-spell-icon :championId="championId" spellName="R" />
           </div>
         </div>
 
@@ -86,235 +114,195 @@
           <tabs>
             <tab :selected="true" name="종합">
               <div class="mt-3" v-if="selectedPositionData">
-                <div class="d-inline-block vertical__top mr-2">
-                  <table
-                    class="data-table"
-                    v-if="
-                      selectedPositionData.spells &&
-                        selectedPositionData.spells.length > 0
-                    "
-                  >
-                    <thead class="table-title">
-                      <tr>
-                        <th>소환사 주문</th>
-                        <th>픽률</th>
-                        <th>승률</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-content">
-                      <tr
-                        v-bind:key="i"
-                        v-for="(n, i) in selectedPositionData.spells.length"
-                      >
-                        <td>
-                          <spell-icon
-                            :spellId="selectedPositionData.spells[i].id1"
-                            class="mr-1"
-                            large
-                          />
-                          <spell-icon
-                            :spellId="selectedPositionData.spells[i].id2"
-                            large
-                          />
-                        </td>
-                        <td>{{ selectedPositionData.spells[i].pickRate }}%</td>
-                        <td>{{ selectedPositionData.spells[i].winRate }}%</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <table class="data-table" v-else>
-                    <thead class="table-title">
-                      <tr>
-                        <th>소환사 주문</th>
-                        <th>픽률</th>
-                        <th>승률</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-content">
-                      <tr>
-                        <td class="data-none" colspan="3">
-                          소환사 주문 통계 데이터가 없습니다.
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="divider" style="height: 135px;"></div>
-
-                <div class="d-inline-block vertical__top">
-                  <table
-                    class="data-table pl-2"
-                    v-if="
-                      selectedPositionData.startItems &&
-                        selectedPositionData.startItems.length > 0
-                    "
-                  >
-                    <thead class="table-title">
-                      <tr>
-                        <th>시작 아이템</th>
-                        <th>픽률</th>
-                        <th>승률</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-content">
-                      <tr
-                        v-bind:key="i"
-                        v-for="(n, i) in selectedPositionData.startItems.length"
-                      >
-                        <td>
-                          <item-icon
-                            :itemId="
-                              selectedPositionData.startItems[i].ids[idx - 1]
-                            "
-                            class="mr-1"
-                            large
-                            v-bind:key="idx"
-                            v-for="idx in selectedPositionData.startItems[i].ids
-                              .length"
-                          />
-                        </td>
-                        <td>
-                          {{ selectedPositionData.startItems[i].pickRate }}%
-                        </td>
-                        <td>
-                          {{ selectedPositionData.startItems[i].winRate }}%
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <table class="data-table pl-2" v-else>
-                    <thead class="table-title">
-                      <tr>
-                        <th>시작 아이템</th>
-                        <th>픽률</th>
-                        <th>승률</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-content">
-                      <tr>
-                        <td class="data-none" colspan="3">
-                          시작 아이템 데이터가 부족합니다.
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="float__right d-inline-block vertical__top">
-                  <div>
+                <div class="d-inline-block">
+                  <div class="d-inline-block vertical__top mr-2">
                     <table
-                      class="data-table pl-2 "
-                      style="width: 368px;"
-                      v-if="summarizedCounters && summarizedCounters.length > 0"
+                      class="data-table"
+                      v-if="
+                        selectedPositionData.spells &&
+                          selectedPositionData.spells.length > 0
+                      "
                     >
                       <thead class="table-title">
                         <tr>
-                          <th :colspan="summarizedCounters.length">
-                            카운터 챔피언
-                          </th>
+                          <th>소환사 주문</th>
+                          <th>픽률</th>
+                          <th>승률</th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
-                        <tr>
-                          <td v-for="(n, i) in summarizedCounters.length">
-                            <champion-icon
-                              :championId="summarizedCounters[i].id"
-                              :subText="
-                                `${Math.floor(summarizedCounters[i].winRate)}%`
-                              "
-                              circle
+                        <tr
+                          v-bind:key="i"
+                          v-for="(n, i) in selectedPositionData.spells.length"
+                        >
+                          <td>
+                            <spell-icon
+                              :spellId="selectedPositionData.spells[i].id1"
                               class="mr-1"
-                              small
+                            />
+                            <spell-icon
+                              :spellId="selectedPositionData.spells[i].id2"
                             />
                           </td>
+                          <td>
+                            {{ selectedPositionData.spells[i].pickRate }}%
+                          </td>
+                          <td>{{ selectedPositionData.spells[i].winRate }}%</td>
                         </tr>
                       </tbody>
                     </table>
-                    <table class="data-table pl-2" style="width: 368px;" v-else>
+                    <table class="data-table" v-else>
                       <thead class="table-title">
                         <tr>
-                          <th>카운터 챔피언</th>
+                          <th>소환사 주문</th>
+                          <th>픽률</th>
+                          <th>승률</th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
                         <tr>
-                          <td class="data-none wide">
-                            데이터가 부족합니다.
+                          <td class="data-none" colspan="3">
+                            소환사 주문 통계 데이터가 없습니다.
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
 
-                  <div>
+                  <div class="divider" style="height: 138px;"></div>
+
+                  <div class="d-inline-block vertical__top mx-2">
                     <table
-                      class="data-table pl-2 "
-                      style="width: 368px;"
-                      v-if="summarizedEasyChampions && summarizedEasyChampions.length > 0"
+                      class="data-table"
+                      v-if="
+                        selectedPositionData.startItems &&
+                          selectedPositionData.startItems.length > 0
+                      "
                     >
                       <thead class="table-title">
                         <tr>
-                          <th :colspan="summarizedEasyChampions.length">
-                            상대하기 쉬운 챔피언
-                          </th>
+                          <th>시작 아이템</th>
+                          <th>픽률</th>
+                          <th>승률</th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
-                        <tr>
-                          <td v-for="(n, i) in summarizedEasyChampions.length">
-                            <champion-icon
-                              :championId="summarizedEasyChampions[i].id"
-                              :subText="
-                                `${Math.floor(
-                                  summarizedEasyChampions[i].winRate
-                                )}%`
+                        <tr
+                          v-bind:key="i"
+                          v-for="(n, i) in selectedPositionData.startItems
+                            .length"
+                        >
+                          <td>
+                            <item-icon
+                              :itemId="
+                                selectedPositionData.startItems[i].ids[idx - 1]
                               "
-                              circle
                               class="mr-1"
-                              small
+                              v-bind:key="idx"
+                              v-for="idx in selectedPositionData.startItems[i]
+                                .ids.length"
                             />
+                          </td>
+                          <td>
+                            {{ selectedPositionData.startItems[i].pickRate }}%
+                          </td>
+                          <td>
+                            {{ selectedPositionData.startItems[i].winRate }}%
                           </td>
                         </tr>
                       </tbody>
                     </table>
-                    <table class="data-table pl-2" style="width: 368px;" v-else>
+                    <table class="data-table pl-2" v-else>
                       <thead class="table-title">
                         <tr>
-                          <th>상대하기 쉬운 챔피언</th>
+                          <th>시작 아이템</th>
+                          <th>픽률</th>
+                          <th>승률</th>
                         </tr>
                       </thead>
                       <tbody class="table-content">
                         <tr>
-                          <td class="data-none wide">
-                            데이터가 부족합니다.
+                          <td class="data-none" colspan="3">
+                            시작 아이템 데이터가 부족합니다.
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                </div>
 
-                <div
-                  class="mt-3"
-                  v-if="
-                    selectedPositionData.runes &&
-                      selectedPositionData.runes.length > 0
-                  "
-                >
-                  <rune
-                    :count="selectedPositionData.runes[i].count"
-                    :mainRuneId="selectedPositionData.runes[i].mainRune"
-                    :mainRuneStyleId="
-                      selectedPositionData.runes[i].mainRuneStyle
+                  <div class="divider" style="height: 138px;"></div>
+
+                  <div class="d-inline-block vertical__top ml-2">
+                    <table
+                      class="data-table"
+                      v-if="
+                        selectedPositionData.shoes &&
+                          selectedPositionData.shoes.length > 0
+                      "
+                    >
+                      <thead class="table-title">
+                        <tr>
+                          <th>신발</th>
+                          <th>픽률</th>
+                          <th>승률</th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-content">
+                        <tr
+                          v-bind:key="i"
+                          v-for="(n, i) in selectedPositionData.shoes.length"
+                        >
+                          <td>
+                            <item-icon
+                              :itemId="selectedPositionData.shoes[i].shoes"
+                              class="mr-1"
+                            />
+                          </td>
+                          <td>{{ selectedPositionData.shoes[i].pickRate }}%</td>
+                          <td>{{ selectedPositionData.shoes[i].winRate }}%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table class="data-table" v-else>
+                      <thead class="table-title">
+                        <tr>
+                          <th>신발</th>
+                          <th>픽률</th>
+                          <th>승률</th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-content">
+                        <tr>
+                          <td class="data-none" colspan="3">
+                            신발 통계 데이터가 없습니다.
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div
+                    class="mt-3"
+                    v-if="
+                      selectedPositionData.runes &&
+                        selectedPositionData.runes.length > 0
                     "
-                    :pick="selectedPositionData.runes[i].pickRate"
-                    :selected="selectedRuneIndex === i"
-                    :subRuneStyleId="selectedPositionData.runes[i].subRuneStyle"
-                    :win="selectedPositionData.runes[i].winRate"
-                    @click="clickRune(i)"
-                    v-for="(n, i) in selectedPositionData.runes.length"
-                  />
+                  >
+                    <rune
+                      :count="selectedPositionData.runes[i].count"
+                      :mainRuneId="selectedPositionData.runes[i].mainRune"
+                      :mainRuneStyleId="
+                        selectedPositionData.runes[i].mainRuneStyle
+                      "
+                      :pick="selectedPositionData.runes[i].pickRate"
+                      :selected="selectedRuneIndex === i"
+                      :subRuneStyleId="
+                        selectedPositionData.runes[i].subRuneStyle
+                      "
+                      :win="selectedPositionData.runes[i].winRate"
+                      @click="clickRune(i)"
+                      v-for="(n, i) in selectedPositionData.runes.length"
+                    />
 
                     <div class="mt-4">
                       <div
@@ -499,6 +487,7 @@
 import { toPercentage } from '@/base/math';
 import Position from '@/components/Champion/Position.vue';
 import Rune from '@/components/Champion/Rune.vue';
+import Trend from '@/components/Champion/Trend.vue';
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
 import ChampionPassiveIcon from '@/components/Icon/ChampionPassiveIcon.vue';
 import ChampionSpellIcon from '@/components/Icon/ChampionSpellIcon.vue';
@@ -507,6 +496,7 @@ import RuneIcon from '@/components/Icon/RuneIcon.vue';
 import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
 import SpellIcon from '@/components/Icon/SpellIcon.vue';
 import RuneBook from '@/components/Rune/RuneBook.vue';
+import LineChart from '@/components/UI/Chart/LineChart.vue';
 import Tab from '@/components/UI/Tab/Tab.vue';
 import Tabs from '@/components/UI/Tab/Tabs.vue';
 import Tooltip from '@/components/UI/Tooltip/Tooltip.vue';
@@ -523,7 +513,7 @@ const POSITION_ID: { [position: string]: number } = {
   support: 5,
 };
 
-interface IPositionData {
+interface PositionData {
   spells: Array<{
     id1: number;
     id2: number;
@@ -563,10 +553,70 @@ interface IPositionData {
       count: number;
     }>;
   }>;
+  trends: Array<{
+    gameVersion: string;
+    win: number;
+    count: number;
+    totalCount: number;
+  }>;
+  shoes: Array<{
+    shoes: number;
+    count: number;
+    pickRate: number;
+    winRate: number;
+  }>;
+}
+
+interface StatisticsCount {
+  win: number;
+  count: number;
+}
+
+interface TrendApiData extends StatisticsCount {
+  gameVersion: string;
+  totalCount: number;
+}
+
+interface SpellApiData extends StatisticsCount {
+  spells: number[];
+}
+
+interface ItemsApiData extends StatisticsCount {
+  items: number[];
+}
+
+interface RivalMatchUpApiData extends StatisticsCount {
+  rivalChampionKey: number;
+  winRate: number;
+}
+
+interface RuneDetail extends StatisticsCount {
+  mainRunes: number[];
+  subRunes: number[];
+  statRunes: number[];
+}
+
+interface RuneGroupApiData extends StatisticsCount {
+  mainRuneStyle: number;
+  mainRune: number;
+  subRuneStyle: number;
+  details: RuneDetail[];
+}
+
+interface ShoesApiData extends StatisticsCount {
+  shoes: number;
+}
+
+interface BanData {
+  gameVersion: string;
+  count: number;
+  totalCount: number;
 }
 
 @Component({
   components: {
+    Trend,
+    LineChart,
     RuneBook,
     RuneIcon,
     RuneStyleIcon,
@@ -589,7 +639,7 @@ export default class ChampionInfo extends Vue {
   private counts: { [position: string]: number } = {};
   private wins: { [position: string]: number } = {};
   private positionData: {
-    [position: string]: IPositionData;
+    [position: string]: PositionData;
   } = {};
   private selectedRuneIndex: number = 0;
   private runeIdList: string[] = ['8000', '8100', '8200', '8300', '8400'];
@@ -600,6 +650,7 @@ export default class ChampionInfo extends Vue {
     8300: 'blue',
     8400: 'green',
   };
+  private banRates: BanData[] = [];
 
   public get selectedPositionData() {
     return this.positionData[this.selectedPosition];
@@ -629,31 +680,88 @@ export default class ChampionInfo extends Vue {
     return this.$store.state.lolstatic.champions;
   }
 
-  public get perks() {
-    return this.$store.state.lolstatic.perks;
+  public get banRateData() {
+    return this.banRates.map((ban) =>
+      toPercentage(ban.count, ban.totalCount, 2)
+    );
   }
 
-  public async getSpellData(position: string) {
-    const response = await axios.get(
-      `${END_POINT}/statistics/champion/spells/${this.championId}/${
-        POSITION_ID[position]
-      }`
+  public get banRateLabels() {
+    return this.banRates.map((ban) => ban.gameVersion);
+  }
+
+  public get winRateLabels() {
+    return this.selectedPositionData.trends
+      ? this.selectedPositionData.trends.map((trend) => trend.gameVersion)
+      : [];
+  }
+
+  public get winRateData() {
+    return this.selectedPositionData.trends
+      ? this.selectedPositionData.trends.map((trend) =>
+          toPercentage(trend.win, trend.count)
+        )
+      : [];
+  }
+
+  public get pickRateLabels() {
+    return (
+      this.selectedPositionData.trends &&
+      this.selectedPositionData.trends.map((trend) => trend.gameVersion)
     );
-    const data: Array<{
-      _id: number[];
-      count: number;
-      win: number;
-    }> = response.data;
+  }
+
+  public get pickRateData() {
+    return (
+      this.selectedPositionData.trends &&
+      this.selectedPositionData.trends.map((trend) =>
+        toPercentage(trend.count, trend.totalCount)
+      )
+    );
+  }
+
+  public async getSummaryBanRate() {
+    try {
+      const response = await axios.get(
+        `${END_POINT}/statistics/champion/bans/${this.championId}/3`
+      );
+      this.banRates = response.data as BanData[];
+    } catch (err) {
+      console.error('[getSummaryBanRate]', err);
+    }
+  }
+
+  public async getChampionStatisticsByPosition(position: string) {
+    try {
+      const response = await axios.get(
+        `${END_POINT}/statistics/champion/${this.championId}/${
+          POSITION_ID[position]
+        }`
+      );
+
+      this.loadTrendData(position, response.data.trends);
+      this.loadSpellData(position, response.data.spells);
+      this.loadStartItemData(position, response.data.startItems);
+      this.loadRivalEasyData(position, response.data.easys);
+      this.loadRivalCounterData(position, response.data.counters);
+      this.loadRuneGroupData(position, response.data.runeGroups);
+      this.loadShoesData(position, response.data.shoes);
+    } catch (err) {
+      console.error('[getSpellData]', err);
+    }
+  }
+
+  private loadSpellData(position: string, data: SpellApiData[]) {
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
     const spells = data
       .map((spell) => ({
-        id1: spell._id[0],
-        id2: spell._id[1],
+        id1: spell.spells[0],
+        id2: spell.spells[1],
         count: spell.count,
         pickRate: toPercentage(spell.count, totalCount),
         winRate: toPercentage(spell.win, spell.count),
       }))
-      .slice(0, 2);
+      .slice(0, 3);
 
     this.$set(
       this.positionData,
@@ -664,27 +772,17 @@ export default class ChampionInfo extends Vue {
     );
   }
 
-  public async getStartItemData(position: string) {
-    const response = await axios.get(
-      `${END_POINT}/statistics/champion/startitems/${this.championId}/${
-        POSITION_ID[position]
-      }`
-    );
-    const data: Array<{
-      _id: number[];
-      count: number;
-      win: number;
-    }> = response.data;
+  public loadStartItemData(position: string, data: ItemsApiData[]) {
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
     const startItems = data
       .map((item) => ({
-        ids: item._id,
+        ids: item.items,
         count: item.count,
         pickRate: toPercentage(item.count, totalCount),
         winRate: toPercentage(item.win, item.count),
       }))
       .filter((item) => item.pickRate > 0)
-      .slice(0, 2);
+      .slice(0, 3);
 
     this.$set(
       this.positionData,
@@ -695,22 +793,11 @@ export default class ChampionInfo extends Vue {
     );
   }
 
-  public async getRivalEasyData(position: string) {
-    const response = await axios.get(
-      `${END_POINT}/statistics/champion/easys/${this.championId}/${
-        POSITION_ID[position]
-      }`
-    );
-    const data: Array<{
-      _id: number;
-      count: number;
-      win: number;
-      win_rate: number;
-    }> = response.data;
+  public loadRivalEasyData(position: string, data: RivalMatchUpApiData[]) {
     const easys = data.map((rival) => ({
-      id: rival._id,
+      id: rival.rivalChampionKey,
       count: rival.count,
-      winRate: rival.win_rate,
+      winRate: rival.winRate,
     }));
 
     this.$set(
@@ -722,22 +809,11 @@ export default class ChampionInfo extends Vue {
     );
   }
 
-  public async getRivalCounterData(position: string) {
-    const response = await axios.get(
-      `${END_POINT}/statistics/champion/counters/${this.championId}/${
-        POSITION_ID[position]
-      }`
-    );
-    const data: Array<{
-      _id: number;
-      count: number;
-      win: number;
-      win_rate: number;
-    }> = response.data;
+  public loadRivalCounterData(position: string, data: RivalMatchUpApiData[]) {
     const counters = data.map((rival) => ({
-      id: rival._id,
+      id: rival.rivalChampionKey,
       count: rival.count,
-      winRate: rival.win_rate,
+      winRate: rival.winRate,
     }));
 
     this.$set(
@@ -749,42 +825,35 @@ export default class ChampionInfo extends Vue {
     );
   }
 
-  public async getRuneData(position: string) {
-    const response = await axios.get(
-      `${END_POINT}/statistics/champion/runes/${this.championId}/${
-        POSITION_ID[position]
-      }`
-    );
-    const data: Array<{
-      _id: {
-        mainRuneStyle: string;
-        mainRune: string;
-        subRuneStyle: string;
-      };
-      count: number;
-      win: number;
-    }> = response.data;
+  public loadRuneGroupData(position: string, data: RuneGroupApiData[]) {
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
     const runes = data
-      .map((rune) => ({
-        mainRuneStyle: rune._id.mainRuneStyle.toString(),
-        mainRune: rune._id.mainRune.toString(),
-        subRuneStyle: rune._id.subRuneStyle.toString(),
-        pickRate: toPercentage(rune.count, totalCount, 2),
-        winRate: toPercentage(rune.win, rune.count, 2),
-        count: rune.count,
-        details: [] as any[],
-      }))
-      .slice(0, 3);
+      .map((rune) => {
+        const detailTotalCount = rune.details.reduce(
+          (prev, cur) => prev + cur.count,
+          0
+        );
+        return {
+          mainRuneStyle: rune.mainRuneStyle.toString(),
+          mainRune: rune.mainRune.toString(),
+          subRuneStyle: rune.subRuneStyle.toString(),
+          pickRate: toPercentage(rune.count, totalCount, 2),
+          winRate: toPercentage(rune.win, rune.count, 2),
+          count: rune.count,
+          details: rune.details
+            .map((detail) => ({
+              mainRunes: detail.mainRunes.map((rune) => rune.toString()),
+              subRunes: detail.subRunes.map((rune) => rune.toString()),
+              statRunes: detail.statRunes.map((rune) => rune.toString()),
+              pickRate: toPercentage(detail.count, detailTotalCount, 2),
+              winRate: toPercentage(detail.win, detail.count, 2),
+              count: detail.count,
+            }))
+            .slice(0, 2),
+        };
+      })
+      .slice(0, 2);
 
-    for (const rune of runes) {
-      rune.details = await this.getRuneDetailData(
-        position,
-        rune.mainRune,
-        rune.subRuneStyle,
-        totalCount
-      );
-    }
     this.$set(
       this.positionData,
       position,
@@ -794,36 +863,35 @@ export default class ChampionInfo extends Vue {
     );
   }
 
-  public async getRuneDetailData(
-    position: string,
-    mainRuneId: string,
-    subRuneStyleId: string,
-    totalCount: number
-  ) {
-    const response = await axios.get(
-      `${END_POINT}/statistics/champion/rune/${this.championId}/${
-        POSITION_ID[position]
-      }/${mainRuneId}/${subRuneStyleId}`
+  public loadTrendData(position: string, trends: TrendApiData[]) {
+    this.$set(
+      this.positionData,
+      position,
+      Object.assign({}, this.positionData[position], {
+        trends,
+      })
     );
-    const data: Array<{
-      _id: {
-        mainRunes: string[];
-        subRunes: string[];
-        statRunes: string[];
-      };
-      count: number;
-      win: number;
-    }> = response.data;
-    return data
-      .map((rune) => ({
-        mainRunes: rune._id.mainRunes.map((runeId) => runeId.toString()),
-        subRunes: rune._id.subRunes.map((runeId) => runeId.toString()),
-        statRunes: rune._id.statRunes.map((runeId) => runeId.toString()),
-        pickRate: toPercentage(rune.count, totalCount, 2),
-        winRate: toPercentage(rune.win, rune.count, 2),
-        count: rune.count,
+  }
+
+  public loadShoesData(position: string, data: ShoesApiData[]) {
+    const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
+    const shoes = data
+      .map((shoesData) => ({
+        shoes: shoesData.shoes,
+        count: shoesData.count,
+        pickRate: toPercentage(shoesData.count, totalCount),
+        winRate: toPercentage(shoesData.win, shoesData.count),
       }))
+      .filter((shoesData) => shoesData.pickRate > 0)
       .slice(0, 3);
+
+    this.$set(
+      this.positionData,
+      position,
+      Object.assign({}, this.positionData[position], {
+        shoes,
+      })
+    );
   }
 
   public async clickPosition(position: string) {
@@ -831,15 +899,9 @@ export default class ChampionInfo extends Vue {
 
     if (!this.positionData[position]) {
       try {
-        await Promise.all([
-          this.getSpellData(position),
-          this.getStartItemData(position),
-          this.getRivalCounterData(position),
-          this.getRivalEasyData(position),
-          this.getRuneData(position),
-        ]);
+        await this.getChampionStatisticsByPosition(position);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
   }
@@ -860,6 +922,7 @@ export default class ChampionInfo extends Vue {
       this.$set(this.wins, POSITION_NAME[position._id], position.win);
     });
 
+    await this.getSummaryBanRate();
     await this.clickPosition(POSITION_NAME[data[0]._id]);
   }
 }
@@ -873,7 +936,7 @@ export default class ChampionInfo extends Vue {
 .champion-info-container {
   text-align: left;
 
-  & > div {
+  div {
     vertical-align: top;
   }
 
@@ -889,7 +952,7 @@ export default class ChampionInfo extends Vue {
   .table-title {
     th {
       text-align: center;
-      padding-bottom: 10px;
+      padding: 10px 0;
       border-bottom: 2px solid #e57c5b;
       font-size: 13px;
     }
@@ -897,8 +960,9 @@ export default class ChampionInfo extends Vue {
 
   .table-content {
     td {
-      padding: 10px;
+      padding: 10px 10px 0 10px;
       text-align: center;
+      font-size: 13px;
     }
   }
 }
@@ -916,16 +980,26 @@ export default class ChampionInfo extends Vue {
   height: 80px;
 
   &.wide {
-    width: 350px;
+    width: 310px;
   }
 }
 
 .rune-container {
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  border-left: 5px solid #ff8a65;
+  background-color: #ffffff;
+  padding: 10px;
 
   .rune-description {
-    font-size: 12px;
+    padding: 10px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
   }
+}
+
+.item-container {
+  border-left: 5px solid #ff8a65;
+  background-color: #ffffff;
+  padding: 10px;
 }
 </style>
