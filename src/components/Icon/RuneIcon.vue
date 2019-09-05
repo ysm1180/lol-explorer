@@ -170,6 +170,7 @@ export default class RuneIcon extends Vue {
 
     &.grayscale {
       filter: grayscale(100%);
+      opacity: 0.5;
     }
   }
 }
