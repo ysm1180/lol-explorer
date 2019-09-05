@@ -58,63 +58,66 @@
           </div>
         </div>
 
-        <div class="positions">
-          <position
-            :count="this.counts['top']"
-            :selected="selectedPosition === 'top'"
-            :totalCount="totalCount"
-            :win="this.wins['top']"
-            @click="clickPosition('top')"
-            name="탑"
-            position="top"
-          />
+        <v-layout>
 
-          <position
-            :count="this.counts['jungle']"
-            :selected="selectedPosition === 'jungle'"
-            :totalCount="totalCount"
-            :win="this.wins['jungle']"
-            @click="clickPosition('jungle')"
-            name="정글"
-            position="jungle"
-          />
+          <v-flex>
+            <position
+              :count="this.counts['top']"
+              :selected="selectedPosition === 'top'"
+              :totalCount="totalCount"
+              :win="this.wins['top']"
+              @click="clickPosition('top')"
+              name="탑"
+              position="top"
+            />
 
-          <position
-            :count="this.counts['mid']"
-            :selected="selectedPosition === 'mid'"
-            :totalCount="totalCount"
-            :win="this.wins['mid']"
-            @click="clickPosition('mid')"
-            name="미드"
-            position="mid"
-          />
+            <position
+              :count="this.counts['jungle']"
+              :selected="selectedPosition === 'jungle'"
+              :totalCount="totalCount"
+              :win="this.wins['jungle']"
+              @click="clickPosition('jungle')"
+              name="정글"
+              position="jungle"
+            />
 
-          <position
-            :count="this.counts['adc']"
-            :selected="selectedPosition === 'adc'"
-            :totalCount="totalCount"
-            :win="this.wins['adc']"
-            @click="clickPosition('adc')"
-            name="원딜"
-            position="adc"
-          />
+            <position
+              :count="this.counts['mid']"
+              :selected="selectedPosition === 'mid'"
+              :totalCount="totalCount"
+              :win="this.wins['mid']"
+              @click="clickPosition('mid')"
+              name="미드"
+              position="mid"
+            />
 
-          <position
-            :count="this.counts['support']"
-            :selected="selectedPosition === 'support'"
-            :totalCount="totalCount"
-            :win="this.wins['support']"
-            @click="clickPosition('support')"
-            name="서포터"
-            position="support"
-          />
-        </div>
+            <position
+              :count="this.counts['adc']"
+              :selected="selectedPosition === 'adc'"
+              :totalCount="totalCount"
+              :win="this.wins['adc']"
+              @click="clickPosition('adc')"
+              name="원딜"
+              position="adc"
+            />
+
+            <position
+              :count="this.counts['support']"
+              :selected="selectedPosition === 'support'"
+              :totalCount="totalCount"
+              :win="this.wins['support']"
+              @click="clickPosition('support')"
+              name="서포터"
+              position="support"
+            />
+          </v-flex>
+        </v-layout>
 
         <div>
           <tabs>
             <tab :selected="true" name="종합">
               <div class="mt-3" v-if="selectedPositionData">
-                <div class="d-inline-block">
+                <div class="d-inline-block data-container mr-3">
                   <div class="d-inline-block vertical__top mr-2">
                     <table
                       class="data-table"
@@ -335,12 +338,12 @@
                       </div>
                     </div>
                   </div>
-                  <div class="mt-3 data-none" v-else>
+                  <div class="mt-5 data-none" v-else>
                     데이터가 부족하여 룬 데이터 분석이 어렵습니다.
                   </div>
                 </div>
 
-                <div class="float__right d-inline-block vertical__top">
+                <div class="float__right d-inline-block vertical__top data-container">
                   <Tabs alignCenter class="mb-3">
                     <Tab name="카운터 챔피언" selected>
                       <v-layout
@@ -747,7 +750,7 @@ export default class ChampionInfo extends Vue {
       this.loadRuneGroupData(position, response.data.runeGroups);
       this.loadShoesData(position, response.data.shoes);
     } catch (err) {
-      console.error('[getSpellData]', err);
+      console.error('[getChampionStatisticsByPosition]', err);
     }
   }
 
@@ -829,14 +832,11 @@ export default class ChampionInfo extends Vue {
     const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
     const runes = data
       .map((rune) => {
-        const detailTotalCount = rune.details.reduce(
-          (prev, cur) => prev + cur.count,
-          0
-        );
         return {
           mainRuneStyle: rune.mainRuneStyle.toString(),
           mainRune: rune.mainRune.toString(),
-          subRuneStyle: rune.subRuneStyle.toString(),
+          subRuneStyle:
+            (rune.subRuneStyle && rune.subRuneStyle.toString()) || '0',
           pickRate: toPercentage(rune.count, totalCount, 2),
           winRate: toPercentage(rune.win, rune.count, 2),
           count: rune.count,
@@ -845,7 +845,7 @@ export default class ChampionInfo extends Vue {
               mainRunes: detail.mainRunes.map((rune) => rune.toString()),
               subRunes: detail.subRunes.map((rune) => rune.toString()),
               statRunes: detail.statRunes.map((rune) => rune.toString()),
-              pickRate: toPercentage(detail.count, detailTotalCount, 2),
+              pickRate: toPercentage(detail.count, totalCount, 2),
               winRate: toPercentage(detail.win, detail.count, 2),
               count: detail.count,
             }))
@@ -952,9 +952,9 @@ export default class ChampionInfo extends Vue {
   .table-title {
     th {
       text-align: center;
-      padding: 10px 0;
+      padding: 7px 0;
       border-bottom: 2px solid #e57c5b;
-      font-size: 13px;
+      font-size: 12px;
     }
   }
 
@@ -1002,4 +1002,10 @@ export default class ChampionInfo extends Vue {
   background-color: #ffffff;
   padding: 10px;
 }
+
+  .data-container {
+    border: 1px solid #E0E0E0;
+    padding: 5px 15px 15px 15px;
+    background-color: #EEEEEE;
+  }
 </style>
