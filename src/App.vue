@@ -12,28 +12,40 @@
       </div>
       <div class="buttons large">
         <button
-          :class="isHome() && 'selected'"
+          :class="isSummonerPage() && 'selected'"
           @click="enterHome()"
           class="icon-button"
           title="소환사 정보"
         >
-          <v-icon dark>home</v-icon>
+          <span v-if="!lcuSummoner || !summoner">
+            소환사 정보
+          </span>
+          <span v-else>
+            <span class="d-flex align-center justify-center flex-row">
+              <v-img :src="summoner.iconUrl" class="summoner-icon mr-2">
+                <span
+                  class="summoner-level font-weight-bold text-center white--text"
+                >
+                  {{ summoner.summonerLevel }}
+                </span>
+              </v-img>
+              {{ lcuSummoner.displayName }}
+            </span>
+          </span>
         </button>
         <button
           :class="isRunePage() && 'selected'"
           @click="enterRunePage()"
           class="icon-button"
-          title="룬 관리"
         >
-          <v-icon dark>filter_none</v-icon>
+          룬 관리
         </button>
         <button
-          :class="isGamePickBan() && 'selected'"
+          :class="isGamePickBanPage() && 'selected'"
           @click="enterChampionSelectPage()"
           class="icon-button"
-          title="In Game"
         >
-          <v-icon dark>wifi</v-icon>
+          게임 설정
         </button>
       </div>
       <div class="ml-3">
@@ -42,6 +54,15 @@
           placeholder="소환사, 챔피언 검색"
           type="text"
         />
+      </div>
+      <div class="buttons large">
+        <button
+          :class="isDevPage() && 'selected'"
+          @click="enterDevPage()"
+          class="icon-button"
+        >
+          개발자
+        </button>
       </div>
     </div>
     <router-view style="padding-top:59px;" />
@@ -125,7 +146,7 @@ export default class App extends Vue {
     this.$store.dispatch('lolstatic/fetchPerks');
   }
 
-  public isHome() {
+  public isSummonerPage() {
     if (this.status === 'LOGIN_COMPLETE' && this.summoner) {
       const homeUrl = `/match/${this.summoner.accountId}`;
       return this.$router.currentRoute.path === homeUrl;
@@ -138,8 +159,12 @@ export default class App extends Vue {
     return this.routerStartWith('/rune');
   }
 
-  public isGamePickBan() {
+  public isGamePickBanPage() {
     return this.routerStartWith('/gamepickban');
+  }
+
+  public isDevPage() {
+    return this.routerStartWith('/dev');
   }
 
   public enterHome() {
@@ -167,6 +192,13 @@ export default class App extends Vue {
 
   public enterChampionSelectPage() {
     const url = `/gamepickban`;
+    if (this.$router.currentRoute.path !== url) {
+      this.$router.push(url);
+    }
+  }
+
+  public enterDevPage() {
+    const url = `/dev`;
     if (this.$router.currentRoute.path !== url) {
       this.$router.push(url);
     }
@@ -227,10 +259,10 @@ export default class App extends Vue {
 .icon-button {
   padding: 2px 5px;
   outline: 0;
+  font-size: 12px;
 
   &.selected {
-    box-shadow: 0 0 0 2px darkorange;
-    border-radius: 10px;
+    box-shadow: 0 4px 2px -2px darkorange;
   }
 }
 
@@ -280,5 +312,31 @@ export default class App extends Vue {
   width: 550px;
   color: black;
   border-radius: 2px;
+  outline: 0;
+  font-size: 13px;
+}
+</style>
+
+<style lang="scss" scoped>
+.summoner-icon {
+  display: inline-block;
+  min-width: 36px;
+  min-height: 36px;
+  max-width: 36px;
+  max-height: 36px;
+  border-radius: 50%;
+}
+
+.summoner-level {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-size: 10px;
+  padding: 0 2px;
+
+  background-color: rgba(#212121, 0.7);
+  border-radius: 10px;
 }
 </style>
