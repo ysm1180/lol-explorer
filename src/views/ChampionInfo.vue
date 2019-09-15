@@ -59,7 +59,6 @@
         </div>
 
         <v-layout>
-
           <v-flex>
             <position
               :count="this.counts['top']"
@@ -118,6 +117,13 @@
             <tab :selected="true" name="종합">
               <div class="mt-3" v-if="selectedPositionData">
                 <div class="d-inline-block data-container mr-3">
+                  <div v-if="selectedPositionData.itemBuilds">
+                    <div v-for="itemBuild in selectedPositionData.itemBuilds">
+                      <div class="d-inline-block" v-for="item in itemBuild.items">
+                        <item-icon :itemId="item" />
+                      </div>
+                    </div>
+                  </div>
                   <div class="d-inline-block vertical__top mr-2">
                     <table
                       class="data-table"
@@ -343,7 +349,9 @@
                   </div>
                 </div>
 
-                <div class="float__right d-inline-block vertical__top data-container">
+                <div
+                  class="float__right d-inline-block vertical__top data-container"
+                >
                   <Tabs alignCenter class="mb-3">
                     <Tab name="카운터 챔피언" selected>
                       <v-layout
@@ -526,6 +534,12 @@ interface PositionData {
   }>;
   startItems: Array<{
     ids: number[];
+    count: number;
+    pickRate: number;
+    winRate: number;
+  }>;
+  itemBuilds: Array<{
+    items: number[];
     count: number;
     pickRate: number;
     winRate: number;
@@ -745,6 +759,7 @@ export default class ChampionInfo extends Vue {
       this.loadTrendData(position, response.data.trends);
       this.loadSpellData(position, response.data.spells);
       this.loadStartItemData(position, response.data.startItems);
+      this.loadItemBuildData(position, response.data.itemBuilds);
       this.loadRivalEasyData(position, response.data.easys);
       this.loadRivalCounterData(position, response.data.counters);
       this.loadRuneGroupData(position, response.data.runeGroups);
@@ -792,6 +807,26 @@ export default class ChampionInfo extends Vue {
       position,
       Object.assign({}, this.positionData[position], {
         startItems,
+      })
+    );
+  }
+
+  public loadItemBuildData(position: string, data: ItemsApiData[]) {
+    const totalCount = data.reduce((prev, cur) => prev + cur.count, 0);
+    const itemBuilds = data
+      .map((item) => ({
+        items: item.items,
+        count: item.count,
+        pickRate: toPercentage(item.count, totalCount),
+        winRate: toPercentage(item.win, item.count),
+      }))
+      .filter((item) => item.pickRate > 0);
+
+    this.$set(
+      this.positionData,
+      position,
+      Object.assign({}, this.positionData[position], {
+        itemBuilds,
       })
     );
   }
@@ -963,6 +998,8 @@ export default class ChampionInfo extends Vue {
       padding: 10px 10px 0 10px;
       text-align: center;
       font-size: 13px;
+
+      min-width: 55px;
     }
   }
 }
@@ -1003,9 +1040,9 @@ export default class ChampionInfo extends Vue {
   padding: 10px;
 }
 
-  .data-container {
-    border: 1px solid #E0E0E0;
-    padding: 5px 15px 15px 15px;
-    background-color: #EEEEEE;
-  }
+.data-container {
+  border: 1px solid #e0e0e0;
+  padding: 5px 15px 15px 15px;
+  background-color: #eeeeee;
+}
 </style>
