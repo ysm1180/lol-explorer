@@ -1,15 +1,231 @@
 <template>
   <v-layout fill-height justify-center>
-    <v-layout align-center fill-height justify-center v-if="!champSelecting">
+    <v-layout
+      align-center
+      fill-height
+      justify-center
+      v-if="gameflowPhase === 'None'"
+    >
       <span class="display-1 font-weight-bold">
         게임 시작 상태가 아닙니다.
       </span>
     </v-layout>
     <v-layout
+      align-center
+      fill-height
+      justify-center
+      v-else-if="gameflowPhase === 'InProgress'"
+    >
+      <div class="mt-3">
+        <div class="summoner-info-container">
+          <div class="d-inline-block vertical__top">
+            <table class="ally-summoner-table mr-2">
+              <thead class="table__head">
+                <tr class="table__row">
+                  <th class="table__cell ally" colspan="3">아군 팀</th>
+                  <th class="table__cell" colspan="2">랭크 통계</th>
+                </tr>
+              </thead>
+              <tbody class="table__body">
+                <tr
+                  class="table__row"
+                  v-bind:key="index"
+                  v-for="(info, index) in myTeamData"
+                >
+                  <td class="table__cell">
+                    <champion-icon
+                      :borderColor="
+                        lcuSummoner.summonerId === info.summonerId
+                          ? '#FF8A65'
+                          : '#49B4FF'
+                      "
+                      :championId="info.championId"
+                      :position="info.assignedPosition"
+                      circle
+                      v-if="info.assignedPosition !== ''"
+                    />
+                    <champion-icon
+                      :borderColor="
+                        lcuSummoner.summonerId === info.summonerId
+                          ? '#FF8A65'
+                          : '#49B4FF'
+                      "
+                      :championId="info.championId"
+                      circle
+                      v-else
+                    />
+                  </td>
+                  <td class="table__cell summoner-spell">
+                    <spell-icon :spellId="info.spell1Id" />
+                    <spell-icon :spellId="info.spell2Id" />
+                  </td>
+                  <td
+                    class="table__cell"
+                    colspan="3"
+                    v-if="!myTeamSummonerInfos[info.summonerId]"
+                  ></td>
+                  <td
+                    class="table__cell"
+                    colspan="3"
+                    v-if="
+                      myTeamSummonerInfos[info.summonerId] &&
+                        myTeamSummonerInfos[info.summonerId].loading &&
+                        !myTeamSummonerInfos[info.summonerId].error
+                    "
+                  >
+                    <v-progress-circular
+                      color="deep-orange lighten-2"
+                      indeterminate
+                      size="16"
+                    />
+                  </td>
+                  <td
+                    class="table__cell error"
+                    colspan="3"
+                    v-if="
+                      myTeamSummonerInfos[info.summonerId] &&
+                        !!myTeamSummonerInfos[info.summonerId].error
+                    "
+                  >
+                    <span>정보를 불러오는 데에 문제가 발생하였습니다.</span>
+                    <v-btn
+                      @click="loadSummonerInfo(info.summonerId)"
+                      flat
+                      icon
+                      title="다시 불러오기"
+                    >
+                      <v-icon>autorenew</v-icon>
+                    </v-btn>
+                  </td>
+                  <td
+                    class="table__cell summoner-name"
+                    v-if="
+                      myTeamSummonerInfos[info.summonerId] &&
+                        !myTeamSummonerInfos[info.summonerId].loading &&
+                        !myTeamSummonerInfos[info.summonerId].error
+                    "
+                  >
+                    {{
+                      myTeamSummonerInfos[info.summonerId] &&
+                        myTeamSummonerInfos[info.summonerId].summoner &&
+                        myTeamSummonerInfos[info.summonerId].summoner.name
+                    }}
+                  </td>
+                  <td
+                    class="table__cell"
+                    v-if="
+                      myTeamSummonerInfos[info.summonerId] &&
+                        !myTeamSummonerInfos[info.summonerId].loading &&
+                        !myTeamSummonerInfos[info.summonerId].error
+                    "
+                  >
+                    <div
+                      v-if="
+                        myTeamSummonerInfos[info.summonerId] &&
+                          myTeamSummonerInfos[info.summonerId].summoner
+                      "
+                    >
+                      <v-img
+                        :src="`/assets/emblems/${getTier(info.summonerId)}.png`"
+                        style="width:30px; height:30px; margin: 0 auto;"
+                      />
+                      <div class="summoner-tier">
+                        {{ getTierRank(info.summonerId) }}
+                      </div>
+                    </div>
+                  </td>
+                  <td
+                    class="table__cell"
+                    v-if="
+                      myTeamSummonerInfos[info.summonerId] &&
+                        !myTeamSummonerInfos[info.summonerId].loading &&
+                        !myTeamSummonerInfos[info.summonerId].error
+                    "
+                  >
+                    <div
+                      v-if="
+                        myTeamSummonerInfos[info.summonerId] &&
+                          myTeamSummonerInfos[info.summonerId].summoner &&
+                          myTeamSummonerInfos[info.summonerId].summoner.season
+                      "
+                    >
+                      <div class="game-win">
+                        {{
+                          toPercentage(
+                            myTeamSummonerInfos[info.summonerId].summoner.season
+                              .wins,
+                            myTeamSummonerInfos[info.summonerId].summoner.season
+                              .wins +
+                              myTeamSummonerInfos[info.summonerId].summoner
+                                .season.losses
+                          )
+                        }}
+                        %
+                      </div>
+                      <div class="game-count">
+                        {{
+                          myTeamSummonerInfos[info.summonerId].summoner.season
+                            .wins +
+                            myTeamSummonerInfos[info.summonerId].summoner.season
+                              .losses
+                        }}
+                        게임
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="game-win">
+                        -
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-inline-block vertical__top">
+            <table class="enemy-summoner-table mr-2">
+              <thead class="table__head">
+                <tr class="table__row">
+                  <th class="table__cell enemy" colspan="2">적군 팀</th>
+                </tr>
+              </thead>
+              <tbody class="table__body">
+                <tr
+                  class="table__row"
+                  v-bind:key="index"
+                  v-for="(info, index) in enemyTeamData"
+                >
+                  <td
+                    class="table__cell summoner-name"
+                    v-if="info.championId === 0"
+                  >
+                    소환사 {{ index + 1 }}
+                  </td>
+                  <td class="table__cell summoner-name" v-else>
+                    {{
+                      champions[info.championId] &&
+                        champions[info.championId].name
+                    }}
+                  </td>
+                  <td class="table__cell">
+                    <champion-icon
+                      :championId="info.championId"
+                      borderColor="#F75556"
+                      circle
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </v-layout>
+    <v-layout
       fill-height
       id="game-start"
       justify-center
-      v-else-if="myTeamData.length > 0"
+      v-else-if="gameflowPhase === 'ChampSelect' && myTeamData.length > 0"
     >
       <div class="mt-3">
         <div class="summoner-info-container">
@@ -268,6 +484,29 @@
                   <tbody class="table__body">
                     <tr class="table__row">
                       <td class="table__cell">아이템</td>
+                      <td class="table__cell">
+                        <hover-button
+                          :data="
+                            recommendSetting[POSITION_NAME[selectedPosition]] &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .builds &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .builds.frequency
+                          "
+                          @show=""
+                        />
+                      </td>
+                      <td class="table__cell">
+                        <hover-button
+                          :data="
+                            recommendSetting[POSITION_NAME[selectedPosition]] &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .builds &&
+                              recommendSetting[POSITION_NAME[selectedPosition]]
+                                .builds.win
+                          "
+                        />
+                      </td>
                     </tr>
                     <tr class="table__row">
                       <td class="table__cell">스펠</td>
@@ -333,22 +572,55 @@
           </v-flex>
 
           <v-flex v-if="selectedRecommendRune">
-            <div class="d-inline-block">
-              <spell-icon :spellId="selectedRecommendSpell.spells[0]" large />
-              <spell-icon :spellId="selectedRecommendSpell.spells[1]" large />
+            <div class="d-inline-block mr-5">
+              <div class="mb-5">
+                <div class="item-title">아이템 빌드</div>
+                <div
+                  class="d-inline-flex align-center justify-center"
+                  v-for="(item, index) in selectedRecommendItemBuild.items"
+                >
+                  <item-icon :itemId="item" class="mr-2" large />
+                  <span
+                    class="mr-2 arrow"
+                    v-show="
+                      index !== selectedRecommendItemBuild.items.length - 1
+                    "
+                  >
+                    >
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div class="item-title mb-3">스펠</div>
+                <div class="text-left">
+                  <spell-icon
+                    :spellId="selectedRecommendSpell.spells[0]"
+                    class="mr-2"
+                    large
+                  />
+                  <spell-icon
+                    :spellId="selectedRecommendSpell.spells[1]"
+                    large
+                  />
+                </div>
+              </div>
             </div>
-            <rune-book
-              :primaryRuneStyle="selectedRecommendRune.mainRuneStyle"
-              :primaryRunes="selectedRecommendRune.mainRunes"
-              :secondaryRuneStyle="selectedRecommendRune.subRuneStyle"
-              :secondaryRunes="selectedRecommendRune.subRunes"
-              :statRunes="selectedRecommendRune.statRunes"
-              containerWidth="200"
-              hover
-              large
-              pointer
-              v-if="selectedRecommendRune"
-            />
+
+            <div class="d-inline-block vertical__top">
+              <div class="item-title mb-3">룬</div>
+              <rune-book
+                :primaryRuneStyle="selectedRecommendRune.mainRuneStyle"
+                :primaryRunes="selectedRecommendRune.mainRunes"
+                :secondaryRuneStyle="selectedRecommendRune.subRuneStyle"
+                :secondaryRunes="selectedRecommendRune.subRunes"
+                :statRunes="selectedRecommendRune.statRunes"
+                containerWidth="200"
+                hover
+                large
+                pointer
+                v-if="selectedRecommendRune"
+              />
+            </div>
           </v-flex>
         </v-layout>
       </div>
@@ -361,6 +633,7 @@ import { toPercentage } from '@/base/math';
 import { QUEUE_TYPE, QUEUE_TYPE_STRING } from '@/common/constants';
 import HoverButton from '@/components/Game/HoverButton.vue';
 import ChampionIcon from '@/components/Icon/ChampionIcon.vue';
+import ItemIcon from '@/components/Icon/ItemIcon.vue';
 import PositionIcon from '@/components/Icon/PositionIcon.vue';
 import RuneIcon from '@/components/Icon/RuneIcon.vue';
 import RuneStyleIcon from '@/components/Icon/RuneStyleIcon.vue';
@@ -392,6 +665,12 @@ interface RecommendSpellApiData {
   spells: number[];
 }
 
+interface RecommedItemsApiData {
+  items: number[];
+  count: number;
+  win: number;
+}
+
 interface TeamLcuData {
   assignedPosition: string;
   cellId: number;
@@ -421,6 +700,10 @@ interface PositionSetting {
     frequency: RecommendSpellApiData;
     win: RecommendSpellApiData;
   };
+  builds: {
+    frequency: RecommedItemsApiData;
+    win: RecommedItemsApiData;
+  };
 }
 
 const LCU_POSITION: { [position: string]: number } = {
@@ -433,6 +716,7 @@ const LCU_POSITION: { [position: string]: number } = {
 
 @Component({
   components: {
+    ItemIcon,
     HoverButton,
     RuneBook,
     RuneStyleIcon,
@@ -444,7 +728,8 @@ const LCU_POSITION: { [position: string]: number } = {
 })
 export default class GamePickBan extends Vue {
   private lcuListener?: (event: any, data: any) => void;
-  private champSelecting: boolean = false;
+  private gameflowPhase: string = 'None';
+  private gameProgress: boolean = false;
   private searchData?: {
     queueType: string;
     state: string;
@@ -474,6 +759,7 @@ export default class GamePickBan extends Vue {
   } = {};
   private selectedRecommendRuneType: 'frequency' | 'win' = 'frequency';
   private selectedRecommendSpellType: 'frequency' | 'win' = 'frequency';
+  private selectedRecommendItemBuildType: 'frequency' | 'win' = 'frequency';
   private editableRunePageIds: number[] = [];
   private hover = false;
 
@@ -561,6 +847,21 @@ export default class GamePickBan extends Vue {
     }
   }
 
+  public get selectedRecommendItemBuild() {
+    if (
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]] &&
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]].builds &&
+      this.recommendSetting[this.POSITION_NAME[this.selectedPosition]].builds[
+        this.selectedRecommendItemBuildType
+      ]
+    ) {
+      return this.recommendSetting[this.POSITION_NAME[this.selectedPosition]]
+        .builds[this.selectedRecommendItemBuildType];
+    } else {
+      return null;
+    }
+  }
+
   public get lcuSummoner(): LcuSummonerData {
     return this.$store.state.connection.lcuSummoner;
   }
@@ -581,8 +882,8 @@ export default class GamePickBan extends Vue {
         data.uri === '/lol-gameflow/v1/gameflow-phase' &&
         data.eventType === 'Update'
       ) {
-        this.champSelecting = data.data === 'ChampSelect';
-        if (!this.champSelecting) {
+        this.gameflowPhase = data.data;
+        if (this.gameflowPhase === 'None') {
           this.myTeamData = [];
           this.enemyTeamData = [];
         }
@@ -722,8 +1023,8 @@ export default class GamePickBan extends Vue {
 
   public async init() {
     if (this.lcuData) {
-      this.champSelecting = await this.isChampSelecting();
-      if (this.champSelecting) {
+      this.gameflowPhase = await this.getGameflowPhase();
+      if (this.gameflowPhase === 'ChampSelect') {
         const sessionData = await this.getGameSession();
         if (sessionData && sessionData.gameData.queue.id !== -1) {
           this.gameQueueId = sessionData.gameData.queue.id;
@@ -747,7 +1048,7 @@ export default class GamePickBan extends Vue {
     }
   }
 
-  public async isChampSelecting() {
+  public async getGameflowPhase() {
     const url = `${this.lcuData.protocol}://${this.lcuData.address}:${
       this.lcuData.port
     }/lol-gameflow/v1/gameflow-phase`;
@@ -759,7 +1060,7 @@ export default class GamePickBan extends Vue {
       },
     });
 
-    return response.data === 'ChampSelect';
+    return response.data;
   }
 
   public async getGameSession() {
@@ -988,6 +1289,10 @@ export default class GamePickBan extends Vue {
         return {
           runes: { frequency: runeFrequency, win: runeWin },
           spells: { frequency: data.spells.frequency, win: data.spells.win },
+          builds: {
+            frequency: data.builds.frequency,
+            win: data.builds.frequency,
+          },
         };
       } catch (err) {
         console.error('[getRecommedRunes]', err);
@@ -1040,6 +1345,8 @@ export default class GamePickBan extends Vue {
               result
             );
             this.selectedRecommendRuneType = 'frequency';
+            this.selectedRecommendSpellType = 'frequency';
+            this.selectedRecommendItemBuildType = 'frequency';
           }
         }
       }
@@ -1256,5 +1563,18 @@ export default class GamePickBan extends Vue {
       color: #dddddd;
     }
   }
+}
+
+.item-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: #e57c5b;
+  text-align: left;
+}
+
+.arrow {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
 }
 </style>
