@@ -138,36 +138,44 @@
             <v-layout column fill-height justify-center>
               <div>
                 <v-layout align-center justify-space-around mb-1>
-                  <v-img
-                    :class="{
-                      mine: gameInfo.requester.participantId === Number(key),
-                    }"
-                    :src="
-                      champions[participant.championId] &&
-                        champions[participant.championId].iconUrl
-                    "
-                    class="participant-icon"
+                  <tooltip
+                    :content="participant.player.summonerName"
                     v-bind:key="key"
                     v-for="(participant, key) in gameInfo.teams['100']
                       .participants"
-                  />
+                  >
+                    <v-img
+                      :class="{
+                        mine: gameInfo.requester.participantId === Number(key),
+                      }"
+                      :src="
+                        champions[participant.championId] &&
+                          champions[participant.championId].iconUrl
+                      "
+                      class="participant-icon"
+                    />
+                  </tooltip>
                 </v-layout>
               </div>
               <div>
                 <v-layout align-center justify-space-around>
-                  <v-img
-                    :class="{
-                      mine: gameInfo.requester.participantId === Number(key),
-                    }"
-                    :src="
-                      champions[participant.championId] &&
-                        champions[participant.championId].iconUrl
-                    "
-                    class="participant-icon"
+                  <tooltip
+                    :content="participant.player.summonerName"
                     v-bind:key="key"
                     v-for="(participant, key) in gameInfo.teams['200']
                       .participants"
-                  />
+                  >
+                    <v-img
+                      :class="{
+                        mine: gameInfo.requester.participantId === Number(key),
+                      }"
+                      :src="
+                        champions[participant.championId] &&
+                          champions[participant.championId].iconUrl
+                      "
+                      class="participant-icon"
+                    />
+                  </tooltip>
                 </v-layout>
               </div>
             </v-layout>

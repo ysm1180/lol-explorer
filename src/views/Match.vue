@@ -1,24 +1,20 @@
 <template>
   <v-layout fill-height justify-center>
-    <v-layout
-      align-center
-      fill-height
-      justify-center
-      v-if="status !== 'LOGIN_COMPLETE'"
-    >
-      <span
-        class="display-1 font-weight-bold"
-        v-if="status === 'WAITING_CLIENT'"
-      >
-        롤 클라이언트를 실행해주세요.
-      </span>
-      <span
-        class="display-1 font-weight-bold"
-        v-if="status === 'WAITING_LOGIN'"
-      >
-        로그인을 기다리는 중...
-      </span>
-    </v-layout>
+    <v-row align-content="center" class="stepper" justify="center">
+      <v-col cols="10">
+        <v-stepper v-if="status !== 'LOGIN_COMPLETE'" v-model="loginStep">
+          <v-stepper-header>
+            <v-stepper-step :complete="loginStep > 1" color="#2A2E38" step="1">
+              LOL 클라이언트를 켜주세요.
+            </v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step :complete="loginStep > 2" color="#2A2E38" step="2">
+              로그인을 해주세요.
+            </v-stepper-step>
+          </v-stepper-header>
+        </v-stepper>
+      </v-col>
+    </v-row>
 
     <v-layout
       @scroll="onScroll"
@@ -143,6 +139,14 @@ export default class Match extends Vue {
     this.loadingMatches = true;
     this.loadingChampion = true;
     this.init();
+  }
+
+  public get loginStep() {
+    return this.status === 'WAITING_CLIENT'
+      ? 1
+      : this.status === 'WAITING_LOGIN'
+      ? 2
+      : 3;
   }
 
   public mounted() {
@@ -300,5 +304,10 @@ export default class Match extends Vue {
 <style scoped>
 #match-page {
   overflow-y: auto;
+}
+
+.stepper {
+  font-weight: bold;
+  font-size: 18px;
 }
 </style>

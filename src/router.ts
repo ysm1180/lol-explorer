@@ -40,5 +40,10 @@ export default new Router({
       component: () => import('./views/ChampionInfo.vue'),
       props: parsingId,
     },
+    {
+      path: '/dev',
+      name: 'development',
+      component: () => import('./views/Development.vue'),
+    },
   ],
 });

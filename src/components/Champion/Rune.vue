@@ -1,25 +1,27 @@
 <template>
   <div :class="{ selected: !!selected }" @click="click()" class="rune">
-    <div class="rune-icons">
-      <div class="rune-icon">
-        <rune-icon
-          :runeId="mainRuneId"
-          :runeStyleId="mainRuneStyleId"
-          notooltip
-        />
+    <div class="d-flex align-center">
+      <div class="rune-icons">
+        <div class="rune-icon">
+          <rune-icon
+            :runeId="mainRuneId"
+            :runeStyleId="mainRuneStyleId"
+            notooltip
+          />
+        </div>
+        <div class="rune-icon">
+          <rune-style-icon :runeStyleId="subRuneStyleId" notooltip />
+        </div>
       </div>
-      <div class="rune-icon">
-        <rune-style-icon :runeStyleId="subRuneStyleId" notooltip />
-      </div>
-    </div>
 
-    <tooltip :content="`${count} 게임`" inlineBlock>
-      <div class="description">
-        픽률 : {{ pick }}%
-        <br />
-        승률 : {{ win }}%
-      </div>
-    </tooltip>
+      <tooltip :content="`${count} 게임`">
+        <div class="description">
+          픽률 : {{ pick }}%
+          <br />
+          승률 : {{ win }}%
+        </div>
+      </tooltip>
+    </div>
   </div>
 </template>
 

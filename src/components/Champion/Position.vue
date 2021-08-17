@@ -78,27 +78,27 @@ export default class Position extends Vue {
 
   .position-name {
     display: table-cell;
-    width: 80px;
+    width: 50px;
     vertical-align: middle;
     padding-left: 10px;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .position-image {
     display: table-cell;
     vertical-align: middle;
-    min-width: 28px;
-    min-height: 28px;
-    max-width: 28px;
-    max-height: 28px;
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
   }
 
   .position-percent {
     display: table-cell;
     text-align: right;
     vertical-align: middle;
-    width: 50px;
-    font-size: 14px;
+    width: 40px;
+    font-size: 12px;
   }
 }
 </style>
